@@ -16,39 +16,35 @@ const getFrom = function (from, returnArrayChunks = []) {
   const data = {
     returnArray,
     returnArrayChunks,
-    getSubcommand: (keyword='a') => (ra = returnArrayChunks) => {
+    getSubcommand: (keyword = 'a') => (ra = returnArrayChunks) => {
       const flatA = flat(returnArrayChunks)
       const aKeys = Object.keys(flatA)
 
-      let returnValues = []
-      const startsWithSymbol = aKeys.filter((key, index)=> flatA[key] === keyword )
-        const aKeysIndexes = aKeys
-        .map((ee,ii,aa)=>{
-          return flatA[aa[ii]]===keyword?ii:false
+      const aKeysIndexes = aKeys
+        .map((ee, ii, aa) => {
+          return flatA[aa[ii]] === keyword ? ii : false
         })
-        .filter(e=>e!==false)
-        .filter((e)=>aKeys[e].split('.')[1]==='0')
-        // .filter((e)=>l(aKeys[e].split('.')[1]).return())
-        const intervals = aKeysIndexes
-        .map((e,i,a)=>true?aKeys.slice(e,a[i+1]):false)
-        .filter(e=>e!==false)
-        .map(e=>Array.from(e))
-        const vvv = intervals.map((e, i) => {
-          const t = {}
-          const c = e.map(e=>{
-            const order = e.split('.')[0]
-            return order
-          })
-          c.forEach(e=>t[e]=true)
+        .filter(e => e !== false)
+        .filter((e) => aKeys[e].split('.')[1] === '0')
 
-          return Object.keys(t)
-        });
+      const intervals = aKeysIndexes.map((e, i, a) => aKeys.slice(e, a[i + 1]))
+        .filter(e => e !== false)
+        .map(e => Array.from(e))
 
-        const result = vvv.map((e,i)=>{
-          return Array.from(e).map(e=>ra[e])
+      const result = intervals.map((e, i) => {
+        const t = {}
+        const c = e.map(e => {
+          const order = e.split('.')[0]
+          return order
         })
+        c.forEach(e => { t[e] = true })
 
-        return result.map((e) => getFrom(0, e))
+        return Object.keys(t)
+      }).map((e, i) => {
+        return Array.from(e).map(e => ra[e])
+      }).map((e) => getFrom(0, e))
+
+      return result
     },
     repeate: {
       // todo: generalize it

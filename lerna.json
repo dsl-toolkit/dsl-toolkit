@@ -1,5 +1,4 @@
 {
-  "lerna": "2.9.0",
   "packages": [
     "packages/*",
     "packages/dsl-framework/examples/auto-publish/parenting"
@@ -9,5 +8,5 @@
       "array-dsl"
     ]
   },
-  "version": "1.6.65"
+  "version": "independent"
 }

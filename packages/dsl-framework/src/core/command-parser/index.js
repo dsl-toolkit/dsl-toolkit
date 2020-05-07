@@ -1,23 +1,16 @@
-const getArrayData = require('./lib/get-array-data')
+const getArrayData = require('../lib/get-array-data')
+const getBaseKind = require('./get-base-kind')
+const getMoreKind = require('./get-more-kind')
+
 module.exports = exports = (returnObject) => {
   const baseObject = {
     init: () => {
-      const baseKind = (kind) => function () {
-        const command = arguments[0]
-        if (Array.isArray(command) || arguments.length > 1) {
-          // command = getArrayData(arguments)
-          return baseObject[`${kind === 'some' ? 'has' : 'get'}`].more(command)
-        }
-        return returnObject.data.returnArrayChunks[kind](argumentArray => argumentArray[0] === command)
-      }
+      const baseKind = getBaseKind(baseObject, returnObject)
 
       baseObject.has = baseKind('some')
       baseObject.get = baseKind('filter')
 
-      const moreKind = (kind) => function () {
-        const commands = getArrayData(arguments)
-        return commands.map(command => baseObject[kind](command))
-      }
+      const moreKind = getMoreKind(baseObject)
       baseObject.has.more = moreKind('has')
       baseObject.get.more = moreKind('get')
       baseObject.hasMore = baseObject.has.more

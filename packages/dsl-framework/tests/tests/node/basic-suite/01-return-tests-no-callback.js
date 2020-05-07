@@ -6,13 +6,12 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
       expect(curryCallbackObject).to.be.a('function')
     })
     it('tests the immediate datatag of an uncalled callbacked one', function () {
-      let data = curryCallbackObject('a')(curryString).data
+      const data = curryCallbackObject('a')(curryString).data
       expect(data).to.be.an('object').that.have.all.keys('data', 'getFrom', 'command', 'arguments', 'commandSequence')
     })
 
-    if(enviromentSupportsPromises)
-    {
-      const {testsPomiseMagic, testsPromistesIfCallbackVersionReturningPromiseGivesBackTheParametersProvided} =
+    if (enviromentSupportsPromises) {
+      const { testsPomiseMagic, testsPromistesIfCallbackVersionReturningPromiseGivesBackTheParametersProvided } =
         require('../promise-tests')
       testsPomiseMagic(expect, curryCallbackObject, dslFrameworkDefaultInstance, curryString)
       testsPromistesIfCallbackVersionReturningPromiseGivesBackTheParametersProvided(expect, curryCallbackObject,
@@ -43,8 +42,8 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
     it('tests the curryObject', function () {
       expect(curryObject.command.has(1)).to.be.equal(true)
       expect(curryObject.command.has(2)).to.be.equal(false)
-      expect(curryObject.command.get(1).toString()).to.be.equal([[1,2,3,4,5]].toString())
-      expect(curryObject.command.getArguments(1).toString()).to.be.equal([[2,3,4,5]].toString())
+      expect(curryObject.command.get(1).toString()).to.be.equal([[1, 2, 3, 4, 5]].toString())
+      expect(curryObject.command.getArguments(1).toString()).to.be.equal([[2, 3, 4, 5]].toString())
       // getCommandArguments
     })
   })

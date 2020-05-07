@@ -1,23 +1,124 @@
 <!--- destination qa rewrite begin -->
 ### QA monorepo
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-[![CircleCI](https://circleci.com/gh/311ecode/dsl-toolkit/tree/master.svg?style=svg)](https://circleci.com/gh/311ecode/dsl-toolkit/tree/master)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/a25454343626ec0c7a70/test_coverage)](https://codeclimate.com/github/311ecode/dsl-toolkit/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/a25454343626ec0c7a70/maintainability)](https://codeclimate.com/github/311ecode/dsl-toolkit/maintainability)
-[![Greenkeeper badge](https://badges.greenkeeper.io/311ecode/dsl-toolkit.svg)](https://greenkeeper.io/)
-[![Known Vulnerabilities](https://snyk.io/test/github/311ecode/dsl-toolkit/badge.svg?targetFile=packages%2Fdsl-framework%2Fpackage.json)](https://snyk.io/test/github/311ecode/dsl-toolkit?targetFile=packages%2Fdsl-framework%2Fpackage.json)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fvidaxl-com%2Fdsl-toolkit.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fvidaxl-com%2Fdsl-toolkit?ref=badge_shield)
-
-[![HitCount](http://hits.dwyl.com/vidaxl.com/dsl-toolkit.svg)](http://hits.dwyl.com/311ecode/dsl-toolkit)
-[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
+[![CircleCI](https://circleci.com/gh/dsl-toolkit/dsl-toolkit/tree/master.svg?style=svg)](https://circleci.com/gh/dsl-toolkit/dsl-toolkit/tree/master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a0e903d579b8ebebaf18/maintainability)](https://codeclimate.com/github/dsl-toolkit/dsl-toolkit/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/a0e903d579b8ebebaf18/test_coverage)](https://codeclimate.com/github/dsl-toolkit/dsl-toolkit/test_coverage)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdsl-toolkit%2Fdsl-toolkit.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdsl-toolkit%2Fdsl-toolkit?ref=badge_shield)[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
 <!--- destination qa rewrite end -->
-
 
 # Installation
 ```bash
 npm install dsl-framework --save
 ```
 
+# Hello world
+
+```javascript
+const { dslFramework } = require('dsl-framework')
+const defaultFactory = dslFramework()
+
+console.log(
+  defaultFactory()
+  .Hello.world()
+  .data.returnArrayChunks.flat().join(' ')) // => Hello world
+```
+This is the easies use of the dsl framework. `data.returnArrayChunks` represents a matrix of data, in other wods an arrays in an array, in other works and abstract syntax tree (AST). with the current exaple you can see it as:
+```javascript
+[['Hello'],['world']]
+```
+The next exaple:
+```javascript
+console.log(
+  defaultFactory()('Hello')('world')()
+  .data.returnArrayChunks.flat().join(' ')) // => Hello world
+```
+gives the exact same output, the first example. It is just a different way to inject data into the AST. Your choice is how you want to use it.
+
+Most of the times you will use the framework with the callback function like this:
+```javascript
+defaultFactory((e, data) => {
+  console.log(data.data.returnArrayChunks.flat().join(' '))
+}).Hello.world() // => Hello world
+```
+
+Most of the times you might want to create a function/module/export or variable like this:
+
+```javascript
+const sayIt = defaultFactory((e, data) => {
+  console.log(data.data.returnArrayChunks.flat().join(' '))
+})
+
+sayIt.Hello.world() // => Hello world
+```
+So you can play with it like below:
+```javascript
+sayIt.Hello.world() // => Hello world
+sayIt.Hello.world('!')() // => Hello world !
+sayIt.Hello.world['!']() // => Hello world !
+sayIt('Hello').world['!']() // => Hello world !
+```
+Let's create a `harvester` that returns the raw data:
+
+```javascript
+const harvester = defaultFactory((e, data) => {
+  return (data.data.returnArrayChunks)
+})
+```
+With the `harvester` we can show the date that comes back:
+```javascript
+console.log(
+  harvester.Hello.world()
+  ) // => [['Hello'],['world']]
+  
+console.log(
+  harvester.Hello.world('!')()
+  ) // => [['Hello'],['world', '!']]
+```
+If you see the last example above, this is the first time we have given a parameter to a function we call. you can see how it escalates in the data, the excamation sign is arrived next to the world as the second item in its array. The rest of this segment of examples are easy, so I will not explain them.
+```javascript  
+console.log(
+  harvester.Hello.world['!']()
+  ) // => [['Hello'],['world'],['!']]
+  
+console.log(
+  harvester('Hello').world['!']()
+  ) // => [['Hello'],['world'],['!']]
+  
+```
+
+```javascript
+const processor = defaultFactory((e, data) => {
+  return (data.data.returnArrayChunks.flat().join(' '))
+})
+
+console.log(processor('Hello').world(), 'oh yeah'); // => Hello world oh yeah
+
+(async () => {
+  const result = await processor.hello.world.form.this.promise.p()
+  console.log(result + '.', '"p" is sPecial!, I can say in other world, preserved, pointing to a promise factory')
+})() // => hello world form this promise. "p" is sPecial!, I can say in other world, preserved, pointing to a promise factory
+
+const processorReturndPromise = defaultFactory((e, data) => {
+  return async () => (data.data.returnArrayChunks.flat().join(' '))
+});
+(async () => {
+  const result = await processorReturndPromise.Hello.You.too('!!!')()()
+  console.log(result, 'I hope got you!')
+})() // => Hello You too !!! I hope got you!
+
+const processorChecksHello = defaultFactory((e, data) => {
+  if (data.command.has('Hello')) {
+    return (data.data.returnArrayChunks.flat().join(' '))
+  }
+  return 'The message does not contain the word Hello'
+})
+
+console.log(processorChecksHello.Hi.World()) // => The message does not contain the word Hello
+console.log(processorChecksHello.Hello.World('!', 'Hello again')('and').again()) // => Hello World ! Hello again and again
+
+```
+The rest of the motivation is kept here for a while because of clarity, and for historical reasons. I don't consider it complete or good enough for grasping how the framework works. Still coul containg some inspiration for someone. I plan continue and polish the hello world examples further to show and cover the abilities of the tool. if you want to see how it really works see the projects in the monorepo of this project, and see the tests within this project.
 # Motivation
 I wanted to have an easy to use function configuring method.
 so that I can develop domain-specific languages easily and keep its application close to the code,
@@ -100,5 +201,3 @@ fn('b')
 returnValue = fn('c')()
 expect(returnValue).to.be.equal('abc')
 ```
-
-of course it will work with the promis version too.

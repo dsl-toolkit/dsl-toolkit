@@ -1,3 +1,2 @@
-module.exports = exports = function (stringWithWhiteSpaces) {
-  return stringWithWhiteSpaces.toString().replace(/\s/g, '')
-}
+module.exports = exports = (stringWithWhiteSpaces) =>
+  stringWithWhiteSpaces.toString().replace(/\s/g, '')

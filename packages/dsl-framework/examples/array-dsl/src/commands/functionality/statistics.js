@@ -8,15 +8,16 @@ const geTag = (arrifyOn, result, transformer) => (tag) => (tagArgument) => () =>
 module.exports = (result, commandArguments, arrifyOn) => {
   const d3Handler = geTag(arrifyOn, result, d3)
   return {
-  'min': d3Handler('min')(),
-  'max': d3Handler('max')(),
-  'extent': d3Handler('extent')(),
-  'sum': d3Handler('sum')(),
-  'median': d3Handler('median')(),
-  'quantile': d3Handler('quantile')(commandArguments),
-  'variance': d3Handler('variance')(),
-  'deviation': d3Handler('deviation')(),
-}}
+    min: d3Handler('min')(),
+    max: d3Handler('max')(),
+    extent: d3Handler('extent')(),
+    sum: d3Handler('sum')(),
+    median: d3Handler('median')(),
+    quantile: d3Handler('quantile')(commandArguments),
+    variance: d3Handler('variance')(),
+    deviation: d3Handler('deviation')()
+  }
+}
 
 // module.exports = (result, commandArguments, arrifyOn) => {
 //   const d3Handler = geTag(arrifyOn, result, d3)

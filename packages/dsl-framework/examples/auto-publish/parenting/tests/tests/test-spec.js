@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 require('cowlog')()
-const {expect} = require('chai')
+const { expect } = require('chai')
 const partenting = require('../../src')
 const flatten = require('flat')
 const assert = require('assert')
@@ -8,29 +8,29 @@ const _ = require('lodash')
 
 describe('Basic Test Suite', function () {
   const exampleObject = {
-    a:{
-      b:{
-        c:1,
-        c1:2,
-        c3:{
-          deep:{
-            deeper:{
+    a: {
+      b: {
+        c: 1,
+        c1: 2,
+        c3: {
+          deep: {
+            deeper: {
               whatCouldGoWrong: 1
             }
           },
-          nameItGood:{
+          nameItGood: {
             good: 'good'
           }
         },
-        c4:4
+        c4: 4
       },
-      d:{
-        e:2
+      d: {
+        e: 2
       }
     },
     f: 'g',
-    array:[
-      {a:{b:'c'}}
+    array: [
+      { a: { b: 'c' } }
     ]
   }
   const getExample = () => _.cloneDeep(exampleObject)
@@ -52,14 +52,14 @@ describe('Basic Test Suite', function () {
   it('.noChildren', function () {
     const hasParentTags = !Object.keys(flatten(
       partenting(getExample()).noChildren()
-    )).filter(path=>path.endsWith('.children')).length
+    )).filter(path => path.endsWith('.children')).length
     assert(hasParentTags)
   })
 
   it('.noParent', function () {
     const hasParentTags = !Object.keys(flatten(
       partenting(getExample()).noParent()
-    )).filter(path=>path.endsWith('.parent')).length
+    )).filter(path => path.endsWith('.parent')).length
     assert(hasParentTags)
   })
 
@@ -68,12 +68,11 @@ describe('Basic Test Suite', function () {
     expect(other).to.deep.equal(exampleObject)
   })
 
-  it('.exclude', function () {
-    const other = partenting(getExample()).excludePathIncludes('.c3.')()
-    // l(other)()
-    // expect(other).to.deep.equal(exampleObject)
-  })
+  // it('.exclude', function () {
+  //   const other = partenting(getExample()).excludePathIncludes('.c3.')()
+  //   // l(other)()
+  //   // expect(other).to.deep.equal(exampleObject)
+  // })
 
-  //no praetn no children
-
+  // no praetn no children
 })

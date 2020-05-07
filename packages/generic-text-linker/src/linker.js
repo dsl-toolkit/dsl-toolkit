@@ -1,10 +1,10 @@
-const sstlm = require('./substing-to-line-mapper')
+const substringToLineMapper = require('./substing-to-line-mapper')
 const clone = require('clone')
 const objectPath = require('object-path')
 
-module.exports = exports = function (inputString, beginning, closing, newValue = null) {
-  const templateBeginningArray = sstlm(inputString, beginning).reverse()
-  const templateEndArray = sstlm(inputString, closing).reverse()
+module.exports = exports = function (inputString, beginningTag, closingTag, newValue = null) {
+  const templateBeginningArray = substringToLineMapper(inputString, beginningTag).reverse()
+  const templateEndArray = substringToLineMapper(inputString, closingTag).reverse()
 
   objectPath.set(module, 'meta.changed', {
     all: false,
@@ -13,11 +13,10 @@ module.exports = exports = function (inputString, beginning, closing, newValue =
   })
   /* istanbul ignore else */
   if (templateBeginningArray.length !== templateEndArray.length) {
-    throw String(
+    throw new Error(
       `The number linker closing tags and starting tags are not matching
-where the opening tag should be "${beginning}"
-and the closing tag should be   "${closing}" 
-      `
+where the opening tag should be "${beginningTag}"
+and the closing tag should be "${closingTag}"`
     )
   }
   let returnData = clone(inputString.split('\n'))

@@ -22,18 +22,13 @@ module.exports = (ralContainer) => {
   }
 
   return mappedDirs.concat(Array.from(ralContainer.dependentLibraries)).map(libraryToRequire => (() => {
-    // l(libraryToRequire)()
-    const nameOrPathOfModule = libraryToRequire
     const localPath = libraryToRequire.includes('.') || libraryToRequire.startsWith('/')
     const localPackageName = libraryToRequire.slice(libraryToRequire.lastIndexOf('/') + 1, libraryToRequire.last)
     require('./text-outputs/local-path-related')(ralContainer, localPath, localPackageName, libraryToRequire)
-
     const returnObject = {}
-    require('./local-path-related')(ralContainer, localPath, returnObject, localPackageName, libraryToRequire,
-      nameOrPathOfModule)
-
-    require('./alias')(ralContainer, returnObject, nameOrPathOfModule, localPath, localPackageName)
-    require('./from')(ralContainer, returnObject, nameOrPathOfModule)
+    require('./local-path-related')(ralContainer, localPath, returnObject, libraryToRequire)
+    require('./alias')(ralContainer, returnObject, libraryToRequire, localPath, localPackageName)
+    require('./from')(ralContainer, returnObject, libraryToRequire)
 
     return returnObject
   })())

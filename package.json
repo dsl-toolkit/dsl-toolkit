@@ -1,50 +1,49 @@
 {
   "devDependencies": {
-    "@octokit/request": "^5.3.2",
     "array-dsl": "^1.6.59",
     "codeclimate-test-reporter": "^0.5.1",
-    "depcheck": "^0.9.2",
-    "diff": "^4.0.2",
-    "directory-fixture-provider": "^1.6.63",
-    "execa": "^4.0.0",
-    "generic-text-linker": "^1.6.62",
-    "lerna": "^3.20.2",
+    "depcheck": "^1.4.2",
+    "diff": "^5.0.0",
+    "directory-fixture-provider": "^1.7.1",
+    "execa": "^5.1.1",
+    "generic-text-linker": "^1.7.1",
+    "lerna": "^4.0.0",
     "license-checker": "^25.0.1",
-    "nyc": "^15.0.0",
-    "object-path": "^0.11.4",
-    "shelljs": "^0.8.3",
-    "tmp": "^0.1.0"
+    "nyc": "^15.1.0",
+    "shelljs": "^0.8.4"
   },
   "scripts": {
-    "test-dev": "npx lerna run test-dev",
-    "test-dev-unit": "npx lerna run test-dev-unit",
-    "test-old": "npx nyc --reporter=lcov --reporter=clover --reporter=text npx lerna run test-old",
-    "test-project": "npm run license-check && npx depcheck --ignores 'rimfaf,husky,codeclimate-test-reporter,directory-fixture-provider' && npm run standard-fix ",
-    "test-clean": "npx lerna clean --yes && npx lerna bootstrap --no-ci",
-    "test": "npm run test-project && npx nyc --reporter=lcov --reporter=clover --reporter=text npx lerna run --concurrency=1 test-all",
-    "test-all": "npm test",
-    "test-all-dev": "npm run test-project && npm run test-dev",
-    "test-compiled": "npm run test-project && npm test",
     "build": "npm run build-src && npm run build-test",
     "build-src": "npx lerna run build-src",
     "build-test": "npx lerna run build-test",
     "docs-gen": "npx lerna run docs-gen",
+    "license-check": "npx license-checker --failOn unknown --summary",
+    "postinstall": "npx lerna bootstrap",
     "prepublish": "npx lerna run publish",
     "standard-fix": "npx lerna run standard-fix",
-    "license-check": "npx license-checker --failOn unknown --summary"
+    "test": "npm run test-project && npx nyc --reporter=lcov --reporter=clover --reporter=text npx lerna run --concurrency=4 test-all",
+    "test-all": "npm test",
+    "test-all-dev": "npm run test-project && npm run test-dev",
+    "test-clean": "npx lerna clean --yes && npx lerna bootstrap --no-ci",
+    "test-compiled": "npm run test-project && npm test",
+    "test-dev": "npx lerna run test-dev",
+    "test-dev-unit": "npx lerna run test-dev-unit",
+    "test-old": "npx nyc --reporter=lcov --reporter=clover --reporter=text npx lerna run test-old",
+    "test-project": "npm run license-check && npx depcheck --ignores 'rimfaf,husky,codeclimate-test-reporter,directory-fixture-provider' && npm run standard-fix "
   },
   "nyc": {
     "exclude": [
-      "**/tests/**",
+      "**/dist/**",
       "**/lib/juggler/**",
-      "**/dist/**"
+      "**/tests/**"
     ]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lerna run test-dev || npm test",
       "post-merge": "npm test",
+      "pre-commit": "lerna run test-dev || npm test",
       "pre-push": "npm test"
     }
-  }
+  },
+  "name": "dsl-toolkit"
 }

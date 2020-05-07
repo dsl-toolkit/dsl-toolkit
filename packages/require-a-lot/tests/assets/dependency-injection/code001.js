@@ -1,6 +1,6 @@
 // [require-a-lot] testAsset001 begin
 const {
-  expect, // *tag* of chai | chai@4.2.0 | http://chaijs.com | BDD/TDD assertion library for node.js and the browser. ...
+  expect, // *tag* of chai |
   logger, // *di service* | an instance of the cowlog |
   path, // *node module*: path | https://nodejs.org/api/path.html |
   requireALot, // *alias* of ../../src | The entry point of the package |

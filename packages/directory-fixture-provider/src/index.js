@@ -65,7 +65,7 @@ you might not want to test with no files right?`)
 
       const returnObject = {
         dir,
-        fixturePath,
+        fixturePath
       }
       // if(!noFileReads)
       Object.assign(returnObject, {
@@ -143,7 +143,7 @@ you might not want to test with no files right?`)
           return returnObject
         }
       })
-      if(!noFileReads) returnObject.getFixtureContent = module.getFixtureContent(fixturesRoot, fixtureDirectory)
+      if (!noFileReads) returnObject.getFixtureContent = module.getFixtureContent(fixturesRoot, fixtureDirectory)
 
       return returnObject
     }

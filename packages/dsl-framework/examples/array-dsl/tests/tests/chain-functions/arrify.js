@@ -4,10 +4,10 @@ const {
   assert // *node module*: assert | https://nodejs.org/api/assert.html |
 }
 // [require-a-lot] testIncludes end
-  =
-  require('../../requires')
+  // eslint-disable-next-line operator-linebreak
+  = require('../../requires')
 
-describe('arrify tests',()=>{
+describe('arrify tests', () => {
   it('checks "arrify" with no arguments', function () {
     assert.deepEqual(arrayDsl().arrify(), [])
   })
@@ -18,13 +18,11 @@ describe('arrify tests',()=>{
     assert.deepEqual(arrayDsl(null).arrify(), [])
     assert.deepEqual(arrayDsl(undefined).arrify(), [])
     assert.deepEqual(arrayDsl({}).arrify(), [{}])
-
   })
   it('checks "arrify" with last', function () {
-    assert.deepEqual(arrayDsl([2,1]).arrify.last(), [1])
+    assert.deepEqual(arrayDsl([2, 1]).arrify.last(), [1])
     // l(11,arrayDsl([1,2]).last.arrify())()
     // l('here', arrayDsl([1,2]).arrify.last())()
     // assert.deepEqual(arrayDsl([1,2]).arrify(), [1,2])
   })
-
 })

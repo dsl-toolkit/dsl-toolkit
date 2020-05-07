@@ -66,9 +66,6 @@ const coreFactory = () => {
         },
         apply (target, thisArg, argumentsList) {
           return target(...argumentsList)
-        },
-        set (obj, prop, value) {
-          return Reflect.set(...arguments)
         }
       })
     return caller()

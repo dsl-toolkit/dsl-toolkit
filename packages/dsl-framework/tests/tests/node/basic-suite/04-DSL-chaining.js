@@ -1,5 +1,5 @@
 module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework) => {
-  const abcTester = function(abcData){
+  const abcTester = function (abcData) {
     expect(abcData.data.returnArray().join('')).to.be.equal('abc')
   }
   describe('chaining', function () {
@@ -12,7 +12,7 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
       expect(fn.foo().data.returnArray().join('')).to.be.equal('foo')
     })
 
-    it('calling chained tag with not empty function',  function () {
+    it('calling chained tag with not empty function', function () {
       // const fn = dslFrameworkDefaultInstance.extra.chainCommands('foo', 'bar').chainCommands('mee')('chainCommands', 'meToo')()(
       const fn = dslFrameworkDefaultInstance(
         (e, parameters) => {

@@ -1,13 +1,13 @@
 const camelCase = require('camelcase')
 const arrayDsl = require('array-dsl')
-module.exports = (ralContainer, returnObject, name, localPath, localPackageName) => {
+module.exports = (ralContainer, returnObject, name, localPath) => {
   const { parameters } = ralContainer
   const alias = parameters.arguments('alias', 'allEntries', [[]])
   const aliasKeys = []
   alias.forEach(alias => {
     const originalLibraryName = alias[0]
     const aliasName = alias[1]
-    const realIndex = localPath ? name : localPackageName
+    const realIndex = localPath ? name : name
     const index = camelCase(realIndex)
     realIndex.endsWith(originalLibraryName) && (() => {
       // l(aliasName)()

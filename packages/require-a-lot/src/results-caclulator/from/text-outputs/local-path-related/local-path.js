@@ -1,8 +1,6 @@
-const camelCase = require('camelcase')
-module.exports = (ralContainer, localPath, localPackageName, name, libraryToRequire) => {
+module.exports = (ralContainer, localPath, localPackageName) => {
   const { infoList } = ralContainer
-
   localPath && (() => {
-    infoList[name] = { head: `*file path*: ${libraryToRequire}` }
+    infoList[localPackageName] = { head: `*file path*: ${localPackageName}` }
   })()
 }

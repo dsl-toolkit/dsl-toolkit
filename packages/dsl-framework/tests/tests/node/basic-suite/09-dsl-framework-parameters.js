@@ -10,22 +10,23 @@ module.exports = (curryCallbackObject, expect) => {
     })
     it('checking with noTriggerEndOfExecution', function (done) {
       const dslFrameworkDefaultInstanceWithParameter = require('../../../../src').noTriggerEndOfExecution()
-      let myDsl = dslFrameworkDefaultInstanceWithParameter((e, d) => {
+      const myDsl = dslFrameworkDefaultInstanceWithParameter((e, d) => {
         expect(d.data.returnArrayChunks[0][0]).to.equal('a')
         expect(d.data.returnArrayChunks[0][1]).to.equal('b')
         expect(d.data.returnArrayChunks[1][0]).to.equal('c')
         // l(d.data.returnArrayChunks)()
         done()
       })
-      setTimeout(()=>{
+      setTimeout(() => {
         myDsl.a('b')
-        setTimeout(()=>{
+        setTimeout(() => {
+          // eslint-disable-next-line no-unused-expressions
           myDsl.c
-          setTimeout(()=>{
+          setTimeout(() => {
             myDsl()
-          },0)
-        },0)
-      },0)
+          }, 0)
+        }, 0)
+      }, 0)
     })
   })
 }

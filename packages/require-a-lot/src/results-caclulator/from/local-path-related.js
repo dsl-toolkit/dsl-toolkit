@@ -1,10 +1,10 @@
 const camelCase = require('camelcase')
 
-module.exports = (ralContainer, localPath, returnObject, localPackageName, libraryToRequire, name) => {
+module.exports = (ralContainer, localPath, returnObject, name) => {
   const { requireModuleInstance } = ralContainer
   localPath && (() => {
     // l("AAAA", libraryToRequire, localPackageName, camelCase(name))()
-    returnObject[name] = requireModuleInstance(libraryToRequire)
+    returnObject[name] = requireModuleInstance(name)
   })()
-  localPath || (() => { returnObject[camelCase(name)] = requireModuleInstance(libraryToRequire) })()
+  localPath || (() => { returnObject[camelCase(name)] = requireModuleInstance(name) })()
 }

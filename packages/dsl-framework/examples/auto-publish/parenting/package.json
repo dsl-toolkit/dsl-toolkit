@@ -1,6 +1,6 @@
 {
   "name": "parenter",
-  "version": "1.6.65",
+  "version": "1.7.18",
   "description": "Recurse parents and children for your embedded objects.",
   "main": "src/index.js",
   "scripts": {
@@ -12,16 +12,16 @@
     "test-all": "npm run test-project && npm test",
     "test-all-dev": "npm run test-project && npm run test-dev",
     "test-compiled": "node_modules/mocha/bin/mocha --require babel-core/register --require babel-polyfill --recursive dist/tests/tests",
-    "build-src": "mkdir tmp; rm -rf dist;mkdir dist;mkdir dist/src;node_modules/babel-cli/bin/babel.js src --presets babel-preset-env --out-dir dist/src",
-    "build-test": "mkdir dist/tests; node_modules/babel-cli/bin/babel.js tests --presets babel-preset-env --out-dir dist/tests",
+    "build-src": "echo 1",
+    "build-test": "echo 1",
     "prepublish": "npm run build-src && npm run build-test",
-    "clean": "rm -rf tests/tmp; rm -rf dist;",
+    "clean": "echo 1",
     "standard-fix": "node_modules/.bin/standard --fix src/index.js src/**/*.js test/**/*.js",
     "license-check": "node_modules/.bin/license-checker --failOn unknown --summary"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsl-toolkit/parenter.git"
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
   },
   "keywords": [
     "parent",
@@ -34,18 +34,17 @@
   "bugs": {
     "url": "https://github.com/dsl-toolkit/parenter/issues"
   },
-  "homepage": "https://github.com/dsl-toolkit/parenter",
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/dsl-framework/examples/auto-publish/parenting",
   "dependencies": {
     "array-dsl": "^1.6.59",
-    "dsl-framework": "^1.6.62",
+    "dsl-framework": "^1.7.22",
     "flat": "^5.0.0",
     "object-path": "^0.11.4",
-    "require-a-lot": "^1.6.65"
+    "require-a-lot": "^1.7.18"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
     "chai": "^4.2.0",
-    "cowlog": "^1.6.62",
+    "cowlog": "^1.7.18",
     "depcheck": "^0.9.2",
     "license-checker": "^25.0.1",
     "lodash": "^4.17.11",
@@ -56,5 +55,5 @@
   "files": [
     "src/**"
   ],
-  "gitHead": "ccc85a5e4123fea608628828bde38f695540bf81"
+  "gitHead": "ac33306c248bb2ec5880278aa7fde255bcabb84d"
 }
