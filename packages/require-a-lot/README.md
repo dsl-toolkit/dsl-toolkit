@@ -1,18 +1,11 @@
-Include your dependencies with elegance.
 <!--- destination qa rewrite begin -->
 ### QA monorepo
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-[![CircleCI](https://circleci.com/gh/311ecode/dsl-toolkit/tree/master.svg?style=svg)](https://circleci.com/gh/311ecode/dsl-toolkit/tree/master)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/d3fce811aecbe5c73ffb/test_coverage)](https://codeclimate.com/github/311ecode/dsl-toolkit/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/d3fce811aecbe5c73ffb/maintainability)](https://codeclimate.com/github/311ecode/dsl-toolkit/maintainability)
-[![Greenkeeper badge](https://badges.greenkeeper.io/311ecode/dsl-toolkit.svg)](https://greenkeeper.io/)
-[![Known Vulnerabilities](https://snyk.io/test/github/311ecode/dsl-toolkit/badge.svg?targetFile=packages%2Fdsl-framework%2Fpackage.json)](https://snyk.io/test/github/311ecode/dsl-toolkit?targetFile=packages%2Fdsl-framework%2Fpackage.json)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fvidaxl-com%2Fdsl-toolkit.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fvidaxl-com%2Fdsl-toolkit?ref=badge_shield)
-
-[![HitCount](http://hits.dwyl.com/vidaxl.com/dsl-toolkit.svg)](http://hits.dwyl.com/311ecode/dsl-toolkit)
-[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
+[![CircleCI](https://circleci.com/gh/dsl-toolkit/dsl-toolkit/tree/master.svg?style=svg)](https://circleci.com/gh/311ecode/dsl-toolkit/tree/master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/0fbd6b842ef4ad099067/maintainability)](https://codeclimate.com/github/dsl-toolkit/dsl-framework/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/0fbd6b842ef4ad099067/test_coverage)](https://codeclimate.com/github/dsl-toolkit/dsl-framework/test_coverage)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdsl-toolkit%2Fdsl-toolkit.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdsl-toolkit%2Fdsl-toolkit?ref=badge_shield)[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
 <!--- destination qa rewrite end -->
-
 
 # Installation
 ```bash
