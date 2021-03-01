@@ -61,7 +61,7 @@
     "md5": "^2.3.0",
     "mime-types": "^2.1.29",
     "object-hash": "^2.1.1",
-    "object-path": "^0.11.4",
+    "object-path": "^0.11.5",
     "sha256": "^0.2.0",
     "stacktrace-js": "^2.0.2",
     "stringify-object": "^3.3.0",
