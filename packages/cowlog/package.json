@@ -30,7 +30,7 @@
     "build-test": "mkdir dist/tests; node_modules/babel-cli/bin/babel.js tests --presets babel-preset-env --out-dir dist/tests",
     "prepublish": "npm run build-src && npm run build-test",
     "clean": "node_modules/.bin/rimraf dist tmp && mkdir dist && mkdir tmp",
-    "standard-fix": "node_modules/.bin/standard --fix src/index.js src/**/*.js test/**/*.js",
+    "standard-fix": "node_modules/.bin/standard --fix src/index.js src/**/*.js tests/**/*.js",
     "license-check": "node_modules/.bin/license-checker --failOn unknown --summary"
   },
   "repository": {
