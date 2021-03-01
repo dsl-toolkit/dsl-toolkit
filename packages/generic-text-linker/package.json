@@ -52,7 +52,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.3.0",
-    "depcheck": "^1.2.0",
+    "depcheck": "^1.4.0",
     "directory-fixture-provider": "^1.7.1",
     "license-checker": "^25.0.1",
     "mocha": "^8.1.3",
