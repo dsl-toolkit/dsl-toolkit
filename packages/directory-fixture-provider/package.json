@@ -63,7 +63,7 @@
     "mocha": "^8.3.0",
     "nyc": "^15.1.0",
     "shelljs": "^0.8.4",
-    "standard": "^14.3.4"
+    "standard": "^16.0.3"
   },
   "engines": {
     "node": "<=6.4.0"
