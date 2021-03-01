@@ -42,13 +42,13 @@
   "dependencies": {
     "bottlejs": "^2.0.0",
     "clone": "^2.1.2",
-    "fs-copy-file-sync": "^1.1.1",
     "is-string": "^1.0.5",
     "mime-types": "^2.1.29",
     "object-path": "^0.11.5",
     "recursive-readdir-sync": "^1.0.6"
   },
   "devDependencies": {
+    "fs-copy-file-sync": "^1.1.1",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.3.0",
