@@ -10,7 +10,7 @@
     "test": "node_modules/.bin/nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
     "test-dev": "node_modules/.bin/mocha --recursive tests/tests/*-spec.js",
     "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/unit/*-spec.js",
-    "test-project": "pwd && npm run license-check && npm run standard-fix",
+    "test-project": "pwd && npm run license-check && node_modules/.bin/depcheck --ignores 'array-dsl,dsl-framework,object-path' && npm run standard-fix",
     "test-all": "npm run test-project && npm test",
     "test-all-dev": "npm run test-project && npm run test-dev",
     "test-compiled": "node_modules/mocha/bin/mocha --require babel-core/register --require babel-polyfill --recursive dist/tests/tests",
