@@ -7,9 +7,9 @@ const stlc = require('../../lib/string-to-line-increasing-checker')
 const mockData = require('../../mockData')
 const expect = require('chai').expect
 require('chai').should()
-const parallel = require('mocha.parallel');
+// const parallel = require('mocha.parallel');
 
-parallel('cowlog functional tests', function () {
+describe('cowlog functional tests', function () {
   this.timeout(15000)
 
   const basicOutputTests = function (capturedText) {
