@@ -3,7 +3,7 @@
     "array-dsl": "^1.6.59",
     "codeclimate-test-reporter": "^0.5.1",
     "depcheck": "^1.4.2",
-    "diff": "^4.0.2",
+    "diff": "^5.0.0",
     "directory-fixture-provider": "^1.6.63",
     "execa": "^4.0.3",
     "generic-text-linker": "^1.6.62",
