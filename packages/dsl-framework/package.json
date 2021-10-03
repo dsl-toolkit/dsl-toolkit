@@ -80,7 +80,7 @@
     "karma-jasmine": "^4.0.1",
     "license-checker": "^25.0.1",
     "minify": "^8.0.0",
-    "mocha": "^8.3.0",
+    "mocha": "^9.1.2",
     "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
     "semver": "^7.3.4",
