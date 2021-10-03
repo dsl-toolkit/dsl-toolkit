@@ -28,7 +28,9 @@ const getCommandSequence = (type = 'javascript') => {
       }
       // Sometimes it puts a space after the version number in the name of the test branch.
       Object.keys(modParams).forEach(tagName => {
-        modParams[tagName] = modParams[tagName].replace(/\s/g, '')
+        if(modParams[tagName]){
+          modParams[tagName] = modParams[tagName].replace(/\s/g, '')
+        }
       })
 
       return [
@@ -46,17 +48,20 @@ const getCommandSequence = (type = 'javascript') => {
   }
 }
 
-const update = async (dependencies) => {
+const update = async (dependencies, exceptions = []) => {
   if (dependencies) {
-    const dependencyNames = Object.keys(dependencies)
-
+    const dependencyNames = Object.keys(dependencies).filter(e=>!exceptions.includes(e))
     let allFine = true
     let testBranch = ''
     const updateLog = []
     for (let i = 0; dependencyNames.length > i; i++) {
       const dependencyName = dependencyNames[i]
+       if(!dependencyName){
+        continue
+      }
       const actualVersion = makeRealSemver(dependencies[dependencyName])
       const latestVersion = await lv(dependencyName)
+
       testBranch = `refreshing-${dependencyName}@${actualVersion}-to-${latestVersion}`
       const update = semver.gt(latestVersion, actualVersion)
       const { name, version } = require(path.join(cwd, 'package.json'))
@@ -97,11 +102,20 @@ const printMessage = (result) => {
 }
 
 module.exports = (async () => {
+  const {argv} = process
+
+  const exceptions = argv.filter((e,i)=>{
+    const notMe = !e.endsWith('index.js')
+    const notFirst = i !== 0
+
+    return notFirst && notMe
+  })
+
   const packageField = require(path.join(cwd, 'package.json'))
-  const results = printMessage(await update(packageField.dependencies))
+  const results = printMessage(await update(packageField.dependencies, exceptions))
   let resultsDev = false
   if (results.allFine) {
-    resultsDev = printMessage(await update(packageField.devDependencies))
+    resultsDev = printMessage(await update(packageField.devDependencies, exceptions))
   }
   printMessage(results)
   resultsDev && printMessage(resultsDev)
