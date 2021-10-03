@@ -28,15 +28,14 @@ references:
           key: deps-{{ checksum "npm-minor-hash" }}
           paths:
             #beginning package template
-            - node_modules
             - packages/cowlog/node_modules
             - packages/directory-fixture-provider/node_modules
             - packages/dsl-framework/node_modules
-            #- packages/dsl-framework/examples/array-dsl/node_modules
             - packages/dsl-framework/examples/auto-publish/parenting/node_modules
             - packages/generic-text-linker/node_modules
             - packages/refresh-me/node_modules
             - packages/require-a-lot/node_modules
+            - node_modules
             #end package template
   #somehow redundant pieces shall be referenced.
   common_steps_upload: &common_steps_upload
@@ -59,15 +58,14 @@ references:
           key: deps-{{ checksum "npm-hash" }}
           paths:
             #beginning package template
-            - node_modules
             - packages/cowlog/node_modules
             - packages/directory-fixture-provider/node_modules
             - packages/dsl-framework/node_modules
-            #- packages/dsl-framework/examples/array-dsl/node_modules
             - packages/dsl-framework/examples/auto-publish/parenting/node_modules
             - packages/generic-text-linker/node_modules
             - packages/refresh-me/node_modules
             - packages/require-a-lot/node_modules
+            - node_modules
             #end package template
       - store_artifacts:
           path: coverage
