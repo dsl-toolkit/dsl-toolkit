@@ -19,15 +19,29 @@
     requireDir, // require-dir@1.2.0 | https://github.com/aseemk/requireDir | Helper to require() directories. |
   }
 // [require-a-lot] testRequires end
-  = require('../../../../lib/requires')
+  = require('../../../../../lib/requires')
 
-describe('.mapDir tess', () => {
-  require('../../../../assets/map-dir/requires')
-  it('testing a simple file', () => {
-    assert(require(path.join(mapDirAssetDir, 'code001')) === 3)
+const fixtureProvider = require('./lib/fixtureProvider')
+
+describe('.tag .linkDirectory .removeUnused Basic templating tests missing variables', () => {
+
+  // it('tests remove unused', () => {
+  //   const {fixture, ral, fixtureDir} = fixtureProvider()
+  //   ral()
+  //   assert(fixture.getStatus().changed)
+  // })
+
+  it('tests remove unused', () => {
+    const {fixture, ral, fixtureDir} = fixtureProvider()
+    ral.removeUnused()
+    const status = fixture.getStatus()
+    assert(status.changed)
+    // l(status.contents, fixtureDir)()
   })
 
-  it('testing a file that named index.js', () => {
-    assert(require(path.join(mapDirAssetDir, 'code002')) === -1)
-  })
+  // describe('', () => {
+  //   it(')', () => {
+  //   })
+  // })
+
 })

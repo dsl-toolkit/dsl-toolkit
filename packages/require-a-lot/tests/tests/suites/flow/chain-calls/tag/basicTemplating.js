@@ -7,7 +7,7 @@ const {
 }
 // [require-a-lot] testRequires end
   = require('../../../../../lib/requires')
-
+// const fixtureProvider = require('./lib/fixtureProvider')
 const fixtureProvider = () => {
   const provider = directoryFixtureProvider(fixturesPath)()
   const fixture = provider.get('./')
@@ -15,36 +15,36 @@ const fixtureProvider = () => {
   return fixture
 }
 
-describe('.tag .linkDirectory test', () => {
+describe('.tag .linkDirectory Basic templating tests', () => {
 
   it('should not change anything', () => {
-    const provider = fixtureProvider()
-    const {dir:fixtureDir} = provider
+    const fixture = fixtureProvider()
+    const {dir:fixtureDir} = fixture
     requireALot(require)('fs')
     .linkDirectory(`${fixtureDir}/templating`)
     .tag('b')
     ()
-    assert(!provider.getStatus().changed)
+    assert(!fixture.getStatus().changed)
   })
 
   it('should change the files with tag "a"', () => {
-    const provider = fixtureProvider()
-    const {dir:fixtureDir} = provider
+    const fixture = fixtureProvider()
+    const {dir:fixtureDir} = fixture
     requireALot(require)('fs')
     .linkDirectory(`${fixtureDir}/templating`)
     .tag('a')
     ()
-    assert(provider.getStatus().changed)
+    assert(fixture.getStatus().changed)
   })
 
   describe('tests the templating output correctness for a simple built in node nodule', () => {
-    const provider = fixtureProvider()
-    const {dir:fixtureDir} = provider
+    const fixture = fixtureProvider()
+    const {dir:fixtureDir} = fixture
     requireALot(require)('fs')
-    .linkDirectory(`${fixtureDir}/templating`)
+    .linkDirectory(`${fixtureDir}templating`)
     .tag('a')
     ()
-    const status = provider.getStatus()
+    const status = fixture.getStatus()
 
     it('for the includes (top of the file usually)', () => {
       const testFileContent = status.contents['templating/test-01.js']
@@ -55,7 +55,7 @@ describe('.tag .linkDirectory test', () => {
       assert(testFileContent.includes('{\n  fs,'))
     })
 
-    it('for the parameter includes', () => {
+    it('tests for parameter type includes', () => {
       const testFileContent = status.contents['templating/test-02.js']
       assert(testFileContent.includes('fs, // *node module*'))
       assert(testFileContent.includes('https://nodejs.org/api/fs.html'))
@@ -64,7 +64,7 @@ describe('.tag .linkDirectory test', () => {
       // todo: implement tests/feature not to have new line character at the beginnin and the end
     })
 
-    it('for the parameter includesss', () => {
+    it('for both ins the same template', () => {
       const testFileContent = status.contents['templating/test-03.js']
       assert(testFileContent.includes('fs, // *node module*'))
       assert(testFileContent.includes('https://nodejs.org/api/fs.html'))
@@ -75,29 +75,41 @@ describe('.tag .linkDirectory test', () => {
 
   })
 
-  describe('tests .removeUnused ', ()=>{
-    const provider = fixtureProvider()
-    const {dir:fixtureDir} = provider
+  describe('tests .removeUnused ', () => {
+    const fixture = fixtureProvider()
+    const {dir:fixtureDir} = fixture
     requireALot(require)('fs')
-    .linkDirectory(`${fixtureDir}/templating`)
+    .linkDirectory(`${fixtureDir}templating`)
     .tag('a')
     .removeUnused
     ()
-    const status = provider.getStatus()
+    const status = fixture.getStatus()
+
     it('tests for the includes', ()=>{
       const testFileContent = status.contents['templating/test-01.js']
       assert(!testFileContent.includes('fs'))
+      assert(testFileContent.includes('{'))
+      assert(testFileContent.includes('}'))
     })
+
     it('tests for the parameters', ()=>{
       const testFileContent = status.contents['templating/test-02.js']
+      l(status, fixtureDir).die()
       assert(!testFileContent.includes('fs'))
-    })
-    it('tests for the both', ()=>{
-      // l(status.contents['templating/test-03.js'],fixtureDir)()
-      const testFileContent = status.contents['templating/test-03.js']
-      // assert(!testFileContent.includes('fs'))
-      // todo fix that
-    })
-  })
+      assert(!testFileContent.includes('{'))
+      // l(testFileContent).die()
 
+      // assert(!testFileContent.includes('}'))
+
+    })
+
+    it('tests for the both', ()=>{
+      const testFileContent = status.contents['templating/test-03.js'] || ''
+      // l(testFileContent, `${fixtureDir}templating`).die()
+      assert(!testFileContent.includes('fs'))
+      assert(testFileContent.includes('{'))
+      assert(testFileContent.includes('}'))
+    })
+
+  })
 })

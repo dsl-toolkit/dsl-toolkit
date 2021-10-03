@@ -1,3 +1,2 @@
-require('../../src/index')('clean');
+require('../../src/index')('clean')
 l('aaa').mute()
-

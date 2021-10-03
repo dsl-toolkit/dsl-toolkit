@@ -1,5 +1,3 @@
-const mockData = require('../mockData')
-//require('../../src/index')('clean')
 require('../../src/index')()
 l('bla-bla-bla', 'bla-bla-bla', 'bla-bla-bla')
 
