@@ -16,21 +16,23 @@ references:
       - run: apt-get update && apt-get -y install expect
       - run: expect -c "spawn ssh-add - <<< "${SSH_KEY}" expect -re \"Enter passphrase for (stdin):\"; send \"n\";"
       - run: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-      - run: git config --global user.email "you@example.com" && git config --global user.name "yn"
-      - run: ./bin/node-modules-cache-key.js > ./npm-hash
+      - run: git config --global user.email "tothimre@gmail.com" && git config --global user.name "Imre Toth"
+      - run: ./bin/node-modules-cache-key.js > ./npm-minor-hash
       - restore_cache:
           keys:
-            - deps-v1-{{ checksum "npm-hash" }}
-            - deps-v1
-      - run: npm install && npm run test-clean
-      - run: npm run test-all && echo 1 > /tmp/test
+            - deps-{{ checksum "npm-minor-hash" }}
+      - run: ls -lah
+      - run: ./bin/install.sh
+      - run: npm run test                                                                                                                       
       - save_cache:
-          key: deps-{{ checksum "npm-hash" }}
+          key: deps-{{ checksum "npm-minor-hash" }}
           paths:
             #beginning package template
+            - node_modules
             - packages/cowlog/node_modules
             - packages/directory-fixture-provider/node_modules
             - packages/dsl-framework/node_modules
+            #- packages/dsl-framework/examples/array-dsl/node_modules
             - packages/dsl-framework/examples/auto-publish/parenting/node_modules
             - packages/generic-text-linker/node_modules
             - packages/refresh-me/node_modules
@@ -45,21 +47,23 @@ references:
       - run: apt-get update && apt-get -y install expect
       - run: expect -c "spawn ssh-add - <<< "${SSH_KEY}" expect -re \"Enter passphrase for (stdin):\"; send \"n\";"
       - run: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-      - run: git config --global user.email "you@example.com" && git config --global user.name "yn"
+      - run: git config --global user.email "tothimre@gmail.com" && git config --global user.name "Imre Toth"
       - run: ./bin/node-modules-cache-key.js > ./npm-hash
       - restore_cache:
           keys:
-            - deps-v1-{{ checksum "npm-hash" }}
-            - deps-v1
-      - run: npm install && npm run test-clean
-      - run: npm run test-all && echo 1 > /tmp/test
+            - deps-{{ checksum "npm-hash" }}
+      - run: ls -lah
+      - run: ./bin/install.sh
+      - run: npm run test                                                                                                                        
       - save_cache:
           key: deps-{{ checksum "npm-hash" }}
           paths:
             #beginning package template
+            - node_modules
             - packages/cowlog/node_modules
             - packages/directory-fixture-provider/node_modules
             - packages/dsl-framework/node_modules
+            #- packages/dsl-framework/examples/array-dsl/node_modules
             - packages/dsl-framework/examples/auto-publish/parenting/node_modules
             - packages/generic-text-linker/node_modules
             - packages/refresh-me/node_modules
