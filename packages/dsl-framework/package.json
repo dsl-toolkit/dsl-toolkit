@@ -75,7 +75,7 @@
     "eslint-plugin-standard": "^5.0.0",
     "generic-text-linker": "^1.7.1",
     "jasmine-core": "^3.9.0",
-    "karma": "^6.1.1",
+    "karma": "^6.3.4",
     "karma-chrome-launcher": "^3.1.0",
     "karma-jasmine": "^4.0.1",
     "license-checker": "^25.0.1",
