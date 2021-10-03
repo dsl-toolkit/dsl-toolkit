@@ -59,7 +59,7 @@
     "jimple": "^1.5.0",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
-    "mime-types": "^2.1.29",
+    "mime-types": "^2.1.33",
     "object-hash": "^2.1.1",
     "object-path": "^0.11.5",
     "sha256": "^0.2.0",
