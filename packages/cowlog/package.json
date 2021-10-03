@@ -48,7 +48,7 @@
     "bottlejs": "^2.0.0",
     "colors": "^1.4.0",
     "cowsay": "^1.5.0",
-    "detect-node": "^2.0.4",
+    "detect-node": "^2.1.0",
     "dsl-framework": "^1.7.1",
     "fclone": "^1.0.11",
     "flat": "^5.0.2",
