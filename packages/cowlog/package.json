@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/dsl-toolkit/array-dsl/issues"
   },
-  "main": "dist/src/index.js",
+  "main": "src/index.js",
   "scripts": {
     "test-dev": "npx mocha --recursive tests/tests ",
     "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/unit",
