@@ -9,5 +9,5 @@ cd $PROJECT_ROOT
 if [[ -f "$NODE_MODULES" ]]; then
     npm install && npm run test-clean
 fi
-npm run build-src
+
 
