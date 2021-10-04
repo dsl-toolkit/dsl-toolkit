@@ -1,6 +1,6 @@
 {
   "name": "parenter",
-  "version": "1.7.7",
+  "version": "1.7.8",
   "description": "Recurse parents and children for your embedded objects.",
   "main": "src/index.js",
   "scripts": {
@@ -37,14 +37,14 @@
   "homepage": "https://github.com/dsl-toolkit/parenter",
   "dependencies": {
     "array-dsl": "^1.6.59",
-    "dsl-framework": "^1.7.7",
+    "dsl-framework": "^1.7.8",
     "flat": "^5.0.0",
     "object-path": "^0.11.4",
-    "require-a-lot": "^1.7.7"
+    "require-a-lot": "^1.7.8"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "cowlog": "^1.7.7",
+    "cowlog": "^1.7.8",
     "depcheck": "^0.9.2",
     "license-checker": "^25.0.1",
     "lodash": "^4.17.11",
