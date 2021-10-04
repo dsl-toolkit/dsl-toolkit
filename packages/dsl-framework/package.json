@@ -63,8 +63,6 @@
   },
   "homepage": "https://github.com/dsl-toolkit/dsl-framework",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
     "browserify": "^17.0.0",
     "chai": "^4.3.0",
     "depcheck": "^1.4.0",

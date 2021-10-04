@@ -54,8 +54,6 @@
     "recursive-readdir-sync": "^1.0.6"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
     "chai": "^4.3.0",
     "depcheck": "^1.4.0",
     "is-directory": "^0.3.1",

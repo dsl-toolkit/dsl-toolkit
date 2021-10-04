@@ -70,8 +70,6 @@
     "lolcatjs": "^2.3.2"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
     "chai": "^4.3.0",
     "depcheck": "^1.4.0",
     "eslint-config-standard": "^16.0.2",
