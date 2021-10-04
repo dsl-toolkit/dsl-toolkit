@@ -22,10 +22,7 @@ const getFiles = require('./lib/get-files');
   console.log(majorVersions,'f');
   const hashCleanObjects = objects.map(e=>delete e.version && e.scripts && e.repository)
 //  console.log(objects,hashCleanObjects);
-
 //  console.log({packageJson});
-
 //  const result = packageJsons.map(file=>fs.readFileSync(file).toString()).join('\n\n  --- \n\n')
-
-  //console.log(result);
+//  console.log(result);
 })();

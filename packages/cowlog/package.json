@@ -91,10 +91,6 @@
   "engines": {
     "node": ">=11"
   },
-  "os": [
-    "darwin",
-    "linux"
-  ],
   "nyc": {
     "exclude": [
       "**/tests/**"

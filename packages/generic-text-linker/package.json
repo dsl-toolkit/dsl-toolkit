@@ -60,7 +60,7 @@
     "standard": "^16.0.3"
   },
   "engines": {
-    "node": "<=7.6.4"
+    "node": ">=7.6.4"
   },
   "nyc": {
     "exclude": [
