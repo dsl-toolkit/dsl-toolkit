@@ -1,7 +1,7 @@
 {
   "name": "cowlog",
   "private": false,
-  "version": "1.7.2",
+  "version": "1.7.3",
   "description": "Development time logging for NodeJs",
   "homepage": "https://github.com/dsl-toolkit/cowlog",
   "keywords": [
