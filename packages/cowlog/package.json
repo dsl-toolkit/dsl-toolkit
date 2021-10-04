@@ -25,11 +25,10 @@
     "test-all": "npm run test-project && npm test",
     "test-all-dev": "npm run test-project && npm run test-dev",
     "test-suites": "npm run standard-fix && npm test",
-    "test-compiled": "node_modules/.bin/mocha --require babel-core/register --require babel-polyfill --recursive dist/tests/tests",
-    "build-src": "node_modules/.bin/rimraf dist && node_modules/babel-cli/bin/babel.js src --presets babel-preset-env --out-dir dist/src",
-    "build-test": "mkdir dist/tests; node_modules/babel-cli/bin/babel.js tests --presets babel-preset-env --out-dir dist/tests",
+    "build-src": "echo 1",
+    "build-test": "echo 1",
     "prepublish": "npm run build-src && npm run build-test",
-    "clean": "node_modules/.bin/rimraf dist tmp && mkdir dist && mkdir tmp",
+    "clean": "echo 1",
     "standard-fix": "node_modules/.bin/standard --fix src/index.js src/**/*.js tests/**/*.js",
     "license-check": "node_modules/.bin/license-checker --failOn unknown --summary"
   },
@@ -110,5 +109,5 @@
   "files": [
     "src/**"
   ],
-  "gitHead": "ccc85a5e4123fea608628828bde38f695540bf81"
+  "gitHead": "ac33306c248bb2ec5880278aa7fde255bcabb84d"
 }
