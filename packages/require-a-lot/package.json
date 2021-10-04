@@ -1,6 +1,6 @@
 {
   "name": "require-a-lot",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "description": "Require more dependencies elegantly.",
   "main": "src/index.js",
   "scripts": {
@@ -13,7 +13,6 @@
     "test-all-dev": "npm run test-project && npm run test-dev",
     "build-src": "echo 1",
     "build-test": "echo 1",
-
     "prepublish": "npm run build-src && npm run build-test",
     "clean": "node_modules/.bin/rimraf dist tmp && mkdir dist && mkdir tmp",
     "standard-fix": "node_modules/.bin/standard --fix src/index.js src/**/*.js test/**/*.js",
@@ -37,11 +36,11 @@
     "array-dsl": "^1.6.59",
     "camelcase": "^6.0.0",
     "compare": "^2.0.0",
-    "directory-fixture-provider": "^1.7.2",
-    "dsl-framework": "^1.7.2",
+    "directory-fixture-provider": "^1.7.4",
+    "dsl-framework": "^1.7.4",
     "esprima": "^4.0.1",
     "flat": "^5.0.2",
-    "generic-text-linker": "^1.7.2",
+    "generic-text-linker": "^1.7.4",
     "get-installed-path": "^4.0.8",
     "recursive-readdir-sync": "^1.0.6",
     "trim-right": "^1.0.1"
@@ -49,7 +48,7 @@
   "devDependencies": {
     "capture-console": "^1.0.1",
     "chai": "^4.2.0",
-    "cowlog": "^1.7.3",
+    "cowlog": "^1.7.4",
     "depcheck": "^1.2.0",
     "license-checker": "^25.0.1",
     "mocha": "^8.1.3",

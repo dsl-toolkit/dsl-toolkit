@@ -1,6 +1,6 @@
 {
   "name": "parenter",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "description": "Recurse parents and children for your embedded objects.",
   "main": "src/index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "build-src": "echo 1",
     "build-test": "echo 1",
     "prepublish": "npm run build-src && npm run build-test",
-    "clean": "rm -rf tests/tmp; rm -rf dist;",
+    "clean": "echo 1",
     "standard-fix": "node_modules/.bin/standard --fix src/index.js src/**/*.js test/**/*.js",
     "license-check": "node_modules/.bin/license-checker --failOn unknown --summary"
   },
@@ -37,15 +37,15 @@
   "homepage": "https://github.com/dsl-toolkit/parenter",
   "dependencies": {
     "array-dsl": "^1.6.59",
-    "dsl-framework": "^1.7.2",
+    "dsl-framework": "^1.7.4",
     "flat": "^5.0.0",
     "object-path": "^0.11.4",
-    "require-a-lot": "^1.7.3"
+    "require-a-lot": "^1.7.4"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "chai": "^4.2.0",
-    "cowlog": "^1.7.3",
+    "cowlog": "^1.7.4",
     "depcheck": "^0.9.2",
     "license-checker": "^25.0.1",
     "lodash": "^4.17.11",
