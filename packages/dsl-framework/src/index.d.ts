@@ -40,8 +40,7 @@ export type returnCallback = (callback: number, state: dState)=> void;
 declare type core = () => {
   (returnCallback) :any
   (): dState | any;
-  (...args : string[]):core;
-  // (param: string), p1: any): core;
+  (...args : any[]):core;
   [key:string]: core | Promise<any>;
 };
 
