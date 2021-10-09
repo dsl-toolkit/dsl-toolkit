@@ -30,7 +30,7 @@ export type dState = {
 }
 
 // It can be promise too. todo: add pomise too
-export type returnCallback (callback: number, state: dState)=> void;
+export type returnCallback = (callback: number, state: dState)=> void;
 
 declare type core = () => {
   (returnCallback) :any
