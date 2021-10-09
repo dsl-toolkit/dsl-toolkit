@@ -1,5 +1,5 @@
 const dslFrameworkFactory = require('./core')
-const unlimitedCurryFactoryInitiator = dslFrameworkFactory((e, d) => {
+const dslFrameworkFactoryInitiator = dslFrameworkFactory((e, d) => {
   dslFrameworkFactory.setCoreData(d)
   return dslFrameworkFactory
 })
@@ -13,11 +13,11 @@ const weHaveAmd = typeof define === 'function' && define.amd
 
 if (weHaveAmd) {
   define('dsl-framework', [], function () {
-    return unlimitedCurryFactoryInitiator
+    return dslFrameworkFactoryInitiator
   })
 }
 
 (weHaveAmd || inBrowser) && (() => { window['dslFramework'] = dslFrameworkFactory })()
 
-module.exports = unlimitedCurryFactoryInitiator
+module.exports = dslFrameworkFactoryInitiator
 
