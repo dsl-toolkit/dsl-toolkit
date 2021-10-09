@@ -40,6 +40,7 @@ export type returnCallback = (callback: number, state: dState)=> void;
 declare type core = () => {
   (returnCallback) :any
   (): dState | any;
+  (...args : string[]):core;
   [key:string]: core;
 };
 
