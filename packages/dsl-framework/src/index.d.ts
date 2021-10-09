@@ -31,7 +31,7 @@ export type dState = {
       me: (mecore: core)=>core
     }
   }
-  getFrom:(fromNthItem:number)=>dState
+  getFrom:(fromNthItem:number,a:ast)=>dState
 }
 
 // It can be promise too. todo: add pomise too
