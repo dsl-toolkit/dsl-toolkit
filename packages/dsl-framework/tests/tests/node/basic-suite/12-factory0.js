@@ -18,7 +18,7 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
 
      r.forEach((e,i) => {
        if(typeof e.ddddd === 'undefined')
-        throw 'Well tha should have beeen defined.'
+        throw 'Well that should have beeen defined.'
       })
     })
   })

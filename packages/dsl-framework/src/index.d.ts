@@ -41,7 +41,7 @@ declare type core = () => {
   (returnCallback) :any
   (): dState | any;
   (...args : string[]):core;
-  [key:string]: core;
+  [key:string]: core | Promise<any>;
 };
 
 export type coreFactory= () => {
