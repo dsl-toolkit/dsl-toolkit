@@ -1,4 +1,4 @@
-const unlimitedCurryFactory = require('./core/unlimited-curry-factory')
+const unlimitedCurryFactory = require('./core')
 const unlimitedCurryFactoryInitiator = unlimitedCurryFactory((e, d) => {
   unlimitedCurryFactory.setCoreData(d)
   return unlimitedCurryFactory
