@@ -29,7 +29,7 @@ export type dState = {
   getFrom:(fromNthItem:number)=>dState
 }
 
-export function returnCallback (callback: number, state: dState): any;
+export type returnCallback (callback: number, state: dState): any;
 
 declare type core = () => {
   (returnCallback) :any
