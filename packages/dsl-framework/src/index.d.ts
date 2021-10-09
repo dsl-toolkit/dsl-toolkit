@@ -6,14 +6,14 @@ export type dState = {
   argumets:{
   }
   command:{
-    getObject:()=>any,
-    hasObject:()=>any,
-    hasXor:()=>any,
-    hasOr:()=>any,
-    hasAnd:()=>any,
-    getMore:()=>any,
-    hasMore:()=>any,
-    get:(name:string)=>any,
+    getObject:(...args : string[])=>ast[]|[],
+    hasObject:(...args : string[])=>{[key:string]: boolean},
+    hasXor:(...args : string[])=>any,
+    hasOr:(...args : string[])=>any,
+    hasAnd:(...args : string[])=>boolean,
+    getMore:(...args : string[])=>ast[],
+    hasMore:(...args : string[])=>boolean[],
+    get:(name:string)=>ast,
     has:()=>any,
     getArguments:()=>any,
   },
