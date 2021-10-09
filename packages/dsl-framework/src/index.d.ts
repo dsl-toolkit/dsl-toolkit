@@ -1,17 +1,45 @@
+export type ast = Array<Array<any>>
 
-// function DslStarter(): typeof DslFramework;
-// declare function DslFramework(): typeof DslFrameworkCallback;
-// declare function DslFrameworkCallback(e: number, d: ddd);
+export type dState = {
+  // make it a generator function:
+  commandSequence: ()=>any
+  argumets:{
+  }
+  command:{
+    getObject:()=>any,
+    hasObject:()=>any,
+    hasXor:()=>any,
+    hasOr:()=>any,
+    hasAnd:()=>any,
+    getMore:()=>any,
+    hasMore:()=>any,
+    get:(name:string)=>any,
+    has:()=>any,
+    getArguments:()=>any,
+  },
+  data:{
+    returnArrayChunks: ast,
+    returnArray: () => ast,
+    getSubcommand: (keyword:string) => ast
+    repeate:{
+      parent: any,
+      me: (mecore: core)=>core
+    }
+  }
+}
 
-import { type } from "os";
-import { setCoreData } from "./core";
+export function returnCallback (callback: number, state: dState): any;
 
-export type dslFrameworkStarter = () => dslFramework;
-type dslFramework = ({key: string}) => core;
-type core = (
-    {setCoreData: ()=>void}
-)
-// declare function dslFramework(): any
-// export =  DslFramework = (
-//     {aaa: () => void} ,
-// ) => DslFramework
+declare type core = () => {
+  (returnCallback) :any
+  (): any;
+  [key:string]: core;
+};
+
+export type coreFactory= () => {
+  (): core;
+  noPromises: coreFactory;
+};
+
+
+export default coreFactory
