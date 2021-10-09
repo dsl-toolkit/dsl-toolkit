@@ -3,7 +3,12 @@ export type ast = Array<Array<any>>
 export type dState = {
   // make it a generator function:
   commandSequence: ()=>any
-  arguments: any 
+  arguments: (
+    command: string, 
+    getProcess: "allEntries"|
+    "firstArgument"|"firstEntry"|
+    "lastArgument"|"lastEntry",
+    defaultValue: any)=>ast 
   // (command:string, getProcess: boolean, defaultValue?: any) =>
   command:{
     getObject:(...args : string[])=>ast[]|[],
@@ -34,7 +39,7 @@ export type returnCallback = (callback: number, state: dState)=> void;
 
 declare type core = () => {
   (returnCallback) :any
-  (): any;
+  (): dState | any;
   [key:string]: core;
 };
 
