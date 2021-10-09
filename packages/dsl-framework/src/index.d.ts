@@ -41,6 +41,7 @@ declare type core = () => {
   (returnCallback) :any
   (): dState | any;
   (...args : string[]):core;
+  (param: string), ...args : any[]): core;
   [key:string]: core | Promise<any>;
 };
 
