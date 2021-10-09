@@ -15,7 +15,7 @@ export type dState = {
     hasMore:(...args : string[])=>boolean[],
     get:(name:string)=>ast,
     has:()=>any,
-    getArguments:()=>any,
+    getArguments:(argument:string)=>ast,
   },
   data:{
     returnArrayChunks: ast,
@@ -26,6 +26,7 @@ export type dState = {
       me: (mecore: core)=>core
     }
   }
+  getFrom:(fromNthItem:number)=>dState
 }
 
 export function returnCallback (callback: number, state: dState): any;
