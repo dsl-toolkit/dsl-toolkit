@@ -30,12 +30,7 @@ const coreFactory = () => {
       const noTriggerEndOfExecution = coreData.command.has('noTriggerEndOfExecution')
       /* istanbul ignore else */
       if (!arguments.length && callback && typeof callback === 'function') {
-        if (!noTriggerEndOfExecution) {
-          clearTimeout(state.timeoutSate)
-        }
-        state.resetMe = true
-        state.start()
-        return callback(RETURN_FROM_CALLBACK, data)
+        return makeCallback(noTriggerEndOfExecution, state, callback, data)
       }
       /* istanbul ignore else */
       if (!arguments.length && !callback) {
@@ -82,3 +77,13 @@ const coreFactory = () => {
 }
 
 module.exports = coreFactory()
+
+function makeCallback(noTriggerEndOfExecution, state, callback, data) {
+  if (!noTriggerEndOfExecution) {
+    clearTimeout(state.timeoutSate)
+  }
+  state.resetMe = true
+  state.start()
+  return callback(RETURN_FROM_CALLBACK, data)
+}
+
