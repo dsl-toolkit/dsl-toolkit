@@ -18,7 +18,14 @@ const coreFactory = () => {
         callerRaw.called = true
         return caller
       }
-      const data = setData(state, callerRaw, coreData, callback)
+      const callerArguments = Array.from(arguments)
+      if (callerArguments.length) {
+        state.setCommandArguments(callerArguments)
+      }
+      const data = callerRaw.data = state.getFrom(0)
+      if (!coreData.command.has('noPromoises')) {
+        callerRaw.p = require('./caller-promise-factory-factory')(state, callback)
+      }
       // l(coreData, coreData.command)()
       const noTriggerEndOfExecution = coreData.command.has('noTriggerEndOfExecution')
       /* istanbul ignore else */
@@ -75,15 +82,3 @@ const coreFactory = () => {
 }
 
 module.exports = coreFactory()
-function setData(state, callerRaw, coreData, callback) {
-  const callerArguments = Array.from(arguments)
-  if (callerArguments.length) {
-    state.setCommandArguments(callerArguments)
-  }
-  const data = callerRaw.data = state.getFrom(0)
-  if (!coreData.command.has('noPromoises')) {
-    callerRaw.p = require('./caller-promise-factory-factory')(state, callback)
-  }
-  return data
-}
-
