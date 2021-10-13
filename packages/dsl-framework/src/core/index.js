@@ -17,20 +17,23 @@ const coreFactory = () => {
       if (arguments.length && !noTriggerEndOfExecution) {
         promiseHandler(state, data, callback)
       }
-      state.level++
-      if (!callerRaw.called) {
-        callerRaw.called = true
-        return caller
-      }
-      /* istanbul ignore else */
-      if (!arguments.length && callback && typeof callback === 'function') {
-        return makeCallback(noTriggerEndOfExecution, state, callback, data)
-      }
-      /* istanbul ignore else */
-      if (!arguments.length && !callback) {
-        state.start()
-        return data
-      }
+      
+      const ret = ((arguments, callback, noTriggerEndOfExecution, state, data) => {
+        state.level++
+        if (!callerRaw.called) {
+          callerRaw.called = true
+          return caller
+        }  
+        if (!arguments.length && callback && typeof callback === 'function') {
+          return makeCallback(noTriggerEndOfExecution, state, callback, data)
+        }
+        if (!arguments.length && !callback) {
+          state.start()
+          return data
+        }    
+      })(arguments, callback, noTriggerEndOfExecution, state, data)
+
+      if(ret) return ret
       /* istanbul ignore else */
       return caller
     }
