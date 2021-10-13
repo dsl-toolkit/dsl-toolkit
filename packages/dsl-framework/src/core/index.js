@@ -18,7 +18,7 @@ const coreFactory = () => {
         promiseHandler(state, data, callback)
       }
 
-      const evaluateReturnsExpectCaller = ((arguments, callback, noTriggerEndOfExecution, state, data) => {
+      const evaluateReturnsExpectCaller = ((callerRaw, arguments, callback, noTriggerEndOfExecution, state, data) => {
         state.level++
         if (!callerRaw.called) {
           callerRaw.called = true
@@ -31,7 +31,7 @@ const coreFactory = () => {
           state.start()
           return data
         }    
-      })(arguments, callback, noTriggerEndOfExecution, state, data)
+      })(callerRaw, arguments, callback, noTriggerEndOfExecution, state, data)
       /* istanbul ignore else */
       if(evaluateReturnsExpectCaller) return evaluateReturnsExpectCaller
 
@@ -113,3 +113,17 @@ function makeCallback(noTriggerEndOfExecution, state, callback, data) {
   return callback(RETURN_FROM_CALLBACK, data)
 }
 
+const aa = (callerRaw, arguments, callback, noTriggerEndOfExecution, state, data) => {
+  state.level++
+  if (!callerRaw.called) {
+    callerRaw.called = true
+    return caller
+  }  
+  if (!arguments.length && callback && typeof callback === 'function') {
+    return makeCallback(noTriggerEndOfExecution, state, callback, data)
+  }
+  if (!arguments.length && !callback) {
+    state.start()
+    return data
+  }    
+}
