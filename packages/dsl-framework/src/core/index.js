@@ -3,7 +3,7 @@ const safetyExecutor = require('./detached-executor')
 const container = require('./container/core')
 // const f = function
 const coreFactory = () => {
-  const core = function me (callback, state = false) {
+  const core = function me(callback, state = false) {
     let { coreData } = core
     state = state || (function () {
       // if(coreData.command.has('factory')){
@@ -18,14 +18,7 @@ const coreFactory = () => {
         callerRaw.called = true
         return caller
       }
-      const callerArguments = Array.from(arguments)
-      if (callerArguments.length) {
-        state.setCommandArguments(callerArguments)
-      }
-      const data = callerRaw.data = state.getFrom(0)
-      if (!coreData.command.has('noPromoises')) {
-        callerRaw.p = require('./caller-promise-factory-factory')(state, callback)
-      }
+      const data = setData(state, callerRaw, coreData, callback)
       // l(coreData, coreData.command)()
       const noTriggerEndOfExecution = coreData.command.has('noTriggerEndOfExecution')
       /* istanbul ignore else */
@@ -57,17 +50,17 @@ const coreFactory = () => {
 
     const caller = new Proxy(callerRaw,
       {
-        get (obj, prop) {
+        get(obj, prop) {
           if (prop === 'p' || prop === 'data' || prop === 'apply') {
             return obj[prop]
           }
           state.setCommandName(prop)
           return caller
         },
-        apply (target, thisArg, argumentsList) {
+        apply(target, thisArg, argumentsList) {
           return target(...argumentsList)
         },
-        set (obj, prop, value) {
+        set(obj, prop, value) {
           return Reflect.set(...arguments)
         }
       })
@@ -82,3 +75,15 @@ const coreFactory = () => {
 }
 
 module.exports = coreFactory()
+function setData(state, callerRaw, coreData, callback) {
+  const callerArguments = Array.from(arguments)
+  if (callerArguments.length) {
+    state.setCommandArguments(callerArguments)
+  }
+  const data = callerRaw.data = state.getFrom(0)
+  if (!coreData.command.has('noPromoises')) {
+    callerRaw.p = require('./caller-promise-factory-factory')(state, callback)
+  }
+  return data
+}
+
