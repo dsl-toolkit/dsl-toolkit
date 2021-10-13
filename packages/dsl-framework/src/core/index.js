@@ -17,8 +17,8 @@ const coreFactory = () => {
       if (arguments.length && !noTriggerEndOfExecution) {
         promiseHandler(state, data, callback)
       }
-      
-      const ret = ((arguments, callback, noTriggerEndOfExecution, state, data) => {
+
+      const evaluateReturnsExpectCaller = ((arguments, callback, noTriggerEndOfExecution, state, data) => {
         state.level++
         if (!callerRaw.called) {
           callerRaw.called = true
@@ -32,9 +32,9 @@ const coreFactory = () => {
           return data
         }    
       })(arguments, callback, noTriggerEndOfExecution, state, data)
-
-      if(ret) return ret
       /* istanbul ignore else */
+      if(evaluateReturnsExpectCaller) return evaluateReturnsExpectCaller
+
       return caller
     }
 
