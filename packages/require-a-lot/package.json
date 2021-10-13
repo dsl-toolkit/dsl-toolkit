@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsl-toolkit/require-a-lot.git"
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
   },
   "keywords": [
     "require",
@@ -32,7 +32,7 @@
   "bugs": {
     "url": "https://github.com/dsl-toolkit/require-a-lot/issues/issues"
   },
-  "homepage": "https://github.com/dsl-toolkit/require-a-lot",
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/require-a-lot",
   "dependencies": {
     "array-dsl": "^1.6.59",
     "camelcase": "^6.0.0",

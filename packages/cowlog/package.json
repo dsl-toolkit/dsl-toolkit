@@ -3,7 +3,7 @@
   "private": false,
   "version": "1.7.10",
   "description": "Development time logging for NodeJs",
-  "homepage": "https://github.com/dsl-toolkit/cowlog",
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/cowlog",
   "keywords": [
     "log",
     "logging",
@@ -34,7 +34,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsl-toolkit/cowlog.git"
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
   },
   "license": "SEE LICENSE IN LICENSE.md",
   "author": {

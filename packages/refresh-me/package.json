@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsl-toolkit/refresh-me.git"
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
   },
   "keywords": [
     "greenkeeper"
@@ -32,7 +32,7 @@
   "bugs": {
     "url": "https://github.com/dsl-toolkit/refresh-me/issues"
   },
-  "homepage": "https://github.com/dsl-toolkit/refresh-me",
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/refresh-me",
   "dependencies": {
     "diff": "^4.0.2",
     "latest-version": "^5.1.0",

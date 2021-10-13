@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsl-toolkit/parenter.git"
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
   },
   "keywords": [
     "parent",
@@ -34,8 +34,8 @@
   "bugs": {
     "url": "https://github.com/dsl-toolkit/parenter/issues"
   },
-  "homepage": "https://github.com/dsl-toolkit/parenter",
-  "dependencies": {
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/dsl-framework/examples/auto-publish/parenting",
+    "dependencies": {
     "array-dsl": "^1.6.59",
     "dsl-framework": "^1.7.10",
     "flat": "^5.0.0",

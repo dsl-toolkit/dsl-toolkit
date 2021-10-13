@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsl-toolkit/dsl-framework.git"
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
   },
   "keywords": [
     "curry",
@@ -62,7 +62,7 @@
   "bugs": {
     "url": "https://github.com/dsl-toolkit/refresh-me/issues"
   },
-  "homepage": "https://github.com/dsl-toolkit/dsl-framework",
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/dsl-framework",
   "devDependencies": {
     "browserify": "^17.0.0",
     "chai": "^4.3.0",

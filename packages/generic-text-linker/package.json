@@ -22,9 +22,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsl-toolkit/generic-text-linker.git"
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
   },
-  "homepage": "https://github.com/dsl-toolkit/generic-text-linker",
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/generic-text-linker",
   "keywords": [
     "linker",
     "linking",
