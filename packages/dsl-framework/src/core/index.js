@@ -17,9 +17,7 @@ const coreFactory = () => {
       const callerArguments = Array.from(arguments)
       setCommandArguments(callerArguments, state)
       const data = callerRaw.data = state.getFrom(0)
-      if (!coreData.command.has('noPromoises')) {
-        callerRaw.p = require('./caller-promise-factory-factory')(state, callback)
-      }
+      newFunction(coreData, callerRaw, state, callback)
       // l(coreData, coreData.command)()
       const noTriggerEndOfExecution = coreData.command.has('noTriggerEndOfExecution')
       if (arguments.length && !noTriggerEndOfExecution) {
@@ -68,6 +66,12 @@ const coreFactory = () => {
 }
 
 module.exports = coreFactory()
+
+function newFunction(coreData, callerRaw, state, callback) {
+  if (!coreData.command.has('noPromoises')) {
+    callerRaw.p = require('./caller-promise-factory-factory')(state, callback)
+  }
+}
 
 function setCommandArguments(callerArguments, state) {
   if (callerArguments.length) {
