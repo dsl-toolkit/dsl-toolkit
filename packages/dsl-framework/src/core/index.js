@@ -44,21 +44,7 @@ const coreFactory = () => {
     }
 
     const caller = new Proxy(callerRaw,
-      {
-        get(obj, prop) {
-          if (getTabooMembers(prop)) {
-            return obj[prop]
-          }
-          state.setCommandName(prop)
-          return caller
-        },
-        apply(target, thisArg, argumentsList) {
-          return target(...argumentsList)
-        },
-        set(obj, prop, value) {
-          return Reflect.set(...arguments)
-        }
-      })
+      newFunction(state, caller))
     return caller()
   }
 
@@ -66,6 +52,24 @@ const coreFactory = () => {
 }
 
 module.exports = coreFactory()
+
+function newFunction(state, caller) {
+  return {
+    get(obj, prop) {
+      if (getTabooMembers(prop)) {
+        return obj[prop]
+      }
+      state.setCommandName(prop)
+      return caller
+    },
+    apply(target, thisArg, argumentsList) {
+      return target(...argumentsList)
+    },
+    set(obj, prop, value) {
+      return Reflect.set(...arguments)
+    }
+  }
+}
 
 function setPromise(coreData, callerRaw, state, callback) {
   if (!coreData.command.has('noPromoises')) {
