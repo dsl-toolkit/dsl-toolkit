@@ -5,10 +5,7 @@ const container = require('./container/core')
 const coreFactory = () => {
   const core = (callback, state = false) => {
     let { coreData } = core
-    state = state || (function () {
-      // if(coreData.command.has('factory')){
-      return container()
-    } ())
+    state = returnStateOrContainer(state)
     coreData = coreData || container().getFrom(0)
     const callerRaw = function () {
       // parameters
@@ -61,6 +58,13 @@ const coreFactory = () => {
 }
 
 module.exports = coreFactory()
+
+function returnStateOrContainer(state) {
+  return state || (function () {
+    // if(coreData.command.has('factory')){
+    return container()
+  } ())
+}
 
 function setPromise(coreData, callerRaw, state, callback) {
   /* istanbul ignore else */
