@@ -3,14 +3,14 @@ const safetyExecutor = require('./detached-executor')
 const container = require('./container/core')
 // const f = function
 const coreFactory = () => {
-  const core = function me(callback, state = false) {
+  const core = (callback, state = false) => {
     let { coreData } = core
     state = state || (function () {
       // if(coreData.command.has('factory')){
       //
       // }
       return container()
-    }())
+    } ())
     coreData = coreData || container().getFrom(0)
     const callerRaw = function () {
       // parameters
@@ -18,10 +18,8 @@ const coreFactory = () => {
       setCommandArguments(callerArguments, state)
       const data = callerRaw.data = state.getFrom(0)
       setPromise(coreData, callerRaw, state, callback)
-      // l(coreData, coreData.command)()
       const noTriggerEndOfExecution = coreData.command.has('noTriggerEndOfExecution')
       if (arguments.length && !noTriggerEndOfExecution) {
-        /* istanbul ignore else */
         promiseHandler(state, data, callback)
       }
       state.level++
@@ -39,7 +37,6 @@ const coreFactory = () => {
         return data
       }
       /* istanbul ignore else */
-
       return caller
     }
 
@@ -68,12 +65,14 @@ const coreFactory = () => {
 module.exports = coreFactory()
 
 function setPromise(coreData, callerRaw, state, callback) {
+  /* istanbul ignore else */
   if (!coreData.command.has('noPromoises')) {
     callerRaw.p = require('./caller-promise-factory-factory')(state, callback)
   }
 }
 
 function setCommandArguments(callerArguments, state) {
+  /* istanbul ignore else */
   if (callerArguments.length) {
     state.setCommandArguments(callerArguments)
   }
@@ -92,14 +91,16 @@ function getTabooMembers(prop) {
 }
 
 function promiseHandler(state, data, callback) {
-  if (state.timeoutSate) {
+    /* istanbul ignore else */
+    if (state.timeoutSate) {
     clearTimeout(state.timeoutSate)
   }
   state.timeoutSate = safetyExecutor(data, callback)
 }
 
 function makeCallback(noTriggerEndOfExecution, state, callback, data) {
-  if (!noTriggerEndOfExecution) {
+    /* istanbul ignore else */
+    if (!noTriggerEndOfExecution) {
     clearTimeout(state.timeoutSate)
   }
   state.resetMe = true
