@@ -7,8 +7,6 @@ const coreFactory = () => {
     let { coreData } = core
     state = state || (function () {
       // if(coreData.command.has('factory')){
-      //
-      // }
       return container()
     } ())
     coreData = coreData || container().getFrom(0)
