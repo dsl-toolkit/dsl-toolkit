@@ -40,7 +40,7 @@ const coreFactory = () => {
       /* istanbul ignore else */
       if (arguments.length && !noTriggerEndOfExecution) {
         /* istanbul ignore else */
-        newFunction(state, data, callback)
+        promiseHandler(state, data, callback)
       }
       state.level++
 
@@ -75,7 +75,7 @@ const coreFactory = () => {
 
 module.exports = coreFactory()
 
-function newFunction(state, data, callback) {
+function promiseHandler(state, data, callback) {
   if (state.timeoutSate) {
     clearTimeout(state.timeoutSate)
   }
