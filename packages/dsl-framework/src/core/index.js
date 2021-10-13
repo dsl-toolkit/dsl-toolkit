@@ -50,7 +50,7 @@ const coreFactory = () => {
     const caller = new Proxy(callerRaw,
       {
         get(obj, prop) {
-          if (newFunction(prop)) {
+          if (getTabooMembers(prop)) {
             return obj[prop]
           }
           state.setCommandName(prop)
@@ -66,6 +66,12 @@ const coreFactory = () => {
     return caller()
   }
 
+  return newFunction(core)
+}
+
+module.exports = coreFactory()
+
+function newFunction(core) {
   core.setCoreData = function (data) {
     this.coreData = data
   }
@@ -73,9 +79,7 @@ const coreFactory = () => {
   return core
 }
 
-module.exports = coreFactory()
-
-function newFunction(prop) {
+function getTabooMembers(prop) {
   return prop === 'p' || prop === 'data' || prop === 'apply'
 }
 
