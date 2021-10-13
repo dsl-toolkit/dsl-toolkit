@@ -1,8 +1,9 @@
 {
   "name": "require-a-lot",
-  "version": "1.7.6",
+  "version": "1.7.10",
   "description": "Require more dependencies elegantly.",
   "main": "src/index.js",
+  "types": "src/index.d.ts",
   "scripts": {
     "test-dev": "npx mocha --recursive tests/tests/*-spec.js",
     "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/unit/*-spec.js",
@@ -20,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsl-toolkit/require-a-lot.git"
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
   },
   "keywords": [
     "require",
@@ -31,16 +32,16 @@
   "bugs": {
     "url": "https://github.com/dsl-toolkit/require-a-lot/issues/issues"
   },
-  "homepage": "https://github.com/dsl-toolkit/require-a-lot",
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/require-a-lot",
   "dependencies": {
     "array-dsl": "^1.6.59",
     "camelcase": "^6.0.0",
     "compare": "^2.0.0",
-    "directory-fixture-provider": "^1.7.6",
-    "dsl-framework": "^1.7.6",
+    "directory-fixture-provider": "^1.7.10",
+    "dsl-framework": "^1.7.10",
     "esprima": "^4.0.1",
     "flat": "^5.0.2",
-    "generic-text-linker": "^1.7.6",
+    "generic-text-linker": "^1.7.10",
     "get-installed-path": "^4.0.8",
     "recursive-readdir-sync": "^1.0.6",
     "trim-right": "^1.0.1"
@@ -48,7 +49,7 @@
   "devDependencies": {
     "capture-console": "^1.0.1",
     "chai": "^4.2.0",
-    "cowlog": "^1.7.6",
+    "cowlog": "^1.7.10",
     "depcheck": "^1.2.0",
     "license-checker": "^25.0.1",
     "mocha": "^8.1.3",

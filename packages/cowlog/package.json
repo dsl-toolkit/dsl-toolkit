@@ -1,9 +1,9 @@
 {
   "name": "cowlog",
   "private": false,
-  "version": "1.7.6",
+  "version": "1.7.10",
   "description": "Development time logging for NodeJs",
-  "homepage": "https://github.com/dsl-toolkit/cowlog",
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/cowlog",
   "keywords": [
     "log",
     "logging",
@@ -21,7 +21,7 @@
     "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/unit",
     "test-old": "npm run build && npm run test-compiled && npm run clean",
     "test": "PROD=true npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
-    "test-project": "pwd && npm run license-check && node_modules/.bin/depcheck   --ignores \"eslint-plugin-standard\" && npm run standard-fix",
+    "test-project": "pwd && npm run license-check && node_modules/.bin/depcheck   --ignores \"@types/node, eslint-plugin-standard\" && npm run standard-fix",
     "test-all": "npm run test-project && npm test",
     "test-all-dev": "npm run test-project && npm run test-dev",
     "test-suites": "npm run standard-fix && npm test",
@@ -34,7 +34,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsl-toolkit/cowlog.git"
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
   },
   "license": "SEE LICENSE IN LICENSE.md",
   "author": {
@@ -48,7 +48,7 @@
     "colors": "^1.4.0",
     "cowsay": "^1.5.0",
     "detect-node": "^2.1.0",
-    "dsl-framework": "^1.7.6",
+    "dsl-framework": "^1.7.10",
     "fclone": "^1.0.11",
     "flat": "^5.0.2",
     "is-function": "^1.0.2",
@@ -70,14 +70,16 @@
     "lolcatjs": "^2.3.2"
   },
   "devDependencies": {
+    "@types/node": "^16.10.3",
     "chai": "^4.3.0",
     "depcheck": "^1.4.0",
+    "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^5.0.0",
-    "generic-text-linker": "^1.7.6",
+    "generic-text-linker": "^1.7.10",
     "glob": "^7.1.6",
     "license-checker": "^25.0.1",
     "mocha": "^8.3.0",

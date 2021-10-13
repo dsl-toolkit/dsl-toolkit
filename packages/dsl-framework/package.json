@@ -1,14 +1,15 @@
 {
   "name": "dsl-framework",
-  "version": "1.7.6",
+  "version": "1.7.10",
   "description": "Easy function chaining.",
   "main": "src/index.js",
+  "types": "src/index.d.ts",
   "scripts": {
     "test-dev": "npx mocha --recursive tests/tests/node/*-spec.js",
     "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/node/unit/*-spec.js",
     "test-old": "npm run build && npm run test-compiled && npm run clean",
     "test": "PROD=true npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
-    "test-project": "npm run license-check && node_modules/.bin/depcheck --ignores \"require-a-lot,cowlog,flat,lodash,rimraf,generic-text-linker,jasmine-core,karma-chrome-launcher,karma-jasmine,eslint*\" && npm run standard-fix",
+    "test-project": "npm run license-check && node_modules/.bin/depcheck --ignores \"@types/node,require-a-lot,cowlog,flat,lodash,rimraf,generic-text-linker,jasmine-core,karma-chrome-launcher,karma-jasmine,eslint*\" && npm run standard-fix",
     "test-all": "npm run test-project && npm test",
     "test-all-dev": "npm run test-project && npm run test-dev",
     "build-src": "echo 1",
@@ -25,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsl-toolkit/dsl-framework.git"
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
   },
   "keywords": [
     "curry",
@@ -61,17 +62,18 @@
   "bugs": {
     "url": "https://github.com/dsl-toolkit/refresh-me/issues"
   },
-  "homepage": "https://github.com/dsl-toolkit/dsl-framework",
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/dsl-framework",
   "devDependencies": {
     "browserify": "^17.0.0",
-    "chai": "^4.3.0",
-    "depcheck": "^1.4.0",
-    "eslint-config-standard": "^16.0.2",
+    "chai": "^4.3.4",
+    "depcheck": "^1.4.2",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^8.0.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^5.0.0",
-    "generic-text-linker": "^1.7.6",
+    "generic-text-linker": "^1.7.10",
     "jasmine-core": "^3.6.0",
     "karma": "^6.1.1",
     "karma-chrome-launcher": "^3.1.0",
