@@ -40,10 +40,7 @@ const coreFactory = () => {
       /* istanbul ignore else */
       if (arguments.length && !noTriggerEndOfExecution) {
         /* istanbul ignore else */
-        if (state.timeoutSate) {
-          clearTimeout(state.timeoutSate)
-        }
-        state.timeoutSate = safetyExecutor(data, callback)
+        newFunction(state, data, callback)
       }
       state.level++
 
@@ -77,6 +74,13 @@ const coreFactory = () => {
 }
 
 module.exports = coreFactory()
+
+function newFunction(state, data, callback) {
+  if (state.timeoutSate) {
+    clearTimeout(state.timeoutSate)
+  }
+  state.timeoutSate = safetyExecutor(data, callback)
+}
 
 function makeCallback(noTriggerEndOfExecution, state, callback, data) {
   if (!noTriggerEndOfExecution) {
