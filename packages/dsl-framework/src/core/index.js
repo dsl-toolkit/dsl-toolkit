@@ -14,20 +14,23 @@ const coreFactory = () => {
     coreData = coreData || container().getFrom(0)
     const callerRaw = function () {
       // parameters
-      if (!callerRaw.called) {
-        callerRaw.called = true
-        return caller
-      }
       const callerArguments = Array.from(arguments)
-      if (callerArguments.length) {
-        state.setCommandArguments(callerArguments)
-      }
+      setCommandArguments(callerArguments, state)
       const data = callerRaw.data = state.getFrom(0)
       if (!coreData.command.has('noPromoises')) {
         callerRaw.p = require('./caller-promise-factory-factory')(state, callback)
       }
       // l(coreData, coreData.command)()
       const noTriggerEndOfExecution = coreData.command.has('noTriggerEndOfExecution')
+      if (arguments.length && !noTriggerEndOfExecution) {
+        /* istanbul ignore else */
+        promiseHandler(state, data, callback)
+      }
+      state.level++
+      if (!callerRaw.called) {
+        callerRaw.called = true
+        return caller
+      }
       /* istanbul ignore else */
       if (!arguments.length && callback && typeof callback === 'function') {
         return makeCallback(noTriggerEndOfExecution, state, callback, data)
@@ -38,11 +41,6 @@ const coreFactory = () => {
         return data
       }
       /* istanbul ignore else */
-      if (arguments.length && !noTriggerEndOfExecution) {
-        /* istanbul ignore else */
-        promiseHandler(state, data, callback)
-      }
-      state.level++
 
       return caller
     }
@@ -66,12 +64,18 @@ const coreFactory = () => {
     return caller()
   }
 
-  return newFunction(core)
+  return giveMyself(core)
 }
 
 module.exports = coreFactory()
 
-function newFunction(core) {
+function setCommandArguments(callerArguments, state) {
+  if (callerArguments.length) {
+    state.setCommandArguments(callerArguments)
+  }
+}
+
+function giveMyself(core) {
   core.setCoreData = function (data) {
     this.coreData = data
   }
