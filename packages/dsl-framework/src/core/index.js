@@ -50,7 +50,7 @@ const coreFactory = () => {
     const caller = new Proxy(callerRaw,
       {
         get(obj, prop) {
-          if (prop === 'p' || prop === 'data' || prop === 'apply') {
+          if (newFunction(prop)) {
             return obj[prop]
           }
           state.setCommandName(prop)
@@ -74,6 +74,10 @@ const coreFactory = () => {
 }
 
 module.exports = coreFactory()
+
+function newFunction(prop) {
+  return prop === 'p' || prop === 'data' || prop === 'apply'
+}
 
 function promiseHandler(state, data, callback) {
   if (state.timeoutSate) {
