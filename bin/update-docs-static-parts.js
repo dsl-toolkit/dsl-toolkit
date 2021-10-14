@@ -1,20 +1,17 @@
 #!/usr/bin/env node
-'use strict';
+console.log("AAA");
+const { log } = require('console')
+const { linkerDir } = require('generic-text-linker')
 
-const {linkerDir, linkerFile} = require('generic-text-linker');
-const {join} = require('path')
-const tags =  ['<!--- destination qa rewrite begin -->', '<!--- destination qa rewrite end -->']
+const path = require('path')
+const staticUpdate = function () {
+  const projectRoot = path.join(__dirname, '../')
 
-const staticUpdate = function staticUpdate() {
-  const projectRoot = join(__dirname, '../');
-  const src = linkerFile(join(projectRoot, 'README.md'), ...tags);
-  // console.log(join(projectRoot, 'packages'), "AAAAAAAAAAAA", src);
-   
-  
-  
+  const src = linkerDir(projectRoot, '<!--- source qa rewrite begin -->', '<!--- source qa rewrite end -->')
+  console.log(src);
+  linkerDir(projectRoot,
+    '<!--- destination qa rewrite begin -->', '<!--- destination qa rewrite end -->',
+    src)
+}
 
-  const results = linkerDir(join(projectRoot, 'packages'), ...tags, src);
-  // console.log(src, results)
-};
-
-staticUpdate();
+staticUpdate()
