@@ -113,17 +113,3 @@ function makeCallback (noTriggerEndOfExecution, state, callback, data) {
   return callback(RETURN_FROM_CALLBACK, data)
 }
 
-// const aa = (callerRaw, arg, callback, noTriggerEndOfExecution, state, data) => {
-//   state.level++
-//   if (!callerRaw.called) {
-//     callerRaw.called = true
-//     return caller
-//   }
-//   if (!arg.length && callback && typeof callback === 'function') {
-//     return makeCallback(noTriggerEndOfExecution, state, callback, data)
-//   }
-//   if (!arg.length && !callback) {
-//     state.start()
-//     return data
-//   }
-// }
