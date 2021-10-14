@@ -18,16 +18,16 @@ const coreFactory = () => {
         promiseHandler(state, data, callback)
       }
 
-      const evaluateReturnsExpectCaller = ((callerRaw, arg, callback, noTriggerEndOfExecution, state, data) => {
+      const evaluateReturnsExpectCaller = ((callerRaw, originalArguments, callback, noTriggerEndOfExecution, state, data) => {
         state.level++
         if (!callerRaw.called) {
           callerRaw.called = true
           return caller
         }
-        if (!arg.length && callback && typeof callback === 'function') {
+        if (!originalArguments.length && callback && typeof callback === 'function') {
           return makeCallback(noTriggerEndOfExecution, state, callback, data)
         }
-        if (!arg.length && !callback) {
+        if (!originalArguments.length && !callback) {
           state.start()
           return data
         }
