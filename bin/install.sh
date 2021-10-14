@@ -7,9 +7,7 @@ NODE_MODULES=$(realpath $PROJECT_ROOT/node_modules)
 echo -- $PROJECT_ROOT -- $NODE_MODULES -- $SCRIPT_DIR
 cd $PROJECT_ROOT
 ls -lah
-if [[ ! -f "$NODE_MODULES" ]]; then
-    npm install && npm run test-clean
-fi
+[[ -d $NODE_MODULES ]] || npm install && npm run test-clean
 
 node_modules/.bin/lerna bootstrap
 
