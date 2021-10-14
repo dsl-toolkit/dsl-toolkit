@@ -40,9 +40,9 @@ const coreFactory = () => {
 
     const caller = new Proxy(callerRaw,
       {
-        get (obj, prop) {
+        get (object, prop) {
           if (getTabooMembers(prop)) {
-            return obj[prop]
+            return object[prop]
           }
           state.setCommandName(prop)
           return caller
