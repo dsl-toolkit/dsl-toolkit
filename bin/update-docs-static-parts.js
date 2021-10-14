@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-console.log("AAA");
 const { log } = require('console')
 const { linkerDir } = require('generic-text-linker')
 
