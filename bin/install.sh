@@ -8,5 +8,3 @@ echo -- $PROJECT_ROOT -- $NODE_MODULES -- $SCRIPT_DIR
 cd $PROJECT_ROOT
 ls -lah
 [[ -d $NODE_MODULES ]] || npm install && npm run test-clean && node_modules/.bin/lerna bootstrap
-
-
