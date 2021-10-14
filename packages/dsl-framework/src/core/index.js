@@ -112,4 +112,3 @@ function makeCallback (noTriggerEndOfExecution, state, callback, data) {
   state.start()
   return callback(RETURN_FROM_CALLBACK, data)
 }
-
