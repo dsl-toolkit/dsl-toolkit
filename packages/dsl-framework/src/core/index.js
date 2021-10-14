@@ -50,7 +50,7 @@ const coreFactory = () => {
         apply (target, thisArg, argumentsList) {
           return target(...argumentsList)
         },
-        set (obj, prop, value) {
+        set (object, prop, value) {
           return Reflect.set(...arguments)
         }
       })
