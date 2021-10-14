@@ -8,8 +8,13 @@ const tags =  ['<!--- destination qa rewrite begin -->', '<!--- destination qa r
 const staticUpdate = function staticUpdate() {
   const projectRoot = join(__dirname, '../');
   const src = linkerFile(join(projectRoot, 'README.md'), ...tags);
+  // console.log(join(projectRoot, 'packages'), "AAAAAAAAAAAA", src);
+   
+  
+  
+
   const results = linkerDir(join(projectRoot, 'packages'), ...tags, src);
-  console.log(src, results)
+  // console.log(src, results)
 };
 
 staticUpdate();
