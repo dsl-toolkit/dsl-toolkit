@@ -1,23 +1,23 @@
-const dslFrameworkFactory = require('./core')
-const dslFrameworkFactoryInitiator = dslFrameworkFactory((e, d) => {
-  dslFrameworkFactory.setCoreData(d)
-  return dslFrameworkFactory
+const unlimitedCurryFactory = require('./core/unlimited-curry-factory')
+const unlimitedCurryFactoryInitiator = unlimitedCurryFactory((e, d) => {
+  unlimitedCurryFactory.setCoreData(d)
+  return unlimitedCurryFactory
 })
 const inBrowser = !!process.browser
 
 if (inBrowser) {
-  window['dslFramework'] = dslFrameworkFactory
+  window['dslFramework'] = unlimitedCurryFactory
 }
 
 const weHaveAmd = typeof define === 'function' && define.amd
 
 if (weHaveAmd) {
   define('dsl-framework', [], function () {
-    return dslFrameworkFactoryInitiator
+    return unlimitedCurryFactoryInitiator
   })
 }
 
-(weHaveAmd || inBrowser) && (() => { window['dslFramework'] = dslFrameworkFactory })()
+(weHaveAmd || inBrowser) && (() => { window['dslFramework'] = unlimitedCurryFactory })()
 
-module.exports = dslFrameworkFactoryInitiator
+module.exports = unlimitedCurryFactoryInitiator
 
