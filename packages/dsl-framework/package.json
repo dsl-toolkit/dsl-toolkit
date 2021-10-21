@@ -1,6 +1,6 @@
 {
   "name": "dsl-framework",
-  "version": "1.7.17",
+  "version": "1.7.18",
   "description": "Easy function chaining.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -73,7 +73,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^5.0.0",
-    "generic-text-linker": "^1.7.14",
+    "generic-text-linker": "^1.7.15",
     "jasmine-core": "^3.6.0",
     "karma": "^6.1.1",
     "karma-chrome-launcher": "^3.1.0",
