@@ -1,7 +1,7 @@
 {
   "name": "cowlog",
   "private": false,
-  "version": "1.7.13",
+  "version": "1.7.14",
   "description": "Development time logging for NodeJs",
   "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/cowlog",
   "keywords": [
@@ -48,7 +48,7 @@
     "colors": "^1.4.0",
     "cowsay": "^1.5.0",
     "detect-node": "^2.1.0",
-    "dsl-framework": "^1.7.16",
+    "dsl-framework": "^1.7.17",
     "fclone": "^1.0.11",
     "flat": "^5.0.2",
     "is-function": "^1.0.2",
@@ -79,7 +79,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^5.0.0",
-    "generic-text-linker": "^1.7.13",
+    "generic-text-linker": "^1.7.14",
     "glob": "^7.1.6",
     "license-checker": "^25.0.1",
     "mocha": "^8.3.0",
