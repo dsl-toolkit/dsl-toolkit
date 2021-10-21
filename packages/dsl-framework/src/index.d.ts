@@ -8,7 +8,7 @@ export type dState = {
     getProcess: "allEntries"|
     "firstArgument"|"firstEntry"|
     "lastArgument"|"lastEntry",
-    defaultValue: any)=>ast 
+    defaultValue?: any)=>ast 
   // (command:string, getProcess: boolean, defaultValue?: any) =>
   command:{
     getObject:(...args : string[])=>ast[]|[],
@@ -19,7 +19,7 @@ export type dState = {
     getMore:(...args : string[])=>ast[],
     hasMore:(...args : string[])=>boolean[],
     get:(name:string)=>ast,
-    has:()=>any,
+    has:(name:string)=>boolean,
     getArguments:(argument:string)=>ast,
   },
   data:{
