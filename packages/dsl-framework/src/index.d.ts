@@ -8,7 +8,7 @@ export type dState = {
     getProcess: "allEntries"|
     "firstArgument"|"firstEntry"|
     "lastArgument"|"lastEntry",
-    defaultValue: any)=>ast 
+    defaultValue?: any)=>ast 
   // (command:string, getProcess: boolean, defaultValue?: any) =>
   command:{
     getObject:(...args : string[])=>ast[]|[],
@@ -19,7 +19,7 @@ export type dState = {
     getMore:(...args : string[])=>ast[],
     hasMore:(...args : string[])=>boolean[],
     get:(name:string)=>ast,
-    has:()=>any,
+    has:(name:string)=>boolean,
     getArguments:(argument:string)=>ast,
   },
   data:{
@@ -37,17 +37,22 @@ export type dState = {
 // It can be promise too. todo: add pomise too
 export type returnCallback = (callback: number, state: dState)=> void;
 
-declare type core = () => {
-  (returnCallback) :any
+declare type core = {
+  (returnCallback): core
   (): dState | any;
-  (...args : any[]):core;
-  [key:string]: core | Promise<any>;
+  (...args : any[]): core;
+  [index: string]: core;
 };
 
-export type coreFactory= () => {
+export type coreFactory = () => {
   (): core;
   noPromises: coreFactory;
 };
 
+// export const instance = ():core|function(returnCallback):core => {
+export const instance = ():core => {
+  ()=>core
+  noPromises: this;
+};
 
-export default coreFactory
+instance.noPromises = instance;
