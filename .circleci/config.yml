@@ -16,16 +16,16 @@ references:
       - run: apt-get update && apt-get -y install expect
       - run: expect -c "spawn ssh-add - <<< "${SSH_KEY}" expect -re \"Enter passphrase for (stdin):\"; send \"n\";"
       - run: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-      - run: git config --global user.email "you@example.com" && git config --global user.name "yn"
-      - run: ./bin/node-modules-cache-key.js > ./npm-hash
+      - run: git config --global user.email "tothimre@gmail.com" && git config --global user.name "Imre Toth"
+      - run: ./bin/node-modules-cache-key.js > ./npm-minor-hash
       - restore_cache:
           keys:
-            - deps-v1-{{ checksum "npm-hash" }}
-            - deps-v1
-      - run: npm install && npm run test-clean
-      - run: npm run test-all && echo 1 > /tmp/test
+            - deps-{{ checksum "npm-minor-hash" }}
+      - run: ls -lah
+      - run: ./bin/install.sh
+      - run: npm run test                                                                                                                       
       - save_cache:
-          key: deps-{{ checksum "npm-hash" }}
+          key: deps-{{ checksum "npm-minor-hash" }}
           paths:
             #beginning package template
             - packages/cowlog/node_modules
@@ -35,6 +35,7 @@ references:
             - packages/generic-text-linker/node_modules
             - packages/refresh-me/node_modules
             - packages/require-a-lot/node_modules
+            - node_modules
             #end package template
   #somehow redundant pieces shall be referenced.
   common_steps_upload: &common_steps_upload
@@ -45,14 +46,14 @@ references:
       - run: apt-get update && apt-get -y install expect
       - run: expect -c "spawn ssh-add - <<< "${SSH_KEY}" expect -re \"Enter passphrase for (stdin):\"; send \"n\";"
       - run: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-      - run: git config --global user.email "you@example.com" && git config --global user.name "yn"
+      - run: git config --global user.email "tothimre@gmail.com" && git config --global user.name "Imre Toth"
       - run: ./bin/node-modules-cache-key.js > ./npm-hash
       - restore_cache:
           keys:
-            - deps-v1-{{ checksum "npm-hash" }}
-            - deps-v1
-      - run: npm install && npm run test-clean
-      - run: npm run test-all && echo 1 > /tmp/test
+            - deps-{{ checksum "npm-hash" }}
+      - run: ls -lah
+      - run: ./bin/install.sh
+      - run: npm run test                                                                                                                        
       - save_cache:
           key: deps-{{ checksum "npm-hash" }}
           paths:
@@ -64,6 +65,7 @@ references:
             - packages/generic-text-linker/node_modules
             - packages/refresh-me/node_modules
             - packages/require-a-lot/node_modules
+            - node_modules
             #end package template
       - store_artifacts:
           path: coverage
@@ -71,18 +73,14 @@ references:
       - store_test_results:
           path: coverage/lcov-report/
       - run: node_modules/codeclimate-test-reporter/bin/codeclimate.js < ./coverage/lcov.info && echo 1 > /tmp/coverage
+      - run: bin/github.js
 
 
 jobs:
-  node10:
-    docker:
-      - image: node:10
-    <<: [ *common_steps_upload ]
-
   node12:
     docker:
       - image: node:12
-    <<: [ *common ]
+    <<: [ *common_steps_upload ]
   node14:
     docker:
       - image: node:14
@@ -90,10 +88,6 @@ jobs:
   node15:
     docker:
       - image: node:15
-    <<: [ *common ]
-  node16:
-    docker:
-      - image: node:16
     <<: [ *common ]
 
 workflows:
@@ -104,4 +98,4 @@ workflows:
     jobs:
       - node12
       - node14
-      - node15
+#      - node15

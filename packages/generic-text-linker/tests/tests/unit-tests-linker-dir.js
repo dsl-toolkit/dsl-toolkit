@@ -9,31 +9,29 @@ require('chai').should()
 const fixtureDirectoryProvider = require('directory-fixture-provider')(fixturesRoot)()
 
 describe('Testing', function () {
-  let {linkerDir} = require('../../src/index')
+  const { linkerDir } = require('../../src/index')
 
   describe('@linker-dir', function () {
     it('test @linker-dir-template', function () {
-      let fixtureData = fixtureDirectoryProvider.get('linker/directory')
+      const fixtureData = fixtureDirectoryProvider.get('linker/directory')
 
-      let fileNames = linkerDir(fixtureData.dir,
+      const fileNames = linkerDir(fixtureData.dir,
         '<!--- source qa rewrite begin -->',
         '<!--- source qa rewrite end -->', '+++***---')
       if (!Object.keys(fileNames)[0]) {
         throw String('As a result you have at least one file changed by now')
       }
-
     })
 
-    it('test @linker-dir-return', function () {
-      let linker = require('../../src/linker-dir')
-      let fixtureData = fixtureDirectoryProvider.get('linker/directory')
-
-      let results = linkerDir(fixtureData.dir,
-        '<!--- source qa rewrite begin -->',
-        '<!--- source qa rewrite emd -->')
-      // expect(fixtureData.status().changed).to.equal(false)
-      //todo: test it!
-    })
-
+    // it('test @linker-dir-return', function () {
+    //   const linker = require('../../src/linker-dir')
+    //   const fixtureData = fixtureDirectoryProvider.get('linker/directory')
+    //
+    //   const results = linkerDir(fixtureData.dir,
+    //     '<!--- source qa rewrite begin -->',
+    //     '<!--- source qa rewrite emd -->')
+    //   // expect(fixtureData.status().changed).to.equal(false)
+    //   // todo: test it!
+    // })
   })
 })

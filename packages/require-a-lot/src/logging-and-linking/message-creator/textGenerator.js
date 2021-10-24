@@ -1,12 +1,14 @@
 const compare = require('compare')
 
-module.exports = (listDelimiter, results, infoList, lastLineDelimiter, noTagEqual, maxLineWidth) => {
-  let msg = `const {${listDelimiter}`
+module.exports = (ralContainer) => (includeThese = false) => {
+  const results = includeThese ? includeThese : ralContainer.results
+  const {parameters, infoList} = ralContainer
+  const { maxLineWidth, noTagEqual, listDelimiter, lastLineDelimiter} = require('./messagePieces')(parameters)
   const resultsKeys = Object.keys(results).sort(compare)
-
-  resultsKeys.forEach((key, index) => {
-    const infoObject = infoList[`${key}`]
-    let msgPiece = `  ${key}${','} // `
+  let msg = `const {${listDelimiter}`
+  resultsKeys.forEach(key => {
+    const infoObject = infoList[key]
+    let msgPiece = `  ${key}, // `
     typeof infoObject === 'object' && (() => {
       msgPiece += `${infoObject['head'] || ''} `
       if (infoObject['head']) msgPiece += '| '

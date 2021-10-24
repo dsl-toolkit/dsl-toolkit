@@ -1,5 +1,5 @@
-module.exports = function (input, find, options = {nothingAfterFind:true}) {
-  const {nothingAfterFind} = options
+module.exports = function (input, find, options = { nothingAfterFind: true }) {
+  const { nothingAfterFind } = options
   const inputArray = input.split('\n')
   const returnValue = []
   inputArray.forEach(function (line, lineKey) {

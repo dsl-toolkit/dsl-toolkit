@@ -6,24 +6,29 @@ const linking = (linkFile, begin, end, msg, emptySpaces) => {
   msg = msg.split('\n').map(line => trimRight(line)).join('\n')
   const params = [linkFile, begin, end, msg.split('\n')
   .map(line => emptySpaces + line).join('\n')]
-  return typeof linkFile === 'string'
+  const returnObject =  typeof linkFile === 'string'
     ? fs.lstatSync(linkFile).isDirectory()
       ? linkerDir(...params)
       : linkerFile(...params)
     : {}
-}
-const prepareMsgAsParameters = (msg) => {
-  msg = msg.replace("const {", '').replace("}", '')
-  return msg
+
+  return returnObject
 }
 
-module.exports = (linkFile, begin, end, msg, emptySpaces) => {
-  const returningObject = {}
+const prepareMsgAsParameters = (msg) => msg
+.replace("const {\n", '')
+.replace("\n}", '')
+// .replace("}", '')
+.trimRight()
 
-  Object.assign(returningObject,
-    linking(linkFile, begin, end, msg, emptySpaces),
-    linking(linkFile, begin + ' parameters', end + ' parameters', prepareMsgAsParameters(msg), emptySpaces),
-  )
+module.exports = (ralContainer) => (linkFile, msg, emptySpaces, extraTag) => {
+  const {messagePieces} = ralContainer
+  let {begin, end} = messagePieces
+  begin += extraTag
+  end += extraTag
+  const preparedMsg = begin.endsWith('parameters') ? prepareMsgAsParameters(msg) : msg
 
-  return returningObject
+  return linking(linkFile, begin, end, preparedMsg, emptySpaces)
 }
+
+module.exports.tags = ['', ' parameters']

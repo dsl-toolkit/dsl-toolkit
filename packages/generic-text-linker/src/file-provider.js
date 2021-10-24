@@ -7,8 +7,7 @@ module.exports = exports = function (rootDir) {
   files.forEach(function (file) {
     let blackListed = false
     blackList.forEach(function (pathPart) {
-      if (!blackListed && !file.includes(pathPart)) {
-      } else {
+      if (blackListed && file.includes(pathPart)) {
         blackListed = true
       }
     })
