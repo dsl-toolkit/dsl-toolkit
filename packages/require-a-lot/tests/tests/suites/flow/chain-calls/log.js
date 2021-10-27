@@ -28,14 +28,14 @@ describe('.log for ease of use', () => {
     assert(consoleOut.split('\n').length === 1, `${consoleOut.split('\n').length} --`)
   })
 
-  it('tests .log(vertical)', () => {
+  xit('tests .log(vertical)', () => {
     const consoleOut = consoleCapture(() => requireALot(require)('../../../test-spec', '../../../../../src')
       .alias('src', 'ral')
       .alias('test-spec', 'cc').log('vertical')())
     assert(consoleOut.split('\n').length === 4)
   })
 
-  it('tests .log with .info', () => {
+  xit('tests .log with .info', () => {
     const template = requireALot(require)('cowlog', 'chai')
       .from('chai', ['expect']).log.info.alias('cowlog', 'l')
     let result = null
@@ -48,7 +48,7 @@ describe('.log for ease of use', () => {
     assert(result.expect)
   })
 
-  it('tests .log .info .tag', () => {
+  xit('tests .log .info .tag', () => {
     const template = requireALot(require)('cowlog', 'chai').from('chai', ['expect'])
       .log.info.tag('genericTestSuite').alias('cowlog', 'l')
     let result = null
@@ -61,7 +61,7 @@ describe('.log for ease of use', () => {
     // assert(result.expect)
   })
 
-  it('tests .log .info .tag', () => {
+  xit('tests .log .info .tag', () => {
     const template = requireALot(require)('cowlog', 'chai').from('chai', ['expect'])
       .log.info.tag('genericTestSuite').alias('cowlog', 'l')
     let result = null

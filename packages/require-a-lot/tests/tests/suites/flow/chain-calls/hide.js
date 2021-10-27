@@ -15,7 +15,7 @@ describe('.hide', () => {
     assert(tst.expect)
   })
 
-  it('tests .hide() with .log()', () => {
+  xit('tests .hide() with .log()', () => {
     const template = requireALot(require)('chai').from('chai', ['expect']).hide('chai')('log')
     let result = null
     const output = consoleCapture(() => {result = template()})
