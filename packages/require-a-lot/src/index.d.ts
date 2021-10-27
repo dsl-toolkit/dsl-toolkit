@@ -15,7 +15,6 @@ export type coreFactory = (...args : string[]) => {
     secondArg: (...args : any[])=>any,
     secondArgParamContainerNamePointers?: string[]
   ) => coreFactory;
-  from: (firstArf: string, tags:string[]) => coreFactory;
   hide: (tag: string) => coreFactory;
   log: coreFactory;
   info: coreFactory;
@@ -23,6 +22,6 @@ export type coreFactory = (...args : string[]) => {
   information: (index:string, text:string) => coreFactory;
 };
 
-export type coreFactoryStarter = (require: require) => coreFactory;
+export type coreFactoryStarter = (require: (requiredPAth:string)=>any) => coreFactory;
 
 export default coreFactory
