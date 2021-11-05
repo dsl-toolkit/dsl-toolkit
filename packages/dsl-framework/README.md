@@ -19,7 +19,6 @@ const { dslFramework } = require('dsl-framework')
 const defaultFactory = dslFramework()
 
 console.log(defaultFactory().Hello.world().data.returnArrayChunks.flat().join(' ')) // => Hello world
-
 console.log(defaultFactory()('Hello')('world')().data.returnArrayChunks.flat().join(' ')) // => Hello world
 
 defaultFactory((e, data) => {
@@ -31,11 +30,8 @@ const printer = defaultFactory((e, data) => {
 })
 
 printer.Hello.world() // => Hello world
-
 printer.Hello.world('!')() // => Hello world !
-
 printer.Hello.world['!']() // => Hello world !
-
 printer('Hello').world['!']() // => Hello world !
 
 const processor = defaultFactory((e, data) => {
@@ -151,5 +147,3 @@ fn('b')
 returnValue = fn('c')()
 expect(returnValue).to.be.equal('abc')
 ```
-
-of course it will work with the promis version too.
