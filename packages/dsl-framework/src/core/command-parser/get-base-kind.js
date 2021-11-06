@@ -6,7 +6,7 @@ module.exports = (baseObject, returnObject) => {
         havingCaseFunction,
         trueCaseFunction,
         falseCaseFunction
-      } = newFunction(...arguments)
+      } = extractCallbackData(...arguments)
 
       const command = arguments[0]
 
@@ -26,7 +26,7 @@ module.exports = (baseObject, returnObject) => {
       }
     }
 }
-function newFunction () {
+function extractCallbackData () {
   let baseKindArguments = Array.from(arguments)
   const argumentsLastIndex =
     baseKindArguments.length >= 2 ? baseKindArguments.length - 1 : false
