@@ -5,9 +5,9 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
         const example = dslFrameworkDefaultInstance((e, d) => {
           return d
         })
-        const data = example.a.b('c').d('e','f').g('h','i').g('j','k')()
+        const data = example.a.b('c').d('e', 'f').g('h', 'i').g('j', 'k')()
 
-        let example2 = dslFrameworkDefaultInstance((e, d) => {
+        const example2 = dslFrameworkDefaultInstance((e, d) => {
           return d
         })
         const data2 = data.data.repeate.me(example2)()

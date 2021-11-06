@@ -1,5 +1,5 @@
 module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework) => {
-  const abcTester = function(abcData){
+  const abcTester = function (abcData) {
     expect(abcData.data.returnArray().join('')).to.be.equal('abc')
   }
   describe('callback tests', function () {
@@ -36,10 +36,11 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
       fn('a')('b')('c')
     })
 
-    if(enviromentSupportsPromises)
-    {
-      const {testsPromistesIfCallbackVersionReturningPromiseGivesBackTheParametersProvidedTwo,
-        testingReturnedProcessedDataPromise} =
+    if (enviromentSupportsPromises) {
+      const {
+        testsPromistesIfCallbackVersionReturningPromiseGivesBackTheParametersProvidedTwo,
+        testingReturnedProcessedDataPromise
+      } =
         require('../promise-tests')
       testsPromistesIfCallbackVersionReturningPromiseGivesBackTheParametersProvidedTwo(expect, dslFrameworkDefaultInstance, abcTester)
       testingReturnedProcessedDataPromise(expect, dslFrameworkDefaultInstance)
@@ -55,9 +56,9 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
 
     it('tests if callback split calls', function () {
       const getMyCurry = () => dslFrameworkDefaultInstance(
-        (e, parameters) => parameters.data.returnArray()[0]
-          + parameters.data.returnArray()[1]
-          + parameters.data.returnArray()[2]
+        (e, parameters) => parameters.data.returnArray()[0] +
+          parameters.data.returnArray()[1] +
+          parameters.data.returnArray()[2]
       )
       let fn = getMyCurry()
       fn('a')
@@ -85,7 +86,5 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
       )
       fn('a')('b')('c')()
     })
-
   })
-
 }

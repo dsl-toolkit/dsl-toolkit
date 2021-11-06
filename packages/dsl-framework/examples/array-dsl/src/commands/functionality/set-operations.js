@@ -8,10 +8,10 @@ const arrayUnion = require('array-union/index')
 const arrDiff = require('arr-diff')
 
 module.exports = (result, commandArguments, arrifyOn) => ({
-  'xor': () => arrayXor(result, ...commandArguments),
-  'diff': () => arrDiff(result, ...commandArguments),
-  'union': () => arrayUnion(result, ...commandArguments),
-  'unique': () => simpleArgumentCall(arrayUniq, result),
-  'flatten': () => simpleArgumentCall(arrayFlatten, result),
-  'randomItem': () => simpleArgumentCall(randomItem, result),
+  xor: () => arrayXor(result, ...commandArguments),
+  diff: () => arrDiff(result, ...commandArguments),
+  union: () => arrayUnion(result, ...commandArguments),
+  unique: () => simpleArgumentCall(arrayUniq, result),
+  flatten: () => simpleArgumentCall(arrayFlatten, result),
+  randomItem: () => simpleArgumentCall(randomItem, result)
 })

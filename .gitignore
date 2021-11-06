@@ -10,3 +10,4 @@ tmp
 **/dist
 *.tgz
 npm-minor-hash
+.vscode

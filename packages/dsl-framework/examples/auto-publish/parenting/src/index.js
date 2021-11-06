@@ -8,7 +8,8 @@ const {
 const dslF = dslFramework.noTriggerEndOfExecution.noPromoises()
 const parentFunctionFactory = (object, path) => () => objectPath.get(object, path)
 const childrenFunctionFactory = (object, path) => () => Object.keys(objectPath.get(object, path)).map(key => path
-  ? objectPath.get(object, `${path}.${key}`) : objectPath.get(object, `${key}`))
+  ? objectPath.get(object, `${path}.${key}`)
+  : objectPath.get(object, `${key}`))
 
 module.exports = exports = (object) => dslF(function (returnCode, data) {
   const parentName = data.arguments('parentName', 'lastArgument', 'parent')

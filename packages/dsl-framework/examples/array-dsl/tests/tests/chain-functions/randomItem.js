@@ -6,10 +6,10 @@ const {
   =
   require('../../requires')
 
-describe('arrayFindIndexs tests',()=>{
+describe('arrayFindIndexs tests', () => {
   it('checks "randomItem" ', function () {
-    const item = arrayDsl([1,2]).randomItem()
-    if(!(item === 1 || item === 2)){
+    const item = arrayDsl([1, 2]).randomItem()
+    if (!(item === 1 || item === 2)) {
       throw `something bad happened ${item}`
     }
   })

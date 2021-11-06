@@ -2,10 +2,9 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
   describe('factory functionality', function () {
     describe('basic usage', function () {
       it('.Testing the factory', function () {
-
         const repeater = (inctance = false) => sample.data.repeate.me(instanceFactory(inctance))
-        const instanceFactory = (instance)=>instance?instance:dslFramework()((e,d)=>{
-          const {data} = d
+        const instanceFactory = (instance) => instance || dslFramework()((e, d) => {
+          const { data } = d
           // l(returnArrayChunks, data, repeate.me)()
           return data.returnArray()
         })

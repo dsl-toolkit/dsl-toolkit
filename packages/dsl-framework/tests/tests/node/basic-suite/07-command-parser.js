@@ -7,12 +7,42 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
 
     data = example.a.b('c').d('e', 'f').g('h', 'i').g('j', 'k')()
 
-    it('.has', function () {
-      assert(data.command.has('g') === true)
-      assert.deepEqual(data.command.has('g','d'), [true])
-      assert.deepEqual(data.command.has(['g']), [true])
-      assert.deepEqual(data.command.has(['g']), [true])
-      assert(data.command.has('buu') === false)
+    describe('.has', () => {
+      describe('retun true or false', () => {
+        describe('one argument', () => {
+          it('tests true case', () => {
+            assert(data.command.has('g') === true)
+          })
+          it('tests false case', () => {
+            assert(data.command.has('Hey') === false)
+          })
+        })
+      })
+
+      describe('callback', () => {
+        describe('true case', () => {
+          it('In case to flase callback is not present', () => {
+            let beenThere = false
+            data.command.has('a', () => { beenThere = true })
+            assert(beenThere)
+          })
+          it('In case to flase callback is present', () => {
+            let beenThere = false
+            let neverWasThere = true
+            data.command.has('a', () => { beenThere = true }, () => { neverWasThere = false })
+            assert(beenThere)
+            assert(neverWasThere)
+          })
+        })
+      })
+
+      it('false case', () => {
+        let beenThere = false
+        let neverWasThere = true
+        data.command.has('HEY', () => { neverWasThere = false }, () => { beenThere = true })
+        assert(beenThere)
+        assert(neverWasThere)
+      })
     })
 
     it('.has.more', function () {
@@ -52,15 +82,15 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
     })
 
     it('.has.object', function () {
-      assert.deepEqual(data.command.has.object('g'), {g: true})
-      assert.deepEqual(data.command.has.object('g', 'a'), {g: true, a: true})
-      assert.deepEqual(data.command.has.object(['g', 'a']), {g: true, a: true})
-      assert.deepEqual(data.command.has.object(['g', 'a', 'foo']), {g: true, a: true, foo: false})
-      assert.deepEqual(data.command.has.object(['g', 'a'], 'foo'), {g: true, a: true, foo: false})
-      assert.deepEqual(data.command.has.object(['g', 'a'], ['foo'], 'b'), {g: true, a: true, foo: false, b: true})
-      assert.deepEqual(data.command.has.object(['g', 'a'], ['foo', 'b']), {g: true, a: true, foo: false, b: true})
+      assert.deepEqual(data.command.has.object('g'), { g: true })
+      assert.deepEqual(data.command.has.object('g', 'a'), { g: true, a: true })
+      assert.deepEqual(data.command.has.object(['g', 'a']), { g: true, a: true })
+      assert.deepEqual(data.command.has.object(['g', 'a', 'foo']), { g: true, a: true, foo: false })
+      assert.deepEqual(data.command.has.object(['g', 'a'], 'foo'), { g: true, a: true, foo: false })
+      assert.deepEqual(data.command.has.object(['g', 'a'], ['foo'], 'b'), { g: true, a: true, foo: false, b: true })
+      assert.deepEqual(data.command.has.object(['g', 'a'], ['foo', 'b']), { g: true, a: true, foo: false, b: true })
 
-      assert.deepEqual(data.command.hasObject(['g', 'a'], ['foo', 'b']), {g: true, a: true, foo: false, b: true})
+      assert.deepEqual(data.command.hasObject(['g', 'a'], ['foo', 'b']), { g: true, a: true, foo: false, b: true })
     })
 
     it('.get.more', function () {
@@ -73,18 +103,17 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
     })
 
     it('.get.object', function () {
-      assert.deepEqual(data.command.get.object(['b']), {b: [['b', 'c']]})
-      assert.deepEqual(data.command.get.object(['b'], 'jj'), {b: [['b', 'c']], jj: []})
-      const {g} = data.command.get.object(['b'], 'jj', 'g')
+      assert.deepEqual(data.command.get.object(['b']), { b: [['b', 'c']] })
+      assert.deepEqual(data.command.get.object(['b'], 'jj'), { b: [['b', 'c']], jj: [] })
+      const { g } = data.command.get.object(['b'], 'jj', 'g')
       assert.deepEqual(g, [['g', 'h', 'i'], ['g', 'j', 'k']])
 
-      const {d} = data.command.getObject(['b'], 'jj', 'g')
+      const { d } = data.command.getObject(['b'], 'jj', 'g')
       assert.deepEqual(g, [['g', 'h', 'i'], ['g', 'j', 'k']])
     })
 
     // it('.', function () {
 
     // })
-
   })
 }

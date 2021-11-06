@@ -7,8 +7,8 @@ const {
   =
   require('../../requires')
 
-describe('arrayFindIndexs tests',()=>{
+describe('arrayFindIndexs tests', () => {
   it('arrayFindIndex', function () {
-    assert.deepEqual(arrayDsl([1,2,3,4,5]).arrayFindIndex(x=>x===2)(), 1)
+    assert.deepEqual(arrayDsl([1, 2, 3, 4, 5]).arrayFindIndex(x => x === 2)(), 1)
   })
 })

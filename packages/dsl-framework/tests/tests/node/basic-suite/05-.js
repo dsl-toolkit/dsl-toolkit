@@ -3,7 +3,7 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
     const example = dslFrameworkDefaultInstance((e, d) => {
       return d
     })
-    const data = example.a.b('c').d('e','f').g('h','i').g('j','k')()
+    const data = example.a.b('c').d('e', 'f').g('h', 'i').g('j', 'k')()
 
     it('casting parameter to booleand data', function () {
       expect(data.arguments('a', 'boolean')).to.be.equal(true)
@@ -18,20 +18,20 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
     })
 
     it('Getting the arguments of the first command.', function () {
-      expect(data.arguments('d', 'firstEntry')).to.include('e').and.to.include('f');
+      expect(data.arguments('d', 'firstEntry')).to.include('e').and.to.include('f')
     })
 
     it('Getting the arguments for a once called command.', function () {
       const allEntriesTestDataOnceDefined = data.arguments('d', 'allEntries')
       expect(allEntriesTestDataOnceDefined).to.be.an('array').that.includes.an('array')
-      expect(allEntriesTestDataOnceDefined[0]).to.include('e').and.to.include('f');
+      expect(allEntriesTestDataOnceDefined[0]).to.include('e').and.to.include('f')
     })
 
     it('Getting the arguments for a more called command.', function () {
       const allEntriesTestDataMoreDefined = data.arguments('g', 'allEntries')
       expect(allEntriesTestDataMoreDefined).to.be.an('array').that.includes.an('array')
-      expect(allEntriesTestDataMoreDefined[0]).to.include('h').and.to.include('i');
-      expect(allEntriesTestDataMoreDefined[1]).to.include('j').and.to.include('k');
+      expect(allEntriesTestDataMoreDefined[0]).to.include('h').and.to.include('i')
+      expect(allEntriesTestDataMoreDefined[1]).to.include('j').and.to.include('k')
     })
 
     it('different ways of getting patrameters for the return object.', function () {
