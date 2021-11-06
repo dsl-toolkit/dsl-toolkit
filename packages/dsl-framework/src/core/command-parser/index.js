@@ -1,4 +1,4 @@
-const getArrayData = require('./lib/get-array-data')
+const getArrayData = require('../lib/get-array-data')
 module.exports = exports = (returnObject) => {
   const baseObject = {
     init: () => {
