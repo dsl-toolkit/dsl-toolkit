@@ -18,22 +18,76 @@ npm install dsl-framework --save
 const { dslFramework } = require('dsl-framework')
 const defaultFactory = dslFramework()
 
-console.log(defaultFactory().Hello.world().data.returnArrayChunks.flat().join(' ')) // => Hello world
-console.log(defaultFactory()('Hello')('world')().data.returnArrayChunks.flat().join(' ')) // => Hello world
+console.log(
+  defaultFactory()
+  .Hello.world()
+  .data.returnArrayChunks.flat().join(' ')) // => Hello world
+```
+This is the easies use of the dsl framework. `data.returnArrayChunks` represents a matrix of data, in other wods an arrays in an array, in other works and abstract syntax tree (AST). with the current exaple you can see it as:
+```javascript
+[['Hello'],['world']]
+```
+The next exaple:
+```javascript
+console.log(
+  defaultFactory()('Hello')('world')()
+  .data.returnArrayChunks.flat().join(' ')) // => Hello world
+```
+gives the exact same output, the first example. It is just a different way to inject data into the AST. Your choice is how you want to use it.
 
+Most of the times you will use the framework with the callback function like this:
+```javascript
 defaultFactory((e, data) => {
   console.log(data.data.returnArrayChunks.flat().join(' '))
 }).Hello.world() // => Hello world
+```
 
-const printer = defaultFactory((e, data) => {
+Most of the times you might want to create a function/module/export or variable like this:
+
+```javascript
+const sayIt = defaultFactory((e, data) => {
   console.log(data.data.returnArrayChunks.flat().join(' '))
 })
 
-printer.Hello.world() // => Hello world
-printer.Hello.world('!')() // => Hello world !
-printer.Hello.world['!']() // => Hello world !
-printer('Hello').world['!']() // => Hello world !
+sayIt.Hello.world() // => Hello world
+```
+So you can play with it like below:
+```javascript
+sayIt.Hello.world() // => Hello world
+sayIt.Hello.world('!')() // => Hello world !
+sayIt.Hello.world['!']() // => Hello world !
+sayIt('Hello').world['!']() // => Hello world !
+```
+Let's create a `harvester` that returns the raw data:
 
+```javascript
+const harvester = defaultFactory((e, data) => {
+  return (data.data.returnArrayChunks)
+})
+```
+With the `harvester` we can show the date that comes back:
+```javascript
+console.log(
+  harvester.Hello.world()
+  ) // => [['Hello'],['world']]
+  
+console.log(
+  harvester.Hello.world('!')()
+  ) // => [['Hello'],['world', '!']]
+```
+If you see the last example above, this is the first time we have given a parameter to a function we call. you can see how it escalates in the data, the excamation sign is arrived next to the world as the second item in its array. The rest of this segment of examples are easy, so I will not explain them.
+```javascript  
+console.log(
+  harvester.Hello.world['!']()
+  ) // => [['Hello'],['world'],['!']]
+  
+console.log(
+  harvester('Hello').world['!']()
+  ) // => [['Hello'],['world'],['!']]
+  
+```
+
+```javascript
 const processor = defaultFactory((e, data) => {
   return (data.data.returnArrayChunks.flat().join(' '))
 })
@@ -64,7 +118,7 @@ console.log(processorChecksHello.Hi.World()) // => The message does not contain 
 console.log(processorChecksHello.Hello.World('!', 'Hello again')('and').again()) // => Hello World ! Hello again and again
 
 ```
-
+The rest of the motivation is kept here for a while because of clarity, and for historical reasons. I don't consider it complete or good enough for grasping how the framework works. Still coul containg some inspiration for someone. I plan continue and polish the hello world examples further to show and cover the abilities of the tool. if you want to see how it really works see the projects in the monorepo of this project, and see the tests within this project.
 # Motivation
 I wanted to have an easy to use function configuring method.
 so that I can develop domain-specific languages easily and keep its application close to the code,
