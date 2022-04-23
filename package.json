@@ -1,7 +1,7 @@
 {
   "devDependencies": {
     "array-dsl": "^1.6.59",
-    "codeclimate-test-reporter": "^0.5.1",
+    "codeclimate-test-reporter": "^0.0.2",
     "depcheck": "^1.4.2",
     "diff": "^5.0.0",
     "directory-fixture-provider": "^1.7.1",
