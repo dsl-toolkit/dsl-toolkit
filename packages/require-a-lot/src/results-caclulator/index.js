@@ -8,7 +8,10 @@ module.exports = (ralContainer) => {
     })
   require('./hide')(parameters, results)
 
-  results = require('../container')(parameters, results, requireModuleInstance, infoList)
+  results = require(
+    '../../../container'
+    // '../container'
+    )(parameters, results, requireModuleInstance, infoList)
 
   return ({ results, noPackageInfo, infoList })
 }
