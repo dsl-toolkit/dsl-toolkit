@@ -1,46 +1,43 @@
-// [require-a-lot] testRequires begin
-const {
-  assert, // *node module*: assert | https://nodejs.org/api/assert.html |
-  requireALot // *alias* of ../../src | The main library itself. |
-} =
-// [require-a-lot] testRequires end
-  require('../../../lib/requires')
-const basicInstance = () => require('../../../../src/app-container-factory')()
+const assert = require('assert')
+
+const basicInstance = require('../../../../src')('chai')
+// require('../../../../src/app-container-factory')()
   .define('a', 'AAA')
   .compose('b', (a) => a)
   .create('c', (b, a) => ({ b, a }))()
 
 describe('container tests', () => {
-  it('tests .create .compose .define combo', () => {
-    const template = requireALot(require)('assert', 'chai')
-      .from('chai', ['expect'])
-      .define('one', 1)
-      // .define('composedStuff',2)
-      .compose('composedStuff', (assert, expect, one) => ({ a: assert, e: expect, one }), ['assert', 'expect', 'one'])
-      .create('castLogicalFalse', (assert, one, composedStuff) => {
-        const randomValue = Math.floor(Math.random() * Math.floor(100))
-        return (someBoolean) => {
-          try {
-            assert(someBoolean)
-            // l({randomValue,one,composedStuff}).die()
-            return { randomValue, someBoolean, one, composedStuff }
-          } catch (e) {
-            return false
-          }
-        }
-      }, ['assert', 'one', 'composedStuff'])
-      ()
-    assert(template.castLogicalFalse(true).one === 1)
-    assert(template.castLogicalFalse(true).composedStuff.one === 1)
-    const checkIfNotZero = (
-      (template.castLogicalFalse(true).randomValue - template.castLogicalFalse(true).randomValue) +
-      (template.castLogicalFalse(true).randomValue - template.castLogicalFalse(true).randomValue) +
-      (template.castLogicalFalse(true).randomValue - template.castLogicalFalse(true).randomValue) +
-      (template.castLogicalFalse(true).randomValue - template.castLogicalFalse(true).randomValue))
-    assert(
-      checkIfNotZero !== 0
-    )
-  })
+  // it('tests .create .compose .define combo', () => {
+
+  //   const template = requireALot(require)('assert', 'chai')
+  //     .from('chai', ['expect'])
+  //     .define('one', 1)
+  //     // .define('composedStuff',2)
+  //     .compose('composedStuff', (assert, expect, one) => ({ a: assert, e: expect, one }), ['assert', 'expect', 'one'])
+  //     .create('castLogicalFalse', (assert, one, composedStuff) => {
+  //       const randomValue = Math.floor(Math.random() * Math.floor(100))
+  //       return (someBoolean) => {
+  //         try {
+  //           assert(someBoolean)
+  //           // l({randomValue,one,composedStuff}).die()
+  //           return { randomValue, someBoolean, one, composedStuff }
+  //         } catch (e) {
+  //           return false
+  //         }
+  //       }
+  //     }, ['assert', 'one', 'composedStuff'])
+  //     ()
+  //   assert(template.castLogicalFalse(true).one === 1)
+  //   assert(template.castLogicalFalse(true).composedStuff.one === 1)
+  //   const checkIfNotZero = (
+  //     (template.castLogicalFalse(true).randomValue - template.castLogicalFalse(true).randomValue) +
+  //     (template.castLogicalFalse(true).randomValue - template.castLogicalFalse(true).randomValue) +
+  //     (template.castLogicalFalse(true).randomValue - template.castLogicalFalse(true).randomValue) +
+  //     (template.castLogicalFalse(true).randomValue - template.castLogicalFalse(true).randomValue))
+  //   assert(
+  //     checkIfNotZero !== 0
+  //   )
+  // })
 
   it('container existence test', () => {
     assert(basicInstance().a === 'AAA')

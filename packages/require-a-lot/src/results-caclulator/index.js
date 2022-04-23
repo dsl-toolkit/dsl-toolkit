@@ -11,7 +11,7 @@ module.exports = (ralContainer) => {
   results = require(
     '../../../container'
     // '../container'
-    )(parameters, results, requireModuleInstance, infoList)
+  )(parameters, results, requireModuleInstance, infoList)
 
   return ({ results, noPackageInfo, infoList })
 }

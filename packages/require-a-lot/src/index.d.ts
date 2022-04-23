@@ -1,5 +1,3 @@
-export type ast = Array<Array<any>>
-
 export type coreFactory = (...args : string[]) => {
   (): {[key:string]: any};
   alias: (from:string, to:string) => coreFactory;
@@ -10,7 +8,7 @@ export type coreFactory = (...args : string[]) => {
     secondArg: (...args : any[])=>any,
     secondArgParamContainerNamePointers?: string[]
   ) => coreFactory;
-  cretae: (
+  create: (
     firstArg:string, 
     secondArg: (...args : any[])=>any,
     secondArgParamContainerNamePointers?: string[]

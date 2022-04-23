@@ -22,13 +22,13 @@
   = require('../../../../lib/requires')
 
 describe('.log for ease of use', () => {
-  it('tests .log', () => {
+  xit('tests .log', () => {
     const consoleOut = consoleCapture(() => requireALot(require)('../../../test-spec')
       .alias('test-spec', 'cc').log())
     assert(consoleOut.split('\n').length === 1, `${consoleOut.split('\n').length} --`)
   })
 
-  xit('tests .log(vertical)', () => {
+  xit('tests .log (vertical)', () => {
     const consoleOut = consoleCapture(() => requireALot(require)('../../../test-spec', '../../../../../src')
       .alias('src', 'ral')
       .alias('test-spec', 'cc').log('vertical')())
