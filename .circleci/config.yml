@@ -80,15 +80,15 @@ jobs:
   node12:
     docker:
       - image: node:12
-    <<: [ *common_steps_upload ]
+    <<: [ *common ]
   node14:
     docker:
       - image: node:14
     <<: [ *common ]
-  node15:
+  node16:
     docker:
-      - image: node:15
-    <<: [ *common ]
+      - image: node:16
+    <<: [ *common_steps_upload ]
 
 workflows:
   version: 2
@@ -96,6 +96,5 @@ workflows:
     # Evidently CircleCI can't cope with unique job
     # names unless workflows are used.
     jobs:
-      - node12
       - node14
-#      - node15
+      - node16

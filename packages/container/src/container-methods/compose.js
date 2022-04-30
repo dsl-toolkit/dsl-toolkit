@@ -6,27 +6,20 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy) =
   composes.length &&
   (() => {
     composes.map(composeDetails => {
-      const returnObject = {}
+      const composed = {}
       const service = composeDetails[1]
-      const isItPath = typeof service === 'string'
-        ? requireModuleInstance(composeDetails[1])
-        : composeDetails[1]
       const parameterNames = composeDetails[2]
         ? arrayDsl(composeDetails[2]).arrify()
         : parseScript(service.toString()).body[0].expression.params.map(e => e.name)
-      // l(composeDetails[2])()
-
-      // l(isItPath,
-      //   service,
-      //   // parseScript(data.toString()),
-      //   parameterNames)()
-
       infoList[composeDetails[0]] = { head: '*di service*' }
-      returnObject[composeDetails[0]] = () => service(
-        ...parameterNames.map(dependecyName => proxy[dependecyName]))
-      return returnObject
+      composed[composeDetails[0]] = () => 
+        service(...parameterNames.map(dependecyName => proxy[dependecyName]))
+
+      return composed
     }).forEach(composed => Object.assign(results, composed))
   })()
+
+  console.log({composes});
 
   return require('./lib/get-keys')(composes, 'service')
 }

@@ -1,12 +1,4 @@
 module.exports =
-(parameters) => {
-  console.log(parameters.arguments)
-  // console.log(Object.keys(parameters))
+(parameters) => parameters.arguments
+  ('compose', 'allEntries', []).map(e => e[0])
 
-  console.log(
-    // {parameters},
-    // parameters.arguments('compose', 'allEntries', [])
-  )
-
-  return parameters.arguments('compose', 'allEntries', []).map(e => e[0])
-}

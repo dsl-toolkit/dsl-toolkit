@@ -5,10 +5,10 @@
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "scripts": {
-    "test-dev": "echo 1 || npx mocha --recursive tests/tests/*-spec.js",
+    "test-dev": "npx mocha --recursive tests/tests/*-spec.js",
     "test-dev-unit": "echo 1 || npm run clean && node_modules/.bin/mocha --recursive tests/tests/*-spec.js",
     "test-old": "echo 1 || npm run build && npm run test-compiled && npm run clean",
-    "test": "echo 1 || PROD=true npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
+    "test": "npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
     "test-project": "echo 1 || npm run license-check && node_modules/.bin/depcheck --ignores \"chai,@types/node,require-a-lot,cowlog,flat,lodash,rimraf,generic-text-linker,jasmine-core,karma-chrome-launcher,karma-jasmine,eslint*\" && echo npm run standard-fix",
     "test-all": "echo 1 || npm run test-project && npm test",
     "test-all-dev": "echo 1 || npm run test-project && npm run test-dev",

@@ -7,6 +7,7 @@ module.exports = (results, factories, services, parameters) => {
         if (Object.keys(obj).includes(prop)) {
           const createHasKey = factories.includes(prop)
           const composeHasKey = services.includes(prop)
+          console.log("WUWUWUW");
           if (parameters.includes(prop)) {
             return obj[prop]
           }
