@@ -67,14 +67,14 @@ references:
             - packages/require-a-lot/node_modules
             - node_modules
             #end package template
-      - store_artifacts:
-          path: coverage
-          destination: prefix
-      - store_test_results:
-          path: coverage/lcov-report/
-     - run:
-          name: Setup Code Climate test-reporter
-          command: |
+#       - store_artifacts:
+#           path: coverage
+#           destination: prefix
+#       - store_test_results:
+#           path: coverage/lcov-report/
+#      - run:
+#           name: Setup Code Climate test-reporter
+#           command: |
           # download test reporter as a static binary
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
