@@ -76,8 +76,8 @@ references:
 #           name: Setup Code Climate test-reporter
 #           command: |
           # download test reporter as a static binary
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
+            # curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            # chmod +x ./cc-test-reporter
             
       - run: ./cc-test-reporter after-build --coverage-input-type lcov --exit-code $? ./coverage/lcov.info
       # - run: node_modules/codeclimate-test-reporter/bin/codeclimate.js < ./coverage/lcov.info && echo 1 > /tmp/coverage
