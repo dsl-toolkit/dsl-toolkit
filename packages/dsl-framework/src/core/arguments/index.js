@@ -1,3 +1,7 @@
+/* eslint-disable block-spacing */
+/* eslint-disable brace-style */
+/* eslint-disable indent */
+
 const getArrayData = require('../lib/get-array-data')
 const process = (parameters) => (command, getProcess, defaultValue) => {
   defaultValue = typeof defaultValue === 'undefined' ? false : defaultValue
@@ -12,9 +16,7 @@ const process = (parameters) => (command, getProcess, defaultValue) => {
     if (returnValue === defaultValue) { return returnValue }
 
     const commandValue = parameters.command.get(command)
-    return require('./parser')(commandValue, getProcess)
-  }
-}
+    return require('./parser')(commandValue, getProcess)}}
 
 module.exports = exports = (parameters) => process(parameters)
 // exports.toObject = (command, getProcess, defailtValue = false) => {

@@ -1,3 +1,5 @@
+/* eslint-disable brace-style */
+/* eslint-disable block-spacing */
 const getArrayData = require('../lib/get-array-data')
 const getBaseKind = require('./get-base-kind')
 const getMoreKind = require('./get-more-kind')
@@ -18,50 +20,35 @@ module.exports = exports = (returnObject) => {
 
       const hasLogicalKind = (kind) => function () {
         const commands = getArrayData(arguments)
-        return commands ? baseObject.has.more(commands).reduce(kind) : false
-      }
+        return commands ? baseObject.has.more(commands).reduce(kind) : false}
 
       baseObject.has.and = hasLogicalKind((acc = true, currValue) => acc && currValue)
       baseObject.has.or = hasLogicalKind((acc = true, currValue) => acc || currValue)
-
       baseObject.hasAnd = baseObject.has.and
       baseObject.hasOr = baseObject.has.or
-
       baseObject.has.xor = function () {
         const commands = getArrayData(arguments)
 
         return commands
           ? baseObject.has.more(commands).filter((entry) => entry).length &&
           baseObject.has.more(commands).filter((entry) => !entry).length
-          : false
-      }
+          : false}
       baseObject.hasXor = baseObject.has.xor
 
       const toObjectKind = (kind) => function () {
         const returnObject = {}
         getArrayData(arguments).forEach(entry => {
-          returnObject[entry] = baseObject[kind](entry)
-        })
+          returnObject[entry] = baseObject[kind](entry)})
 
-        return returnObject
-      }
-
+        return returnObject}
       baseObject.has.object = toObjectKind('has')
       baseObject.get.object = toObjectKind('get')
-
       baseObject.hasObject = baseObject.has.object
       baseObject.getObject = baseObject.get.object
-
-      return baseObject
-    },
+      return baseObject},
 
     getArguments: function (command, commands) {
       if (typeof commands === 'undefined') {
-        commands = returnObject.data.returnArrayChunks
-      }
-      return this.get(command).map((command) => command.slice(1))
-    }
-  }
-
-  return baseObject.init()
-}
+        commands = returnObject.data.returnArrayChunks}
+      return this.get(command).map((command) => command.slice(1))}}
+  return baseObject.init()}

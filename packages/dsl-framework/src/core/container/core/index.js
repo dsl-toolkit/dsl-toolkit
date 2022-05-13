@@ -38,19 +38,15 @@ const getFrom = function (from, returnArrayChunks = []) {
           return order
         })
         c.forEach(e => { t[e] = true })
-
         return Object.keys(t)
       }).map((e, i) => {
         return Array.from(e).map(e => ra[e])
       }).map((e) => getFrom(0, e))
-
       return result
     },
     repeate: {
       // todo: generalize it
-      me: require('./repeate-me')
-    }
-  }
+      me: require('./repeate-me')}}
   data.repeate.parent = data
 
   const me = this

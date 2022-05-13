@@ -1,3 +1,7 @@
+/* eslint-disable block-spacing */
+/* eslint-disable brace-style */
+/* eslint-disable indent */
+
 module.exports = exports =
   /**
    *
@@ -20,7 +24,5 @@ module.exports = exports =
     if (Array.isArray(dataToProcess)) {
       if (getProcess.endsWith('Argument')) return dataToProcess[1]
       if (getProcess.endsWith('Entry')) return dataToProcess.slice(1)
-      if (getProcess === 'allEntries') return commandValue.map((entry) => entry.slice(1))
-    }
-    return [[]]
-  }
+      if (getProcess === 'allEntries') return commandValue.map((entry) => entry.slice(1))}
+    return [[]]}

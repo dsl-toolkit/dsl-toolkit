@@ -1,3 +1,7 @@
+/* eslint-disable block-spacing */
+/* eslint-disable brace-style */
+/* eslint-disable indent */
+
 function extractCallbackData () {
   let baseKindArguments = Array.from(arguments)
   const argumentsLastIndex = baseKindArguments.length >= 2 ? baseKindArguments.length - 1 : false

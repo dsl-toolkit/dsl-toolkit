@@ -1,3 +1,6 @@
+/* eslint-disable block-spacing */
+/* eslint-disable brace-style */
+
 const getArrayData = require('../lib/get-array-data')
 const { extractCallbackData } = require('./extractCallbackData')
 
@@ -15,7 +18,4 @@ module.exports = (baseObject) => {
       const actualCommand = [...command]
       trueCaseFunction && actualCommand.push(trueCaseFunction)
       falseCaseFunction && actualCommand.push(falseCaseFunction)
-      return baseObject[kind](command)
-    })
-  }
-}
+      return baseObject[kind](command)})}}

@@ -1,3 +1,7 @@
+/* eslint-disable block-spacing */
+/* eslint-disable brace-style */
+/* eslint-disable indent */
+
 module.exports = function () {
   return {
     level: this.level,
@@ -11,6 +15,4 @@ module.exports = function () {
     start: this.start,
     setCommandArguments: this.setCommandArguments,
     setCommandName: this.setCommandName,
-    getFrom: this.getFrom
-  }
-}
+    getFrom: this.getFrom}}
