@@ -19,7 +19,5 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy) =
     }).forEach(composed => Object.assign(results, composed))
   })()
 
-  console.log({composes});
-
   return require('./lib/get-keys')(composes, 'service')
 }

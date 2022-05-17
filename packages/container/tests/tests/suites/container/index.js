@@ -17,7 +17,7 @@ describe('checking services', ()=>{
     .define('a', 'AAA')
     .compose('b', (a) => {
       calculated+=1;
-      console.log({calculated}); 
+      // console.log({calculated}); 
       return `${a}BBBCCC`
     })()
 
@@ -37,14 +37,14 @@ describe('checking services', ()=>{
     .define('a', 'AAA')
     .create('b', (a) => {
       calculated+=1;
-      console.log({calculated}); 
+      // console.log({calculated});
       return `${a}BBBCCC`
     })()
 
     container.b
-    assert(calculated)
+    // assert(calculated)
     container.b
-    console.log(calculated);
+    // console.log(calculated);
     assert(calculated===2)
   })
 })
