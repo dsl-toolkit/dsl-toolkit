@@ -7,15 +7,15 @@ module.exports = (results, factories, services, parameters) => {
         if (Object.keys(obj).includes(prop)) {
           const createHasKey = factories.includes(prop)
           const composeHasKey = services.includes(prop)
-          if (parameters?.includes(prop)) {
+          if (parameters && parameters.includes && parameters.includes(prop)) {
             return obj[prop]}
           if (composeHasKey) {
-            if (Object.keys(composedStore)?.includes(prop)) {
-              return composedStore[prop]
-            } else {
+            const storedObject = Object.keys(composedStore)
+            if (storedObject && storedObject.includes && storedObject.includes(prop)) {
+              return composedStore[prop]}
+            else {
               composedStore.prop = obj[prop]()
-              return composedStore.prop
-            }}
+              return composedStore.prop}}
           if (createHasKey) {
             return obj[prop]()}
           if (!createHasKey || !composeHasKey) {
