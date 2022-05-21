@@ -1,9 +1,9 @@
 {
   "name": "di-dsl",
-  "version": "1.7.27",
+  "version": "1.7.39",
   "description": "Easy function chaining.",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test-dev": "npx mocha --recursive tests/tests/*-spec.js",
     "test-dev-unit": "echo 1 || npm run clean && node_modules/.bin/mocha --recursive tests/tests/*-spec.js",
@@ -21,8 +21,7 @@
     "web": "npm run browserify && npm run minify && node tools/create-sample-page",
     "browserify": "mkdir dist/web -p && node_modules/.bin/browserify -o dist/web/dsl-framework.js -e src/index.js --exclude src/examples",
     "minify": "node_modules/.bin/minify dist/web/dsl-framework.js > dist/web/dsl-framework.min.js",
-    "karmaa": "node_modules/.bin/karma start my.conf.js --log-level debug --single-run",
-    "karma": "node_modules/.bin/karma start my.conf.js"
+    "babel": "npx babel ./src -d ./dist"
   },
   "repository": {
     "type": "git",
@@ -39,12 +38,11 @@
   "license": "MIT",
   "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/dsl-framework",
   "devDependencies": {
-    "capture-console": "^1.0.1",
     "chai": "^4.2.0",
-    "cowlog": "^1.7.21",
     "depcheck": "^1.2.0",
     "license-checker": "^25.0.1",
     "mocha": "^8.1.3",
+    "mocha-explorer-launcher-scripts": "^0.4.0",
     "nyc": "^15.1.0",
     "require-dir": "^1.2.0",
     "standard": "^14.3.4"
@@ -76,7 +74,7 @@
     ]
   },
   "files": [
-    "src/**"
+    "dist/**"
   ],
   "gitHead": "ccc85a5e4123fea608628828bde38f695540bf81",
   "dependencies": {

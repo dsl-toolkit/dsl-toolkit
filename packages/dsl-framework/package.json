@@ -1,9 +1,9 @@
 {
   "name": "dsl-framework",
-  "version": "1.7.25",
+  "version": "1.7.29",
   "description": "Easy function chaining.",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test-dev": "npx mocha --recursive tests/tests/node/*-spec.js",
     "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/node/unit/*-spec.js",
@@ -22,7 +22,8 @@
     "browserify": "mkdir dist/web -p && node_modules/.bin/browserify -o dist/web/dsl-framework.js -e src/index.js --exclude src/examples",
     "minify": "node_modules/.bin/minify dist/web/dsl-framework.js > dist/web/dsl-framework.min.js",
     "karmaa": "node_modules/.bin/karma start my.conf.js --log-level debug --single-run",
-    "karma": "node_modules/.bin/karma start my.conf.js"
+    "karma": "node_modules/.bin/karma start my.conf.js",
+    "babel": "npx babel ./src -d ./dist && cp ./src/index.d.ts ./dist"
   },
   "repository": {
     "type": "git",
@@ -64,6 +65,10 @@
   },
   "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/dsl-framework",
   "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.17.12",
+    "@babel/preset-env": "^7.17.12",
+    "babel-cli": "^6.26.0",
     "browserify": "^17.0.0",
     "chai": "^4.3.4",
     "depcheck": "^1.4.2",
@@ -113,7 +118,7 @@
     ]
   },
   "files": [
-    "src/**"
+    "dist/**"
   ],
   "gitHead": "ccc85a5e4123fea608628828bde38f695540bf81",
   "dependencies": {

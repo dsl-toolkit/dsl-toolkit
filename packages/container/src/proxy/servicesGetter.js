@@ -1,4 +1,5 @@
-module.exports =
-(parameters) => parameters.arguments
-  ('compose', 'allEntries', []).map(e => e[0])
+module.exports =(parameters) => parameters.arguments('compose', 'allEntries', [])
+.map(e =>{
+  return e[0]
+})
 
