@@ -23,7 +23,7 @@ references:
             - deps-{{ checksum "npm-minor-hash" }}
       - run: ls -lah
       - run: ./bin/install.sh
-      - run: npm run test                                                                                                                       
+      - run: npm test                                                                                                                       
       - save_cache:
           key: deps-{{ checksum "npm-minor-hash" }}
           paths:

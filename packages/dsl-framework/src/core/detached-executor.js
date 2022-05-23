@@ -1,3 +1,5 @@
+/* eslint-disable brace-style */
+/* eslint-disable block-spacing */
 module.exports = exports = (data, callback) => {
   let timeoutSate = null
   if (callback && typeof callback === 'function') {

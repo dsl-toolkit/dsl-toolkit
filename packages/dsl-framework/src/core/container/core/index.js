@@ -1,18 +1,18 @@
+/* eslint-disable brace-style */
+/* eslint-disable block-spacing */
+
 const flat = require('flat')
 const getFrom = function (from, returnArrayChunks = []) {
   if (this.reset) {
     returnArrayChunks = this.returnArrayChunks
     if (this.commandName) {
-      returnArrayChunks.push([this.commandName])
-    }
-  }
+      returnArrayChunks.push([this.commandName])}}
   const returnArray = () => {
     const result = []
     returnArrayChunks
       .forEach(chunkData => chunkData.forEach(pieceData => result.push(pieceData)))
 
-    return result
-  }
+    return result}
   const data = {
     returnArray,
     returnArrayChunks,
@@ -22,8 +22,7 @@ const getFrom = function (from, returnArrayChunks = []) {
 
       const aKeysIndexes = aKeys
         .map((ee, ii, aa) => {
-          return flatA[aa[ii]] === keyword ? ii : false
-        })
+          return flatA[aa[ii]] === keyword ? ii : false})
         .filter(e => e !== false)
         .filter((e) => aKeys[e].split('.')[1] === '0')
 
@@ -42,8 +41,7 @@ const getFrom = function (from, returnArrayChunks = []) {
       }).map((e, i) => {
         return Array.from(e).map(e => ra[e])
       }).map((e) => getFrom(0, e))
-      return result
-    },
+      return result},
     repeate: {
       // todo: generalize it
       me: require('./repeate-me')}}
@@ -62,15 +60,12 @@ const getFrom = function (from, returnArrayChunks = []) {
     Array.isArray(defaultValue) || (() => { defaultValue = [defaultValue] })()
 
     commands.forEach((command, i) => {
-      returnObject[command] = arg(command, getProcess[i], defaultValue[i])
-    })
-    return returnObject
-  }
+      returnObject[command] = arg(command, getProcess[i], defaultValue[i])})
+    return returnObject}
 
   returnObject.commandSequence = require('../../command-sequence')(returnObject)
 
-  return returnObject
-}
+  return returnObject}
 
 module.exports = exports = () => ({
   p: null,
@@ -84,11 +79,9 @@ module.exports = exports = () => ({
   clone: require('./clone'),
   start () {
     this.reset()
-    this.level++
-  },
+    this.level++},
   getData: function () {
-    return this.getFrom(0)
-  },
+    return this.getFrom(0)},
   setCommandArguments (commandArguments) {
     commandArguments = commandArguments || []
     let newChain = false
@@ -96,19 +89,14 @@ module.exports = exports = () => ({
       // l(this.commandName)()
       commandArguments = [this.commandName, ...commandArguments]
       newChain = true
-      this.commandName = false
-    }
+      this.commandName = false}
     this.returnArrayChunks.push(commandArguments)
 
-    return newChain
-  },
+    return newChain},
   setCommandName (commandName) {
     let newChain = false
     if (this.commandName) {
-      newChain = this.setCommandArguments()
-    }
+      newChain = this.setCommandArguments()}
     this.commandName = commandName
 
-    return newChain
-  }
-})
+    return newChain}})

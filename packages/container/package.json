@@ -21,7 +21,6 @@
     "web": "npm run browserify && npm run minify && node tools/create-sample-page",
     "browserify": "mkdir dist/web -p && node_modules/.bin/browserify -o dist/web/dsl-framework.js -e src/index.js --exclude src/examples",
     "minify": "node_modules/.bin/minify dist/web/dsl-framework.js > dist/web/dsl-framework.min.js",
-    "babel": "npx babel ./src -d ./dist"
   },
   "repository": {
     "type": "git",
