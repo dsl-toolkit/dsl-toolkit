@@ -1,9 +1,9 @@
 {
   "name": "di-dsl",
-  "version": "1.7.40",
+  "version": "1.7.41",
   "description": "Easy function chaining.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
   "scripts": {
     "test-dev": "npx mocha --recursive tests/tests/*-spec.js",
     "test-dev-unit": "echo 1 || npm run clean && node_modules/.bin/mocha --recursive tests/tests/*-spec.js",
@@ -67,16 +67,16 @@
   "files": [
     "dist/**"
   ],
-  "gitHead": "ccc85a5e4123fea608628828bde38f695540bf81",
+  "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
   "dependencies": {
     "array-dsl": "^1.6.59",
     "camelcase": "^6.0.0",
     "compare": "^2.0.0",
-    "directory-fixture-provider": "^1.7.22",
-    "dsl-framework": "^1.7.30",
+    "directory-fixture-provider": "^1.7.23",
+    "dsl-framework": "^1.7.31",
     "esprima": "^4.0.1",
     "flat": "^5.0.2",
-    "generic-text-linker": "^1.7.22",
+    "generic-text-linker": "^1.7.23",
     "get-installed-path": "^4.0.8",
     "recursive-readdir-sync": "^1.0.6",
     "trim-right": "^1.0.1"
