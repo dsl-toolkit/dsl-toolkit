@@ -1,112 +1,42 @@
-# Javascript Node CircleCI 2.0 configuration file
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-version: 2
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
 
-environment:
-  BASH_ENV: "~/.bashrc"
-
-references:
-  common: &common
-    environment:
-      BASH_ENV: "~/.bashrc"
-    steps: &steps
-      - checkout
-      - run: apt-get update && apt-get -y install expect
-      - run: expect -c "spawn ssh-add - <<< "${SSH_KEY}" expect -re \"Enter passphrase for (stdin):\"; send \"n\";"
-      - run: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-      - run: git config --global user.email "tothimre@gmail.com" && git config --global user.name "Imre Toth"
-      - run: ./bin/node-modules-cache-key.js > ./npm-minor-hash
-      - restore_cache:
-          keys:
-            - deps-{{ checksum "npm-minor-hash" }}
-      - run: ls -lah
-      - run: ./bin/install.sh
-      - run: npm test
-      - run: ./bin/cache-packages-update.js
-      - save_cache:
-          key: deps-{{ checksum "npm-minor-hash" }}
-          paths:
-            #beginning package template
-            - packages/container/node_modules
-            - packages/cowlog/node_modules
-            - packages/directory-fixture-provider/node_modules
-            - packages/dsl-framework/node_modules
-            - packages/dsl-framework/examples/auto-publish/parenting/node_modules
-            - packages/generic-text-linker/node_modules
-            - packages/refresh-me/node_modules
-            - packages/require-a-lot/node_modules
-            - node_modules
-            #end package template
-  #somehow redundant pieces shall be referenced.
-  common_steps_upload: &common_steps_upload
-    environment:
-      BASH_ENV: "~/.bashrc"
-    steps:
-      - checkout
-      - run: apt-get update && apt-get -y install expect
-      - run: echo "${HOME}/bin/cc-test-reporter"
-      - run: mkdir -p bin; curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > "/tmp/tr" && chmod +x "/tmp/tr"
-      - run: expect -c "spawn ssh-add - <<< "${SSH_KEY}" expect -re \"Enter passphrase for (stdin):\"; send \"n\";"
-      - run: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-      - run: git config --global user.email "tothimre@gmail.com" && git config --global user.name "Imre Toth"
-      - run: ./bin/node-modules-cache-key.js > ./npm-hash
-      - restore_cache:
-          keys:
-            - deps-{{ checksum "npm-hash" }}
-      - run: ls -lah
-      - run: ./bin/install.sh
-      - run: /tmp/tr before-build
-      - run: npm run test
-      - run: /tmp/tr after-build --exit-code $?
-      - save_cache:
-          key: deps-{{ checksum "npm-hash" }}
-          paths:
-            #beginning package template
-            - packages/container/node_modules
-            - packages/cowlog/node_modules
-            - packages/directory-fixture-provider/node_modules
-            - packages/dsl-framework/node_modules
-            - packages/dsl-framework/examples/auto-publish/parenting/node_modules
-            - packages/generic-text-linker/node_modules
-            - packages/refresh-me/node_modules
-            - packages/require-a-lot/node_modules
-            - node_modules
-            #end package template
-      - store_artifacts:
-          path: coverage
-          destination: prefix
-      - store_test_results:
-          path: coverage/lcov-report/
-      - run: /tmp/tr after-build --coverage-input-type lcov --exit-code $? ./coverage/lcov.info
-      - run: bin/github.js
-
+orbs:
+  # The Node.js orb contains a set of prepackaged CircleCI configuration you can utilize
+  # Orbs reduce the amount of configuration required for common tasks.
+  # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
+  node: circleci/node@4.7
 
 jobs:
-
-  # node12:
-  #   docker:
-  #     - image: node:12
-  #   <<: [ *common ]
-
-  node14:
+  # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
+  build-and-test:
+    # These next lines define a Docker executor: https://circleci.com/docs/2.0/executor-types/
+    # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
     docker:
-      - image: node:14
-    <<: [ *common ]
-
-  # node16:
-  #   docker:
-  #     - image: node:16
-  #   <<: [ *common ]
-
-  # node18:
-  #   docker:
-  #     - image: node:18
-  #   <<: [ *common_steps_upload ]
+      - image: cimg/node:16.10
+    # Then run your tests!
+    # CircleCI will report the results back to your VCS provider.
+    steps:
+      # Checkout the code as the first step.
+      - checkout
+      # Next, the node orb's install-packages step will install the dependencies from a package.json.
+      # The orb install-packages step will also automatically cache them for faster future runs.
+      - node/install-packages:
+          # If you are using yarn, change the line below from "npm" to "yarn"
+          pkg-manager: npm
+      - run:
+          name: Run tests
+          command: npm test
 
 workflows:
-  version: 2
-  build:
+  # Below is the definition of your workflow.
+  # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
+  # CircleCI will run this workflow on every commit.
+  # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
+  sample:
     jobs:
-      - node14
-      # - node16
-      # - node18
+      - build-and-test
+      # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
+      # - node/test
