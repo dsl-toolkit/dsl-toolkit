@@ -1,6 +1,6 @@
 {
   "name": "di-dsl",
-  "version": "1.7.41",
+  "version": "1.7.42",
   "description": "Easy function chaining.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -72,11 +72,11 @@
     "array-dsl": "^1.6.59",
     "camelcase": "^6.0.0",
     "compare": "^2.0.0",
-    "directory-fixture-provider": "^1.7.23",
-    "dsl-framework": "^1.7.31",
+    "directory-fixture-provider": "^1.7.24",
+    "dsl-framework": "^1.7.32",
     "esprima": "^4.0.1",
     "flat": "^5.0.2",
-    "generic-text-linker": "^1.7.23",
+    "generic-text-linker": "^1.7.26",
     "get-installed-path": "^4.0.8",
     "recursive-readdir-sync": "^1.0.6",
     "trim-right": "^1.0.1"
