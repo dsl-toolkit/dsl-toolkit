@@ -1,6 +1,6 @@
 {
   "name": "directory-fixture-provider",
-  "version": "1.7.22",
+  "version": "1.7.23",
   "description": "Provides directories for testing.",
   "main": "src/index.js",
   "scripts": {
@@ -44,7 +44,7 @@
   "homepage": "https://github.com/dsl-toolkit/directory-fixture-provider",
   "dependencies": {
     "directory-exists": "^2.0.1",
-    "dsl-framework": "^1.7.30",
+    "dsl-framework": "^1.7.31",
     "empty-dir": "^2.0.0",
     "fs-extra": "^9.1.0",
     "is-empty": "^1.2.0",
@@ -82,5 +82,5 @@
   "files": [
     "dist/src/**"
   ],
-  "gitHead": "ccc85a5e4123fea608628828bde38f695540bf81"
+  "gitHead": "19e8b21012acf44b1ab3282334728383af893416"
 }

@@ -1,6 +1,6 @@
 {
   "name": "generic-text-linker",
-  "version": "1.7.22",
+  "version": "1.7.23",
   "description": "Generic text linker for NodeJs",
   "main": "src/index.js",
   "scripts": {
@@ -13,9 +13,6 @@
     "test-all": "npm run test-project && npm test",
     "test-all-dev": "npm run test-project && npm run test-dev",
     "test-compiled": "npx mocha --require babel-core/register --require babel-polyfill --recursive dist/tests/tests",
-    "build-src": "echo 1",
-    "build-test": "echo 1",
-    "prepublish": "npm run build-src && npm run build-test",
     "clean": "npx rimraf dist tmp && mkdir dist && mkdir tmp",
     "standard-fix": "npx standard --fix src/index.js src/**/*.js tests/**/*.js",
     "license-check": "npx license-checker --failOn unknown --summary"
@@ -50,7 +47,7 @@
   "devDependencies": {
     "chai": "^4.3.0",
     "depcheck": "^1.4.0",
-    "directory-fixture-provider": "^1.7.22",
+    "directory-fixture-provider": "^1.7.23",
     "license-checker": "^25.0.1",
     "mocha": "^8.3.0",
     "nyc": "^15.1.0",
@@ -76,5 +73,5 @@
   "files": [
     "dist/src/**"
   ],
-  "gitHead": "ccc85a5e4123fea608628828bde38f695540bf81"
+  "gitHead": "19e8b21012acf44b1ab3282334728383af893416"
 }
