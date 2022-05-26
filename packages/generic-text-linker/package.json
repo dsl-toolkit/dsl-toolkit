@@ -1,6 +1,6 @@
 {
   "name": "generic-text-linker",
-  "version": "1.7.24",
+  "version": "1.7.25",
   "description": "Generic text linker for NodeJs",
   "main": "src/index.js",
   "scripts": {
@@ -71,7 +71,7 @@
     ]
   },
   "files": [
-    "dist/src/**"
+    "src/**"
   ],
   "gitHead": "19e8b21012acf44b1ab3282334728383af893416"
 }
