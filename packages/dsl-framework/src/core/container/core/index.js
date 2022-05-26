@@ -43,7 +43,9 @@ const getFrom = function (from, returnArrayChunks = []) {
 
     repeate: {
       // todo: generalize it
-      me: require('./repeate-me')}}
+      me: require('./repeate-me')
+    }
+  }
 
   data.repeate.parent = data
 
@@ -55,7 +57,7 @@ const getFrom = function (from, returnArrayChunks = []) {
 
   returnObject.arguments.object = (commands, getProcess, defaultValue = false) => {
     const returnObject = {}
-    //isArray
+    // isArray
     ia(commands) || (() => { commands = [commands] })()
     ia(getProcess) || (() => { getProcess = [getProcess] })()
     ia(defaultValue) || (() => { defaultValue = [defaultValue] })()
@@ -98,4 +100,5 @@ module.exports = exports = () => ({
       newChain = this.setCommandArguments()}
     this.commandName = commandName
 
-    return newChain}})
+    return newChain}
+})
