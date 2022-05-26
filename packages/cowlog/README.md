@@ -1,17 +1,11 @@
 <!--- destination qa rewrite begin -->
-### QA monorepo
+### QA dsl-toolkit
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-[![CircleCI](https://circleci.com/gh/dsl-toolkit/dsl-toolkit/tree/master.svg?style=svg)](https://circleci.com/gh/dsl-toolkit/dsl-toolkit/tree/master)
+[![CI](https://github.com/dsl-toolkit/dsl-toolkit/actions/workflows/github-actions-demo.yml/badge.svg)](https://github.com/dsl-toolkit/dsl-toolkit/actions/workflows/github-actions-demo.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a0e903d579b8ebebaf18/maintainability)](https://codeclimate.com/github/dsl-toolkit/dsl-toolkit/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a0e903d579b8ebebaf18/test_coverage)](https://codeclimate.com/github/dsl-toolkit/dsl-toolkit/test_coverage)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdsl-toolkit%2Fdsl-toolkit.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdsl-toolkit%2Fdsl-toolkit?ref=badge_shield)[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
 <!--- destination qa rewrite end -->
-
-Cowlog is **not for production code**, as it might cause performance issues. However, the tool provides **detailed information** about **where from you called** it from, so **you can locate and remove after debugging**. It gives you the **stack trace**. All the **log** messages **per process** to a separate file and **many more** things.
-<!--- source chat rewrite begin -->
-### Chat
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dsl-toolkit/Lobby)
-<!--- source chat rewrite end -->
 
 # Cowlog
 
