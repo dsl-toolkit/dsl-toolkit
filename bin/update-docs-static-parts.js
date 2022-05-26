@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-const { log } = require('console')
 const { linkerDir } = require('generic-text-linker')
 
 const path = require('path')
