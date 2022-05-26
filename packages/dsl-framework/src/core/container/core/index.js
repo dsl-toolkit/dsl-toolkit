@@ -1,7 +1,7 @@
 /* eslint-disable brace-style */
 /* eslint-disable block-spacing */
-
 const flat = require('flat')
+const ia = Array.isArray
 const getFrom = function (from, returnArrayChunks = []) {
   if (this.reset) {
     returnArrayChunks = this.returnArrayChunks
@@ -30,21 +30,21 @@ const getFrom = function (from, returnArrayChunks = []) {
         .filter(e => e !== false)
         .map(e => Array.from(e))
 
-      const result = intervals.map((e, i) => {
+      return intervals.map((e, i) => {
         const t = {}
         const c = e.map(e => {
           const order = e.split('.')[0]
-          return order
-        })
+          return order})
         c.forEach(e => { t[e] = true })
-        return Object.keys(t)
-      }).map((e, i) => {
-        return Array.from(e).map(e => ra[e])
-      }).map((e) => getFrom(0, e))
-      return result},
+        return Object.keys(t)})
+        .map((e, i) => {
+          return Array.from(e).map(e => ra[e])})
+        .map((e) => getFrom(0, e))},
+
     repeate: {
       // todo: generalize it
       me: require('./repeate-me')}}
+
   data.repeate.parent = data
 
   const me = this
@@ -55,14 +55,14 @@ const getFrom = function (from, returnArrayChunks = []) {
 
   returnObject.arguments.object = (commands, getProcess, defaultValue = false) => {
     const returnObject = {}
-    Array.isArray(commands) || (() => { commands = [commands] })()
-    Array.isArray(getProcess) || (() => { getProcess = [getProcess] })()
-    Array.isArray(defaultValue) || (() => { defaultValue = [defaultValue] })()
+    //isArray
+    ia(commands) || (() => { commands = [commands] })()
+    ia(getProcess) || (() => { getProcess = [getProcess] })()
+    ia(defaultValue) || (() => { defaultValue = [defaultValue] })()
 
     commands.forEach((command, i) => {
       returnObject[command] = arg(command, getProcess[i], defaultValue[i])})
     return returnObject}
-
   returnObject.commandSequence = require('../../command-sequence')(returnObject)
 
   return returnObject}
@@ -86,7 +86,6 @@ module.exports = exports = () => ({
     commandArguments = commandArguments || []
     let newChain = false
     if (this.commandName) {
-      // l(this.commandName)()
       commandArguments = [this.commandName, ...commandArguments]
       newChain = true
       this.commandName = false}

@@ -10,17 +10,9 @@
     "test-old": "echo 1 || npm run build && npm run test-compiled && npm run clean",
     "test": "npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
     "test-project": "echo 1 || npm run license-check && node_modules/.bin/depcheck --ignores \"chai,@types/node,require-a-lot,cowlog,flat,lodash,rimraf,generic-text-linker,jasmine-core,karma-chrome-launcher,karma-jasmine,eslint*\" && echo npm run standard-fix",
-    "test-all": "echo 1 || npm run test-project && npm test",
-    "test-all-dev": "echo 1 || npm run test-project && npm run test-dev",
-    "build-src": "echo 1",
-    "build-test": "echo 1",
-    "prepublish": "npm run build-src && npm run build-test",
     "clean": "npx rimraf dist tmp && mkdir dist && mkdir tmp",
     "standard-fix": "echo 1 || npx standard --fix",
-    "license-check": "npx license-checker --failOn unknown --summary",
-    "web": "npm run browserify && npm run minify && node tools/create-sample-page",
-    "browserify": "mkdir dist/web -p && node_modules/.bin/browserify -o dist/web/dsl-framework.js -e src/index.js --exclude src/examples",
-    "minify": "node_modules/.bin/minify dist/web/dsl-framework.js > dist/web/dsl-framework.min.js",
+    "license-check": "npx license-checker --failOn unknown --summary"
   },
   "repository": {
     "type": "git",

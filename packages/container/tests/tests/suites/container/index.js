@@ -15,8 +15,7 @@ describe('checking services', ()=>{
     const container = containerFactory
     .define('a', 'AAA')
     .compose('b', (a) => {
-      return`${a}BBB`
-    })()
+      return`${a}BBB`})()
     assert(container.b==='AAABBB')})
 
     it('makes sure that a serice is evaluated only once.', ()=>{
@@ -25,15 +24,13 @@ describe('checking services', ()=>{
       .define('a', 'AAA')
       .compose('b', (a) => {
         calculated++;
-        return `${a}BBBCCC`
-      })()
-  
+        return `${a}BBBCCC`})()
+
       container.b;container.b;container.b;container.b;container.b;container.b;container.b;container.b;
       container.b;container.b;container.b;container.b;container.b;container.b;container.b;container.b;
-  
+
       assert(calculated>0)
-      assert(calculated===1)
-    })
+      assert(calculated===1)})
 
     it('makes sure that a factory is evaluated not only once.', ()=>{
       let calculated=0
@@ -41,14 +38,12 @@ describe('checking services', ()=>{
       .define('a', 'AAA')
       .create('b', (a) => {
         calculated++;
-        return `${a}BBBCCC`
-      })()
+        return `${a}BBBCCC`})()
 
       container.b;container.b;container.b;container.b;container.b;container.b;container.b;container.b;
       container.b;container.b;container.b;container.b;container.b;container.b;container.b;container.b;
 
-      assert(calculated===16)
-    })})
+      assert(calculated===16)})})
 
 describe('checking constants', ()=>{
   it('tests if defined constants are reachable',()=>{
@@ -70,13 +65,11 @@ describe('checking constants', ()=>{
     it('_define', () => {
       const ff = basicInstance
       assert(ff._define.a)
-      assert(ff._define.a.kind === 'parameter')
-    })
+      assert(ff._define.a.kind === 'parameter')})
     it('_compose', () => {
       const ff = basicInstance
       assert(ff._compose.b)
-      assert(ff._compose.b.kind === 'service')
-    })
+      assert(ff._compose.b.kind === 'service')})
     // it('_create', () => {
     //   const ff = basicInstance()
     //   assert(ff._create.c)
@@ -86,8 +79,22 @@ describe('checking constants', ()=>{
       const ff = basicInstance
       assert(Array.isArray(ff._allKeys))
       assert(ff._allKeys.length > 0)
-      assert.deepEqual(ff._allKeys, ['a', 'b', 'c'])
-    })
+      assert.deepEqual(ff._allKeys, ['a', 'b', 'c'])})
+
+    describe ('tests giving malformed functions for compose', ()=>{
+      it('test defining constants and compose services.', ()=>{
+        const container = containerFactory
+        .define('a', 'AAA')
+        .compose('b', c => {
+          return`${a}BBB`})()
+
+        try{
+          (()=>container.b)()
+          assert(false)}
+        catch(e){
+          console.log(e);
+          assert(e.toString().startsWith('ReferenceError: a is not defined'))}})})})
+          
     describe('_duplicateKeys', () => {
       // it('no duplicates', () => {
       //   const ff = basicInstance
@@ -150,4 +157,5 @@ describe('checking constants', ()=>{
 //       })
 //     })
   // })
-})
+
+

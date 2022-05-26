@@ -2,8 +2,8 @@
   "name": "dsl-framework",
   "version": "1.7.30",
   "description": "Easy function chaining.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
   "scripts": {
     "test-dev": "npx mocha --recursive tests/tests/node/*-spec.js",
     "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/node/unit/*-spec.js",
@@ -12,8 +12,6 @@
     "test-project": "npm run license-check && node_modules/.bin/depcheck --ignores \"@types/node,require-a-lot,cowlog,flat,lodash,rimraf,generic-text-linker,jasmine-core,karma-chrome-launcher,karma-jasmine,eslint*\" && npm run standard-fix",
     "test-all": "npm run test-project && npm test",
     "test-all-dev": "npm run test-project && npm run test-dev",
-    "build-src": "echo 1",
-    "build-test": "echo 1",
     "prepublish": "npm run build-src && npm run build-test",
     "clean": "npx rimraf dist tmp && mkdir dist && mkdir tmp",
     "standard-fix": "npx standard --fix",
@@ -22,8 +20,7 @@
     "browserify": "mkdir dist/web -p && node_modules/.bin/browserify -o dist/web/dsl-framework.js -e src/index.js --exclude src/examples",
     "minify": "node_modules/.bin/minify dist/web/dsl-framework.js > dist/web/dsl-framework.min.js",
     "karmaa": "node_modules/.bin/karma start my.conf.js --log-level debug --single-run",
-    "karma": "node_modules/.bin/karma start my.conf.js",
-    "babel": "npx babel ./src -d ./dist && cp ./src/index.d.ts ./dist"
+    "karma": "node_modules/.bin/karma start my.conf.js"
   },
   "repository": {
     "type": "git",
