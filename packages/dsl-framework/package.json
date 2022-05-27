@@ -1,9 +1,10 @@
 {
   "name": "dsl-framework",
-  "version": "1.7.32",
+  "version": "1.7.33",
   "description": "Easy function chaining.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
+  
   "scripts": {
     "test-dev": "npx mocha --recursive tests/tests/node/*-spec.js",
     "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/node/unit/*-spec.js",
@@ -86,9 +87,7 @@
   },
   "nyc": {
     "exclude": [
-      "**/tests/**"
-    ]
-  },
+      "**/tests/**"]},
   "standard": {
     "ignore": [
       "/dist",
@@ -108,7 +107,7 @@
     ]
   },
   "files": [
-    "dist/**"
+    "src/**"
   ],
   "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
   "dependencies": {
