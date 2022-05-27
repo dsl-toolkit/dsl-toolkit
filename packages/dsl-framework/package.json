@@ -1,10 +1,9 @@
 {
   "name": "dsl-framework",
-  "version": "1.7.33",
+  "version": "1.7.34",
   "description": "Easy function chaining.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
-  
   "scripts": {
     "test-dev": "npx mocha --recursive tests/tests/node/*-spec.js",
     "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/node/unit/*-spec.js",
@@ -69,7 +68,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^5.0.0",
-    "generic-text-linker": "^1.7.26",
+    "generic-text-linker": "^1.7.27",
     "jasmine-core": "^3.6.0",
     "karma": "^6.1.1",
     "karma-chrome-launcher": "^3.1.0",
@@ -87,7 +86,9 @@
   },
   "nyc": {
     "exclude": [
-      "**/tests/**"]},
+      "**/tests/**"
+    ]
+  },
   "standard": {
     "ignore": [
       "/dist",
