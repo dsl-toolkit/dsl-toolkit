@@ -1,6 +1,6 @@
 {
   "name": "di-dsl",
-  "version": "1.7.45",
+  "version": "1.7.46",
   "description": "Easy function chaining.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -70,7 +70,7 @@
   "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
   "dependencies": {
     "array-dsl": "^1.6.59",
-    "dsl-framework": "^1.7.35",
+    "dsl-framework": "^1.7.36",
     "esprima": "^4.0.1"
   }
 }
