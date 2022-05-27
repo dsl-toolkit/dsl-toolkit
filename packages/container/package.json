@@ -1,10 +1,11 @@
 {
   "name": "di-dsl",
-  "version": "1.7.44",
+  "version": "1.7.45",
   "description": "Easy function chaining.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "scripts": {
+    "pub": "npm version patch --force && npm publish",
     "test-dev": "npx mocha --recursive tests/tests/*-spec.js",
     "test-dev-unit": "echo 1 || npm run clean && node_modules/.bin/mocha --recursive tests/tests/*-spec.js",
     "test-old": "echo 1 || npm run build && npm run test-compiled && npm run clean",

@@ -1,9 +1,10 @@
 {
   "name": "directory-fixture-provider",
-  "version": "1.7.26",
+  "version": "1.7.24",
   "description": "Provides directories for testing.",
   "main": "src/index.js",
   "scripts": {
+    "pub": "npm version patch --force && npm publish",
     "test-dev": "node_modules/.bin/mocha --recursive tests/tests",
     "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/unit",
     "test-dev-coverage": "node_modules/.bin/mocha --recursive tests/tests",
@@ -44,7 +45,7 @@
   "homepage": "https://github.com/dsl-toolkit/directory-fixture-provider",
   "dependencies": {
     "directory-exists": "^2.0.1",
-    "dsl-framework": "^1.7.35",
+    "dsl-framework": "^1.7.32",
     "empty-dir": "^2.0.0",
     "fs-extra": "^9.1.0",
     "is-empty": "^1.2.0",
@@ -80,7 +81,7 @@
     ]
   },
   "files": [
-    "dist/src/**"
+    "src/**"
   ],
   "gitHead": "19e8b21012acf44b1ab3282334728383af893416"
 }
