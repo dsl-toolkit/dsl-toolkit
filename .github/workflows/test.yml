@@ -16,19 +16,20 @@ jobs:
         node-version: 14
     - name: Check out repository code
       uses: actions/checkout@v3
-    - run: |
-        apt-get update && apt-get -y install git &&
-        git config --global user.email "you@example.com" && git config --global user.name "Your Name"
-    - run: bin/install.sh
-    - run: npm run test
-
     - name: Cache multiple paths
+      id: cache-paths
       uses: actions/cache@v3
       with:
         path: |
           **/node_modules
         key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          
+    - run: |
+        apt-get update && apt-get -y install git &&
+        git config --global user.email "you@example.com" && git config --global user.name "Your Name"
+      if: steps.cache-paths.outputs.cache-hit != 'true'
+    - run: bin/install.sh
+    - run: npm run test          
+    
   # publish-dsl-framework:
   #   runs-on: [self-hosted]
   #   container:
