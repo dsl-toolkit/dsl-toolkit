@@ -1,3 +1,6 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable object-curly-newline */
+/* eslint-disable object-curly-spacing */
 /* eslint-disable brace-style */
 /* eslint-disable block-spacing */
 /* eslint-disable indent */
@@ -5,6 +8,7 @@
 const stringifyObject = require('stringify-object')
 const flatten = require('flat')
 const fclone = require('fclone')
+const { log } = require('console')
 // todo: Needs refactoring!
 const weGotMarkdown = process.env.markdown
 
@@ -31,28 +35,20 @@ module.createBody = function extracted (
   colored, referenceFunctionArguments, originalArguments, calculatedParameters, loggerPrintHelpers) {
   if (colored && weGotMarkdown) {
     colored = false}
-  let logBody = ''
-  const parametersLength = originalArguments.length
-  for (let i = 0; i < parametersLength; i++) {
+  const logbody = originalArguments.map((value, i) => {
     const argumentName = module.createArgumentName(referenceFunctionArguments, i)
-    let newMsg = ''
-    newMsg += module.createArgumentDelimiter(
+    const begin = module.createArgumentDelimiter(
       module.dictionary.beginning, colored, argumentName, calculatedParameters, loggerPrintHelpers)
-    const value = originalArguments[i]
+
     const isObject = value != null && typeof value === 'object'
     const valueToShow = isObject ? flatten(fclone(value)) : value
-    const stringifyedParameter = stringifyObject(valueToShow, {
-      indent: '  ',
-      singleQuotes: false
-    })
-    newMsg += stringifyedParameter
-    newMsg += module.createArgumentDelimiter(
-      module.dictionary.end, colored, argumentName, calculatedParameters, loggerPrintHelpers)
-    logBody += newMsg
-  }
+    const stringifyedParameter = begin + stringifyObject(valueToShow, {indent: '  ', singleQuotes: false})
+    // console.log({stringifyedParameter})
+    return (stringifyedParameter + module.createArgumentDelimiter(
+      module.dictionary.end, colored, argumentName, calculatedParameters, loggerPrintHelpers))}).join('')
 
   const cols = process.stdout.columns || 80
-  const bodyArray = logBody.split('\n')
+  const bodyArray = logbody.split('\n')
   return bodyArray.map((line) => {
     const limit = cols - 6
     const tooLongLine = line.length >= limit

@@ -1,20 +1,22 @@
+/* eslint-disable block-spacing */
+/* eslint-disable brace-style */
 /* eslint-env mocha */
 require('../../lib/test-common')
 const assert = require('chai').assert
 const testExec = require('../../lib/external-test-executor')
-const {substingToLineMapper} = require('generic-text-linker')
+const { substingToLineMapper } = require('generic-text-linker')
 const stlc = require('../../lib/string-to-line-increasing-checker')
 const mockData = require('../../mockData')
 const expect = require('chai').expect
 require('chai').should()
-// const parallel = require('mocha.parallel');
 
-describe('cowlog functional tests', function () {
+require('mocha.parallel')('cowlog functional tests', function () {
   this.timeout(15000)
-
   const basicOutputTests = function (capturedText) {
     if (capturedText) {
-      expect(capturedText).to.be.a('string').that.does.include('Beginnig ---')
+      console.log({capturedText})
+      expect(capturedText).to.be.a('string')
+        .that.does.include('Beginnig ---')
         .and.that.does.include('End ---')
         .and.that.does.include('called from:')
         .and.that.does.include('_-_-_-_-_-_-_-_-_-_-_-_')
@@ -23,24 +25,21 @@ describe('cowlog functional tests', function () {
         .and.that.does.include('logged at:')
         .and.that.does.include('______________')
         .and.that.does.include('--------------')
-      // .and.that.does.include('test:')
+        // .and.that.does.include('test:')
       stlc(capturedText, ['________________', '"' + mockData.abcString + '"', '_-_-_-_-_-_-_-_-_-_-_-_', 'called from:',
-        'stack trace:', 'session log:', 'logged at:', '-----------------------'])
-    }
-  }
+        'stack trace:', 'session log:', 'logged at:', '-----------------------'])}}
 
   it('basic data testing', function (done) {
     testExec('basic', function (output) {
-      expect(output).to.be.a('string').that.does.include('"' + mockData.abcString + '"')
+      expect(output).to.be.a('string')
+        .that.does.include('"' + mockData.abcString + '"')
         .and.that.does.include('"embeded.level1.level2.c": null')
         .and.that.does.include('"embeded.level1.level2.testObject2.fn": function')
         .and.that.does.include('"embeded.level1.level2.testObject2.c": 1')
         .and.that.does.include('"embeded.level1.level2.array.0.b": "b"')
         .and.that.does.not.include('to be able to present')
       basicOutputTests(output)
-      done()
-    })
-  })
+      done()})})
 
   it('clean logger', function (done) {
     testExec('basic-clean', function (output) {
@@ -52,9 +51,7 @@ describe('cowlog functional tests', function () {
         .and.that.does.not.include('stack trace:')
         .and.that.does.not.include('session log:')
         .and.that.does.not.include('logged at:')
-      done()
-    })
-  })
+      done()})})
 
   it('@array', function (done) {
     testExec('basic-array', function (output) {
@@ -63,18 +60,14 @@ describe('cowlog functional tests', function () {
         .and.that.does.include('1')
         .and.that.does.include('2')
         .and.that.does.not.include('3')
-      done()
-    })
-  })
+      done()})})
 
   it('@function', function (done) {
     testExec('basic-function', function (output) {
       expect(output).to.be.a('string').that.does.include('function')
         .and.that.does.include('return')
         .and.that.does.include('}')
-      done()
-    })
-  })
+      done()})})
 
   it('different @object with a @function in it', function (done) {
     testExec('basic-object', function (output) {
@@ -84,22 +77,18 @@ describe('cowlog functional tests', function () {
         .and.that.does.include('+')
         .and.that.does.include('b')
         .and.that.does.include('}')
-      done()
-    })
-  })
+      done()})})
 
   it('tests return', function (done) {
     testExec('return', function (output) {
       expect(output).to.be.a('string').that.does.include(mockData.abcString + 'z')
       stlc(output, ['0 Beginnig ', 'lastly', 'abcz ', 'abczz'])
-      done()
-    })
-  })
+      done()})})
 
   it('testing @last feature', function (done) {
     testExec('last', function (output) {
-      let abcLines = substingToLineMapper(output, mockData.abcString, {nothingAfterTag:false})
-      let endLine = substingToLineMapper(output, 'The following log entry is shown here because asked for it to show it again before the program exits', {nothingAfterTag:false})
+      const abcLines = substingToLineMapper(output, mockData.abcString, { nothingAfterTag: false })
+      const endLine = substingToLineMapper(output, 'The following log entry is shown here because asked for it to show it again before the program exits', { nothingAfterTag: false })
       assert(abcLines.length === 2, `the 'abc' string shall be present in the output twice ${abcLines.length}`)
       assert(endLine > abcLines[0], 'the firts occurence shall be sooner than the process ending text')
       assert(endLine < abcLines[1], 'the second one shall occur after the process end test')
@@ -113,8 +102,8 @@ describe('cowlog functional tests', function () {
 
   it('testing @lasts feature', function (done) {
     testExec('lasts', function (output) {
-      let abcLines = substingToLineMapper(output, 'abcz', {nothingAfterTag:false})
-      let endLine = substingToLineMapper(output, 'The following log entry is shown here because asked for it to show it again before the program exits', {nothingAfterTag:false})
+      const abcLines = substingToLineMapper(output, 'abcz', { nothingAfterTag: false })
+      const endLine = substingToLineMapper(output, 'The following log entry is shown here because asked for it to show it again before the program exits', { nothingAfterTag: false })
       // todo: fix it ===4 shall be ok but nde7 and lover it doubles the printing at the end.
       // assert(abcLines.length === 4, "the 'abc' string shall be present in the output twice " + abcLines.length)
       assert(abcLines.length >= 4, "the 'abc' string shall be present in the output twice " + abcLines.length)
@@ -245,5 +234,4 @@ describe('cowlog functional tests', function () {
       done()
     })
   })
-
 })
