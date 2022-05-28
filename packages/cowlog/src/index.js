@@ -1,5 +1,6 @@
 'use strict'
 const configParser = require('./app/configParser/configParser')
+// const dslFreamewrk = require('dsl-framework')()
 
 module.exports = exports = function (defaultParametersToken) {
   defaultParametersToken = defaultParametersToken || 'default'
