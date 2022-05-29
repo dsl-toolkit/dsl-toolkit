@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/refresh-me",
   "dependencies": {
-    "diff": "^4.0.2",
+    "diff": "^5.1.0",
     "latest-version": "^5.1.0",
     "object-path": "^0.11.4",
     "semver": "^7.3.2",
