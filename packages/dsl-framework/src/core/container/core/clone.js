@@ -15,4 +15,5 @@ module.exports = function () {
     start: this.start,
     setCommandArguments: this.setCommandArguments,
     setCommandName: this.setCommandName,
-    getFrom: this.getFrom}}
+    getFrom: this.getFrom
+}}

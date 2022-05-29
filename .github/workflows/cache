@@ -1,0 +1,14 @@
+    # - name: Cache multiple paths
+    #   id: cache-paths
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: |
+    #       ./node_modules
+    #       ./packages/**/node_modules
+    #     key: ${{ runner.os }}-${{ 
+    #       hashFiles(
+    #       './package-lock.json'
+    #       './packages/**/package-lock.json'
+    #       )}}
+    # - name: Install dependencies
+    # if: steps.cache-paths.outputs.cache-hit != 'true'

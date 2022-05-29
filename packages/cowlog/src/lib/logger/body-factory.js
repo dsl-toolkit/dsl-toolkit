@@ -1,79 +1,58 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable object-curly-newline */
+/* eslint-disable object-curly-spacing */
+/* eslint-disable brace-style */
+/* eslint-disable block-spacing */
+/* eslint-disable indent */
 'use strict'
 const stringifyObject = require('stringify-object')
 const flatten = require('flat')
 const fclone = require('fclone')
-//todo: Needs refactoring!
-const weGotMarkdown = process.env.markdown;
+const { log } = require('console')
+// todo: Needs refactoring!
+const weGotMarkdown = process.env.markdown
 
 module.exports = exports = function (container) {
   module.dictionary = container.get('dictionary')
   module['logger-print-helpers'] = container.get('logger-print-helpers')
 
-  return function (colored,  originalArguments, calculatedParameters, loggerPrintHelpers) {
-    let referenceFunctionArguments = false
-    return module.createBody(colored,
-                             referenceFunctionArguments, originalArguments, calculatedParameters, loggerPrintHelpers)
-  }
-}
+  return function (colored, originalArguments, calculatedParameters, loggerPrintHelpers) {
+    const referenceFunctionArguments = false
+    return module.createBody(
+      colored, referenceFunctionArguments, originalArguments, calculatedParameters, loggerPrintHelpers)}}
 
 module.createArgumentName = function extracted (referenceFunctionArguments, iterator) {
-  let argumentName = iterator
-
-  return argumentName
-}
+  const argumentName = iterator
+  return argumentName}
 
 module.createArgumentDelimiter = function (text, colored, argumentName) {
   let delimiter = argumentName + ` ${text} ${module.dictionary.argumentNameDelimiter}---`
   delimiter = module['logger-print-helpers'].getInverseString(colored, delimiter)
   delimiter = '\n' + delimiter + '\n'
-  return delimiter
-}
+  return delimiter}
 
-module.createBody = function extracted (colored, referenceFunctionArguments, originalArguments,
-                                                                             calculatedParameters, loggerPrintHelpers) {
-  if(colored && weGotMarkdown){
-    colored = false
-  }
-  let logBody = ''
-  let parametersLength = originalArguments.length
-  for (let i = 0; i < parametersLength; i++) {
-    let argumentName = module.createArgumentName(referenceFunctionArguments, i)
-    let newMsg = ''
-    newMsg += module.createArgumentDelimiter(module.dictionary.beginning, colored, argumentName, calculatedParameters,
-                                                                                                     loggerPrintHelpers)
-    let value = originalArguments[i]
+module.createBody = function extracted (
+  colored, referenceFunctionArguments, originalArguments, calculatedParameters, loggerPrintHelpers) {
+  if (colored && weGotMarkdown) {
+    colored = false}
+  const logbody = originalArguments.map((value, i) => {
+    const argumentName = module.createArgumentName(referenceFunctionArguments, i)
+    const begin = module.createArgumentDelimiter(
+      module.dictionary.beginning, colored, argumentName, calculatedParameters, loggerPrintHelpers)
+
     const isObject = value != null && typeof value === 'object'
-    let valueToShow = isObject ? flatten(fclone(value)) : value
-    let stringifyedParameter = stringifyObject(valueToShow , {
-      indent: '  ',
-      singleQuotes: false
-    })
-    newMsg += stringifyedParameter
-    newMsg += module.createArgumentDelimiter(module.dictionary.end, colored, argumentName, calculatedParameters,
-                                                                                                     loggerPrintHelpers)
-    logBody += newMsg
-  }
+    const valueToShow = isObject ? flatten(fclone(value)) : value
+    const stringifyedParameter = begin + stringifyObject(valueToShow, {indent: '  ', singleQuotes: false})
+    // console.log({stringifyedParameter})
+    return (stringifyedParameter + module.createArgumentDelimiter(
+      module.dictionary.end, colored, argumentName, calculatedParameters, loggerPrintHelpers))}).join('')
 
-  let theRightWidthOutput = (function (logBody) {
-    const cols = process.stdout.columns || 80
-    let bodyArray = logBody.split('\n')
-    let ret = []
-    bodyArray.forEach(function (line, index) {
-      let limit = cols -6
-      let tooLongLine = line.length >= limit
-      if(tooLongLine){
-        let re = new RegExp(`.{1,${limit}}`, 'gm')
-        let m = line.match(re)
-        ret.push(m.join('\n'))
-      }
-      if(!tooLongLine || !line.length)
-      {
-        ret.push(line)
-      }
-    })
-
-    return ret.join('\n')
-  }(logBody))
-
-  return theRightWidthOutput
-}
+  const cols = process.stdout.columns || 80
+  const bodyArray = logbody.split('\n')
+  return bodyArray.map((line) => {
+    const limit = cols - 6
+    const tooLongLine = line.length >= limit
+    if (tooLongLine) {
+      return (line.match(RegExp(`.{1,${limit}}`, 'gm')).join('\n'))}
+    if (!tooLongLine || !line.length) {
+      return line}}).join('\n')}

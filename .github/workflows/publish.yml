@@ -25,17 +25,4 @@ jobs:
       with:
         token: ${{ secrets.NPM_TOKEN }}
         package: ./packages/dsl-framework
-        
-  # publish-dsl-framework:
-  #   runs-on: [self-hosted]
-  #   container:
-  #     image: node:current-buster-slim
-  #   steps:
-  #   - run : |
-  #       cd packages/dsl-framework && echo happy
-  #   rules:
-  #     - changes:
-  #       - packages/dsl-framework/package*.json
-  #       - packages/dsl-framework/src/*
-  #       - packages/dsl-framework/src/**/*
 

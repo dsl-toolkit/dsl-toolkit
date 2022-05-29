@@ -5,11 +5,10 @@ module.exports = exports = {
   consoleLogDetails: {
     name: 'consoleLogDetaisDefault',
     register: function (container) {
-      const eventEmitter = container.get('event-emitter')
       const dictionary = container.get('dictionary')
       const coloring = container.get('message-coloring')
 
-      eventEmitter.on('console_log_details', function (colored, logEntry, addtoMsg) {
+      container.get('event-emitter').on('console_log_details', function (colored, logEntry, addtoMsg) {
         /* istanbul ignore else */
         if (colored && weGotMarkdown) {
           colored = false

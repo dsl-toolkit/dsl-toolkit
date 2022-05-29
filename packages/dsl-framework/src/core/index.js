@@ -58,7 +58,8 @@ get (obj, prop) {
           state.setCommandName(prop)
           return caller},
         apply (target, thisArg, argumentsList) {
-          return target(...argumentsList)}})
+          return target(...argumentsList)}
+})
     return caller()}
 
   core.setCoreData = function (data) {
