@@ -50,5 +50,6 @@ module.exports = exports = (returnObject) => {
     getArguments: function (command, commands) {
       if (typeof commands === 'undefined') {
         commands = returnObject.data.returnArrayChunks}
-      return this.get(command).map((command) => command.slice(1))}}
+      return this.get(command).map((command) => command.slice(1))}
+  }
   return baseObject.init()}
