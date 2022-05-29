@@ -17,12 +17,17 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 14
-    
+
     - run: |
         apt-get update && apt-get -y install git tree && tree &&
         git config --global user.email "you@example.com" && git config --global user.name "Your Name"
-  
-    - run: npm install && npx lerna bootstrap
+
+    - uses: nick-fields/retry@v2
+      with:
+        timeout_seconds: 15
+        max_attempts: 3
+        command: npm install && npx lerna bootstrap
+        on_retry_command: npx lerna clean && npm install && npx lerna bootstrap
 
     - name: testing
-      run: npm run test          
+      run: npm run test
