@@ -14,8 +14,7 @@ const extracted = (allFine, testBranch, updateLog, name, version) => ({
   allFine,
   testBranch,
   updateLog,
-  packageInfo: { name, version }
-})
+  packageInfo: { name, version }})
 const relativePath = objectPath.get(diff.diffChars(shell.exec('git rev-parse --show-toplevel').trim(), cwd), '1.value', false)
 
 const getCommandSequence = (type = 'javascript') => {
@@ -24,12 +23,10 @@ const getCommandSequence = (type = 'javascript') => {
       const currentBranch = getCurrentBranch()
       const modParams = {
         // actualVersion,
-        latestVersion, testBranch
-      }
+        latestVersion, testBranch}
       // Sometimes it puts a space after the version number in the name of the test branch.
       Object.keys(modParams).forEach(tagName => {
-        modParams[tagName] = modParams[tagName].replace(/\s/g, '')
-      })
+        modParams[tagName] = modParams[tagName].replace(/\s/g, '')})
 
       return [
         `git checkout -b ${testBranch}`,
@@ -40,16 +37,11 @@ const getCommandSequence = (type = 'javascript') => {
         // `at path:${!relativePath ? './' : relativePath}`,
         `git checkout ${currentBranch}`,
         `git merge ${modParams.testBranch}  --no-verify`,
-        `git branch -D ${modParams.testBranch}`
-      ]
-    }
-  }
-}
+        `git branch -D ${modParams.testBranch}`]}}}
 
 const update = async (dependencies) => {
   if (dependencies) {
     const dependencyNames = Object.keys(dependencies)
-
     let allFine = true
     let testBranch = ''
     const updateLog = []
@@ -77,19 +69,11 @@ const update = async (dependencies) => {
                 console.log(`chain broke at: ${command}`)
                 return extracted(allFine, testBranch, updateLog, name, version)
               })()
-            : (() => extracted(allFine, testBranch, updateLog, name, version))()
-        })
-      }
-
+            : (() => extracted(allFine, testBranch, updateLog, name, version))()})}
       if (!allFine) {
-        break
-      }
-    }
-
-    return extracted(allFine, testBranch, updateLog, '', '')
-  }
-  return extracted(true, '', [], '', '')
-}
+        break}}
+    return extracted(allFine, testBranch, updateLog, '', '')}
+  return extracted(true, '', [], '', '')}
 
 const printMessage = (result) => {
   console.log(result.updateLog.join('\n'))
