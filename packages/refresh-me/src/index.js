@@ -48,8 +48,8 @@ const update = async (dependencies) => {
     for (let i = 0; dependencyNames.length > i; i++) {
       const dependencyName = dependencyNames[i]
       const versionNumber =dependencies[dependencyName]
-      const isItFixedVersion = versionNumber.startsWith('^')
-      if(isItFixedVersion){
+      const itIsNotFixedVersion = versionNumber.startsWith('^')
+      if(itIsNotFixedVersion){
         const actualVersion = makeRealSemver(versionNumber)
         const latestVersion = await lv(dependencyName)
         testBranch = `refreshing-${dependencyName}@${actualVersion}-to-${latestVersion}`
@@ -59,8 +59,8 @@ const update = async (dependencies) => {
           testBranch)
         if (update) {
           commandSequience.map((command) => {
-            allFine && console.log(`-= ${command} =-`)
-            allFine || console.log(updateLog.join('\n'))
+            // allFine && console.log(`-= ${command} =-`)
+            // allFine || console.log(updateLog.join('\n'))
             return allFine
               ? (() => {
                 updateLog.push(command)
@@ -69,12 +69,13 @@ const update = async (dependencies) => {
                 ? allFine
                 : (() => {
                   allFine = false
-                  console.log(`chain broke at: ${command}`)
+                  // console.log(`chain broke at: ${command}`)
                   return extracted(allFine, testBranch, updateLog, name, version)
                 })()
               : (() => extracted(allFine, testBranch, updateLog, name, version))()})}
         if (!allFine) {
-          break}}
+          break}
+        }
       return extracted(allFine, testBranch, updateLog, '', '')}}
   return extracted(true, '', [], '', '')}
 
