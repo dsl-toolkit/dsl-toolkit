@@ -3,7 +3,7 @@ const getCurrentBranch = require('./get-current-branch');
 const getCommandSequence = (type = 'javascript') => {
   if (type === 'javascript') {
     return (relativePath, name, dependencyName, actualVersion, latestVersion, testBranch) => {
-      const currentBranch = getCurrentBranch();
+      const currentBranch = getCurrentBranch()
       const modParams = {
         // actualVersion,
         latestVersion, testBranch

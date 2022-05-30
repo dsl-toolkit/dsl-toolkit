@@ -17,7 +17,6 @@
     "build-test": "npx lerna run build-test",
     "docs-gen": "npx lerna run docs-gen",
     "license-check": "npx license-checker --failOn unknown --summary",
-    "postinstall": "npx lerna bootstrap",
     "prepublish": "npx lerna run publish",
     "standard-fix": "npx lerna run standard-fix",
     "test": "npm run test-project && npx nyc --reporter=lcov --reporter=clover --reporter=text npx lerna run --concurrency=4 test-all",
