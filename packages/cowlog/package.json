@@ -73,7 +73,7 @@
   "devDependencies": {
     "@types/node": "^16.10.3",
     "chai": "^4.3.0",
-    "depcheck": "^1.4.0",
+    "depcheck": "^1.4.3",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
@@ -83,9 +83,9 @@
     "generic-text-linker": "^1.7.29",
     "glob": "^7.1.6",
     "license-checker": "^25.0.1",
-    "mocha": "^8.3.0",
+    "mocha": "^10.0.0",
     "nyc": "^15.1.0",
-    "standard": "^16.0.3",
+    "standard": "^16.0.4",
     "strip-ansi": "^6.0.0"
   },
   "engines": {

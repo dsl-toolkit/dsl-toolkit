@@ -9,4 +9,5 @@ module.exports = exports = (returnObject) => function * () {
     const command = commands[i][0]
     yield {
       command,
-      arguments: commandParserFactory(value)('allEntries')[0]}}}
+      arguments: commandParserFactory(value)('allEntries')[0]
+    }}}
