@@ -36,7 +36,7 @@
   "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/refresh-me",
   "dependencies": {
     "diff": "^5.1.0",
-    "latest-version": "^5.1.0",
+    "latest-version": "5.1.0",
     "object-path": "^0.11.4",
     "semver": "^7.3.2",
     "shelljs": "^0.8.4"
@@ -46,8 +46,8 @@
     "depcheck": "^0.9.2",
     "directory-fixture-provider": "^1.7.26",
     "license-checker": "^25.0.1",
-    "mocha": "^7.1.2",
-    "nyc": "^15.0.1",
+    "mocha": "^7.2.0",
+    "nyc": "^15.1.0",
     "standard": "^14.3.3"
   },
   "files": [

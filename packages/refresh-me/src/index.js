@@ -47,32 +47,35 @@ const update = async (dependencies) => {
     const updateLog = []
     for (let i = 0; dependencyNames.length > i; i++) {
       const dependencyName = dependencyNames[i]
-      const actualVersion = makeRealSemver(dependencies[dependencyName])
-      const latestVersion = await lv(dependencyName)
-      testBranch = `refreshing-${dependencyName}@${actualVersion}-to-${latestVersion}`
-      const update = semver.gt(latestVersion, actualVersion)
-      const { name, version } = require(path.join(cwd, 'package.json'))
-      const commandSequience = getCommandSequence()(relativePath, name, dependencyName, actualVersion, latestVersion,
-        testBranch)
-      if (update) {
-        commandSequience.map((command) => {
-          allFine && console.log(`-= ${command} =-`)
-          allFine || console.log(updateLog.join('\n'))
-          return allFine
-            ? (() => {
-              updateLog.push(command)
-              return !shell.exec(command).code
-            })()
-              ? allFine
-              : (() => {
-                allFine = false
-                console.log(`chain broke at: ${command}`)
-                return extracted(allFine, testBranch, updateLog, name, version)
+      const versionNumber =dependencies[dependencyName]
+      const isItFixedVersion = versionNumber.startsWith('^')
+      if(isItFixedVersion){
+        const actualVersion = makeRealSemver(versionNumber)
+        const latestVersion = await lv(dependencyName)
+        testBranch = `refreshing-${dependencyName}@${actualVersion}-to-${latestVersion}`
+        const update = semver.gt(latestVersion, actualVersion)
+        const { name, version } = require(path.join(cwd, 'package.json'))
+        const commandSequience = getCommandSequence()(relativePath, name, dependencyName, actualVersion, latestVersion,
+          testBranch)
+        if (update) {
+          commandSequience.map((command) => {
+            allFine && console.log(`-= ${command} =-`)
+            allFine || console.log(updateLog.join('\n'))
+            return allFine
+              ? (() => {
+                updateLog.push(command)
+                return !shell.exec(command).code
               })()
-            : (() => extracted(allFine, testBranch, updateLog, name, version))()})}
-      if (!allFine) {
-        break}}
-    return extracted(allFine, testBranch, updateLog, '', '')}
+                ? allFine
+                : (() => {
+                  allFine = false
+                  console.log(`chain broke at: ${command}`)
+                  return extracted(allFine, testBranch, updateLog, name, version)
+                })()
+              : (() => extracted(allFine, testBranch, updateLog, name, version))()})}
+        if (!allFine) {
+          break}}
+      return extracted(allFine, testBranch, updateLog, '', '')}}
   return extracted(true, '', [], '', '')}
 
 const printMessage = (result) => {

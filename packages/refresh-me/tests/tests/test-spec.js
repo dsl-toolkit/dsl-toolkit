@@ -10,7 +10,9 @@ const semver = require('semver')
 const fixtureDirectoryProvider = dfp(path.join(__dirname, '../assets'))()
 
 describe('Basic Test Suite', function () {
+  this.timeout(50000)
   describe('happy flow', () => {
+
     it('.happy flow only devDependencies specified in tha package.json', function () {
       const assetRelativePath = 'javascript/only-dev-dependencies/'
       const fixtureData = fixtureDirectoryProvider.get(assetRelativePath).dir
@@ -22,9 +24,7 @@ describe('Basic Test Suite', function () {
       const testPackageJson = require(path.join(fixtureData, '/package.json'))
       assert(semver.lt(
         makeRealSemver(originalPackageJson.devDependencies.cowlog),
-        makeRealSemver(testPackageJson.devDependencies.cowlog)))
-
-    }).timeout(50000);
+        makeRealSemver(testPackageJson.devDependencies.cowlog)))})
 
     it('.happy flow no devDependencies specified in tha package.json', function () {
       const assetRelativePath = 'javascript/only-dependencies/'
@@ -37,9 +37,17 @@ describe('Basic Test Suite', function () {
       const testPackageJson = require(path.join(fixtureData, '/package.json'))
       assert(semver.lt(
         makeRealSemver(originalPackageJson.dependencies.cowlog),
-        makeRealSemver(testPackageJson.dependencies.cowlog)))
+        makeRealSemver(testPackageJson.dependencies.cowlog)))})
 
-    }).timeout(50000);
-
-  })
-})
+    it('fixed version number dependecy (should not update)', function () {
+      const assetRelativePath = 'javascript/fixed-version-number/'
+      const fixtureData = fixtureDirectoryProvider.get(assetRelativePath).dir
+      shell.cd(fixtureData)
+      shell.exec(`git init && git add . && git commit -m"just for the test && npm install"`)
+      assert(!shell.exec(`${path.join(__dirname, '../../', 'src/index.js')} `).code)
+      assert(getCurrentBranch() === 'master', `getCurrentBranch() = '${getCurrentBranch()}'`)
+      const originalPackageJson = require(path.join(__dirname, '../', `assets/${assetRelativePath}/package.json`))
+      const testPackageJson = require(path.join(fixtureData, '/package.json'))
+      assert(semver.eq(
+        makeRealSemver(originalPackageJson.dependencies.cowlog),
+        makeRealSemver(testPackageJson.dependencies.cowlog)))})})})
