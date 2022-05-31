@@ -26,7 +26,6 @@
     "test-all": "npm run test-project && npm test",
     "test-all-dev": "npm run test-project && npm run test-dev",
     "test-suites": "npm run standard-fix && npm test",
-    "postinstall": "node_modules/.bin/lerna exec npm i && node_modules/.bin/lerna bootstrap",
     "build-src": "echo 1",
     "build-test": "echo 1",
     "prepublish": "npm run build-src && npm run build-test",

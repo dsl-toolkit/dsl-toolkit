@@ -19,6 +19,7 @@
     "license-check": "npx license-checker --failOn unknown --summary",
     "prepublish": "npx lerna run publish",
     "standard-fix": "npx lerna run standard-fix",
+    "postinstall_": "npx lerna bootstrap",
     "test": "npm run test-project && npx nyc --reporter=lcov --reporter=clover --reporter=text npx lerna run --concurrency=4 test-all",
     "test-all": "npm test",
     "test-all-dev": "npm run test-project && npm run test-dev",

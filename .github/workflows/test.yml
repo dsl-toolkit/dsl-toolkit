@@ -4,14 +4,12 @@ on: [push]
 
 jobs:
   install-test-flow:
-    runs-on: [self-hosted]
+    runs-on: self-hosted
     container:
       image: node:current-buster-slim
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 16
+
     - name: Get npm cache directory
       id: npm-cache-dir
       run: |
@@ -20,28 +18,28 @@ jobs:
       id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
       with:
         path: ${{ steps.npm-cache-dir.outputs.dir }}
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-node--${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-node-
+          ${{ runner.os }}-node--
     # - uses: actions/github-script@v6
+
     - name: Check out repository code
       uses: actions/checkout@v3
-    - run: |
-        node -v && npm i
-    - run: |
-        apt-get update && apt-get -y install git &&
-        git config --global user.email "you@example.com" && git config --global user.name "Your Name"
 
-  # publish-dsl-framework:
-  #   runs-on: [self-hosted]
-  #   container:
-  #     image: node:current-buster-slim
-  #   steps:
-  #   - run : |
-  #       cd packages/dsl-framework && echo happy
-  #   rules:
-  #     - changes:
-  #       - packages/dsl-framework/package*.json
-  #       - packages/dsl-framework/src/*
-  #       - packages/dsl-framework/src/**/*
-
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - run: |
+        # whoami &&
+        # chown -R 1000:1000 "/github/home/.npm" &&
+        apt-get update && apt-get -y install git tree &&
+        git config --global user.email "you@example.com" &&
+        git config --global user.name "Your Name" &&
+        node -v &&
+        npm i &&
+        chown -R 1000:1000 "./" &&
+        chown -R 1000:1000 "/github/home/.cache/" &&
+        mkdir /github/home/.standard-v14-cache/ && chown -R 1000:1000 /github/home/.standard-v14-cache
+        # tree &&
+        npx lerna bootstrap &&
+        npm test
