@@ -42,7 +42,7 @@
     "shelljs": "^0.8.4"
   },
   "devDependencies": {
-    "depcheck": "^0.9.2",
+    "depcheck": "^1.4.3",
     "directory-fixture-provider": "^1.7.26",
     "license-checker": "^25.0.1",
     "mocha": "^7.1.2",
