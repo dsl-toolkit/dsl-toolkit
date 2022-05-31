@@ -17,15 +17,10 @@ jobs:
     - name: Check out repository code
       uses: actions/checkout@v3
     - run: |
-        node -v && npm i &&
-        node_modules/.bin/lerna exec npm i &&
-        node_modules/.bin/lerna bootstrap
-    - run: echo "action_state=yellow" >> $GITHUB_ENV
+        node -v && npm i
     - run: |
-        apt-get update && apt-get -y install git tree &&
+        apt-get update && apt-get -y install git &&
         git config --global user.email "you@example.com" && git config --global user.name "Your Name"
-    - run: tree packages
-    - run: tree packages
 
   # publish-dsl-framework:
   #   runs-on: [self-hosted]
