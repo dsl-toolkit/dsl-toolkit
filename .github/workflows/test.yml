@@ -5,6 +5,9 @@ on: [push]
 jobs:
   install-test-flow:
     runs-on: self-hosted
+    strategy:
+      matrix:
+        node: [ 14, 16 ]
     container:
       image: node:current-buster-slim
     steps:
@@ -18,9 +21,9 @@ jobs:
       id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
       with:
         path: ${{ steps.npm-cache-dir.outputs.dir }}
-        key: ${{ runner.os }}-node--${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-${{ matrix.node }}-node--${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          ${{ runner.os }}-node--
+          ${{ runner.os }}-${{ matrix.node }}-node--
     # - uses: actions/github-script@v6
 
     - name: Check out repository code
@@ -28,18 +31,20 @@ jobs:
 
     - uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: ${{ matrix.node }}
     - run: |
-        # whoami &&
-        # chown -R 1000:1000 "/github/home/.npm" &&
-        apt-get update && apt-get -y install git tree &&
+        whoami &&
+        apt-get update &&
+        chown -R 1000:1000 "/github/home/.npm" &&
+        apt-get update &&
+        apt-get -y install git &&
         git config --global user.email "you@example.com" &&
         git config --global user.name "Your Name" &&
         node -v &&
         npm i &&
         chown -R 1000:1000 "./" &&
         chown -R 1000:1000 "/github/home/.cache/" &&
-        mkdir /github/home/.standard-v14-cache/ && chown -R 1000:1000 /github/home/.standard-v14-cache
-        # tree &&
+        mkdir /github/home/.standard-v14-cache/ &&
+        chown -R 1000:1000 /github/home/.standard-v14-cache
         npx lerna bootstrap &&
         npm test
