@@ -9,7 +9,7 @@ const semver = require('semver')
 const fixtureDirectoryProvider = dfp(path.join(__dirname, '../assets'))()
 
 describe('Basic Test Suite', function () {
-  this.timeout(50000);
+  this.timeout(500000);
   describe('happy flow', () => {
     it('.happy flow only devDependencies specified in tha package.json', function () {
       const { originalPackageJson, testPackageJson } = boilerplate('only-dev-dependencies')
