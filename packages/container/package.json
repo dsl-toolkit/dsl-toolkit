@@ -1,5 +1,5 @@
 {
-  "name": "di-dsl",
+  "name": "demeter-di",
   "version": "1.7.47",
   "description": "Easy function chaining.",
   "main": "src/index.js",
