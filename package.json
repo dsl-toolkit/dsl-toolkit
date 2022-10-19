@@ -6,7 +6,7 @@
     "directory-fixture-provider": "^1.7.1",
     "execa": "^5.1.1",
     "generic-text-linker": "^1.7.1",
-    "lerna": "^4.0.0",
+    "lerna": "^6.0.1",
     "license-checker": "^25.0.1",
     "nyc": "^15.1.0",
     "shelljs": "^0.8.4"
