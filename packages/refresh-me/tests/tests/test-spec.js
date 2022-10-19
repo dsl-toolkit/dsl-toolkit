@@ -20,6 +20,7 @@ describe('Basic Test Suite', function () {
 
     it('no updates', function () { const { originalPackageJson, testPackageJson } = boilerplate('no-updates')
       assert(originalPackageJson.devDependencies.cowlog === testPackageJson.devDependencies.cowlog)
-      assert(originalPackageJson.dependencies['directory-fixture-provider'] === testPackageJson.dependencies['directory-fixture-provider'])})})})
+      assert(originalPackageJson.dependencies['directory-fixture-provider'] === testPackageJson.dependencies['directory-fixture-provider'])})
+    })})
 
 

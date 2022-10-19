@@ -52,7 +52,8 @@ const update = async (dependencies) => {
                   log(`chain broke at: ${command}`)
                   return extracted(allFine, testBranch, updateLog, name, version)})()
               : (() => extracted(allFine, testBranch, updateLog, name, version))()})}
-        if (!allFine) {break}}}
+        if (!allFine) {break}
+      }}
     return extracted(allFine, testBranch, updateLog, '', '')}
   return extracted(true, '', [], '', '')}
 

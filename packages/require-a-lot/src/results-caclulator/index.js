@@ -8,10 +8,7 @@ module.exports = (ralContainer) => {
     })
   require('./hide')(parameters, results)
 
-  results = require(
-    '../../../container'
-    // '../container'
-  )(parameters, results, requireModuleInstance, infoList)
+  results = require('demeter-di')(parameters, results, requireModuleInstance, infoList)
 
   return ({ results, noPackageInfo, infoList })
 }
