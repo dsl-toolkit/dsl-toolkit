@@ -1,6 +1,6 @@
 {
   "name": "refresh-me",
-  "version": "1.7.29",
+  "version": "1.7.30",
   "description": "Keep your dependencies upate with ease.",
   "main": "src/index.js",
   "bin": {
