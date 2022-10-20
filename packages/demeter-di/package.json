@@ -1,6 +1,6 @@
 {
   "name": "demeter-di",
-  "version": "1.7.47",
+  "version": "1.7.48",
   "description": "Easy function chaining.",
   "main": "src/index.js",
   "types": "src/index.d.ts",

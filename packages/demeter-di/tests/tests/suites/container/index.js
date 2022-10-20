@@ -96,6 +96,26 @@ describe('checking constants', ()=>{
           assert(e.toString().startsWith('ReferenceError: a is not defined'))}})})})
           
     describe('_duplicateKeys', () => {
+      it('test defining constants and compose services.', ()=>{
+        const container = containerFactory
+        .define('a', 'AAA')
+        .define('a', 'bbb')
+
+        .compose('b', (a)=>{
+          console.log('faa'+a);
+          return 1
+        })
+
+        .compose('b', (a)=>{
+          console.log('fuuu '+a);
+          return 2
+        })
+
+        ()
+        
+
+        console.log(container.a,container.b);
+      })
       // it('no duplicates', () => {
       //   const ff = basicInstance
       //   assert(Array.isArray(ff._duplicateKeys))
