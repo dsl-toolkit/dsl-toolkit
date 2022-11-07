@@ -1,1 +1,7 @@
-module.exports = (parameters) => parameters.arguments('define', 'allEntries', []).map(e => e[0])
+module.exports = exports = (parameters) =>{
+  const arguments = parameters.arguments('define', 'allEntries', [])
+  return arguments.map(e =>e[0])
+}
+
+
+

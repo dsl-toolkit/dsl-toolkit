@@ -2,6 +2,8 @@ module.exports = (parameters, results = {}, requireModuleInstance, infoList = {}
   const baseProxy = require('./proxy')(parameters, results)
   const containerKindData = ['define', 'compose', 'create']
   const containerMethods = []
+
+
   containerKindData.forEach((kind) => {
     containerMethods.push(require(`./container-methods/${kind}`))})
 

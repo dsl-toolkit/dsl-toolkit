@@ -9,7 +9,8 @@ function getAllKeys (registeredKeys) {
 module.exports = (notHiddenVariablesReaches) => (baseProxy, containerKindData, registeredKeys) => new Proxy(baseProxy,{
     get: (obj, prop) => {
       const hidden = prop?.startsWith('_')
-      !hidden && (()=>notHiddenVariablesReaches[prop] = notHiddenVariablesReaches[prop] ? notHiddenVariablesReaches[prop] + 1 : 1)()
+      !hidden && (()=>notHiddenVariablesReaches[prop] = notHiddenVariablesReaches[prop] ?
+      notHiddenVariablesReaches[prop] + 1 : 1)()
       if (hidden) {
         const hiddenProp = prop?.substring(1)
         const kindData = containerKindData?.includes(hiddenProp)

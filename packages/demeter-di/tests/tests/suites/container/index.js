@@ -7,7 +7,26 @@ const basicInstance = containerFactory
   .compose('b', (a) => `${a}BBB`)
   .create('c', (b, a) => ({ b, a }))()
 
-describe('checking services', ()=>{
+  describe('object parameter', ()=>{
+    it('tests',()=>{
+      const data = containerFactory
+      .define({'fuu':'faa','faa':'fuu'})
+      .define('bbb', 'ccc')
+      .create({
+        factoryA:(fuu)=>({a:fuu})})
+      .compose({
+        serviceB:(faa)=>({b:faa})})
+      .compose('serviceC', (faa)=>({c:faa}))
+      ()
+    const {bbb, fuu, faa, factoryA, serviceB, serviceC} = data
+      assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
+      assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
+      assert(factoryA.a==='faa')
+      assert(serviceB.b==='fuu')
+      assert(serviceC.c==='fuu')
+    })})
+
+  describe('checking services', ()=>{
   it('tests if defined services are in therir place', ()=>{
     assert(basicInstance.b === 'AAABBB')})
 
@@ -86,21 +105,21 @@ describe('checking constants', ()=>{
         const container = containerFactory
         .define('a', 'AAA')
         .compose('b', c => {
-          return`${a}BBB`})()
+          return`${a}BBB`})();
 
         try{
           (()=>container.b)()
-          assert(false)}
+          assert(false)
+        }
         catch(e){
-          console.log(e);
+          // console.log(e);
           assert(e.toString().startsWith('ReferenceError: a is not defined'))}})})})
-          
+
     describe('_duplicateKeys', () => {
       it('test defining constants and compose services.', ()=>{
         const container = containerFactory
         .define('a', 'AAA')
         .define('a', 'bbb')
-
         .compose('b', (a)=>{
           console.log('faa'+a);
           return 1
@@ -109,18 +128,17 @@ describe('checking constants', ()=>{
         .compose('b', (a)=>{
           console.log('fuuu '+a);
           return 2
-        })
-
-        ()
-        
+        })()
 
         console.log(container.a,container.b);
       })
+
       // it('no duplicates', () => {
       //   const ff = basicInstance
       //   assert(Array.isArray(ff._duplicateKeys))
       //   assert(ff._duplicateKeys.length === 0)
       // })
+
       // it('duplicates', () => {
       //   const ff = basicInstance
       //   const duplicateContentInThisContainer = require('../../../../src/app-container-factory')()
@@ -177,5 +195,4 @@ describe('checking constants', ()=>{
 //       })
 //     })
   // })
-
 

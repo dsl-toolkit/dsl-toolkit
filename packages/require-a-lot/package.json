@@ -38,7 +38,7 @@
     "array-dsl": "^1.6.59",
     "camelcase": "^6.0.0",
     "compare": "^2.0.0",
-    "demeter-di": "^1.7.47",
+    "demeter-di": "^1.7.48",
     "directory-fixture-provider": "^1.7.26",
     "dsl-framework": "^1.7.37",
     "esprima": "^4.0.1",
