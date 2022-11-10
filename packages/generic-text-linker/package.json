@@ -49,7 +49,7 @@
     "depcheck": "^1.4.0",
     "directory-fixture-provider": "^1.7.26",
     "license-checker": "^25.0.1",
-    "mocha": "^8.3.0",
+    "mocha": "^10.1.0",
     "nyc": "^15.1.0",
     "pkg-dir": "^5.0.0",
     "standard": "^16.0.3"
