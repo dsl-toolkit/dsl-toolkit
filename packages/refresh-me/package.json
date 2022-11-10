@@ -45,7 +45,7 @@
     "depcheck": "^1.4.3",
     "directory-fixture-provider": "^1.7.26",
     "license-checker": "^25.0.1",
-    "mocha": "^7.1.2",
+    "mocha": "^10.1.0",
     "nyc": "^15.0.1",
     "standard": "^14.3.3"
   },
