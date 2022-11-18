@@ -1,7 +1,7 @@
 {
   "name": "demeter-di",
-  "version": "1.7.50",
-  "description": "Easy function chaining.",
+  "version": "1.7.51",
+  "description": "A most flexible container solution",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "scripts": {
@@ -28,7 +28,7 @@
   ],
   "author": "Imre Toth",
   "license": "MIT",
-  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/dsl-framework",
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/demeter-di",
   "devDependencies": {
     "chai": "^4.3.6",
     "depcheck": "^1.2.0",
