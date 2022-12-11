@@ -1,7 +1,7 @@
 /* eslint-disable block-spacing */
 /* eslint-disable brace-style */
 /* eslint-disable indent */
-import core from '../../../../index.js'
+import core from '../../../core/index.js'
 export default function (dslFrameworkInstance) {
   const { returnArrayChunks } = this.parent
   return core()((e, d) => {

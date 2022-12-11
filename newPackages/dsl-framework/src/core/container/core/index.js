@@ -4,9 +4,10 @@ import flat from 'flat'
 import repeateMe from './repeate-me.js'
 import clone from './clone.js'
 import reset from './reset.js'
-// import commandParser from '../../command-parser.js'
-// import argumentsParser from '../../arguments.js'
-// import arguments from '../../arguments.js'
+import commandParser from '../../../core/command-parser/index.js'
+import argumentsParser from '../../../core/arguments/index.js'
+import args from '../../../core/arguments/index.js'
+
 import commandSequence from '../../command-sequence.js'
 
 
@@ -61,7 +62,7 @@ const getFrom = function (from, returnArrayChunks = []) {
   const me = this
   const returnObject = { data, getFrom: me.getFrom }
   returnObject.command = commandSequence(returnObject)
-  const arg = arguments(returnObject)
+  const arg = args(returnObject)
   returnObject.arguments = arg
 
   returnObject.arguments.object = (commands, getProcess, defaultValue = false) => {

@@ -20,4 +20,4 @@ if (weHaveAmd) {
 
 (weHaveAmd || inBrowser) && (() => { window.dslFramework = dslFrameworkFactory })()
 
-module.exports = dslFrameworkFactoryInitiator
+export default dslFrameworkFactoryInitiator

@@ -2,7 +2,7 @@
 /* eslint-disable brace-style */
 /* eslint-disable indent */
 import getArrayData from '../lib/get-array-data.js'
-import parser from './parser'
+import parser from './parser.js'
 const process = (parameters) => (command, getProcess, defaultValue) => {
   defaultValue = typeof defaultValue === 'undefined' ? false : defaultValue
   if (Array.isArray(command)) {
