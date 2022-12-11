@@ -1,1 +1,1 @@
-module.exports = (_arguments) => Array.from(_arguments).flat()
+export default (_arguments) => Array.from(_arguments).flat()

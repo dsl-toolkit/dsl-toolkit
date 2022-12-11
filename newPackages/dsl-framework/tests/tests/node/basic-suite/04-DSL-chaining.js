@@ -1,4 +1,4 @@
-module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework) => {
+export default (curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework) => {
   const abcTester = function (abcData) {
     expect(abcData.data.returnArray().join('')).to.be.equal('abc')
   }

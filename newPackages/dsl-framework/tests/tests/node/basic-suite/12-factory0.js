@@ -1,4 +1,4 @@
-module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework) => {
+export default (curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework) => {
   describe('factory functionality', function () {
     it('.Testing subcommand', function () {
       const data = dslFramework()().x.y.z

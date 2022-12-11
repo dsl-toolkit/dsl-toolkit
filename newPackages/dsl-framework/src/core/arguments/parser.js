@@ -2,7 +2,7 @@
 /* eslint-disable brace-style */
 /* eslint-disable indent */
 
-module.exports = exports =
+export default
   /**
    *
    * @param commandValue

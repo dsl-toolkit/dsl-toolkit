@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   testsPomiseMagic: function (expect, curryCallbackObject, unlimitedCurry, curryString) {
     it('tests promise magic', function () {
       Promise.resolve(async function () {

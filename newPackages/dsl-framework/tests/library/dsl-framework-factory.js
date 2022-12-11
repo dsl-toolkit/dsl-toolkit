@@ -1,4 +1,4 @@
-const dslFramework = require('../../src')
+import dslFramework from '../../src/index.js'
 const dslFrameworkDefaultInstance = dslFramework()
 
-module.exports = { dslFramework, dslFrameworkDefaultInstance }
+export default { dslFramework, dslFrameworkDefaultInstance }

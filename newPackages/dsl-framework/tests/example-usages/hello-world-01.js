@@ -1,4 +1,4 @@
-const { dslFramework } = require('../../src')
+import dslFramework from '../../src/index.js'
 const defaultFactory = dslFramework()
 
 console.log(defaultFactory().Hello.world().data.returnArrayChunks.flat().join(' ')) // => Hello world

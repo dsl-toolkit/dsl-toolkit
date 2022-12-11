@@ -3,9 +3,12 @@
 /* eslint-disable brace-style */
 /* eslint-disable indent */
 
+import safetyExecutor from './detached-executor.js'
+import container from './container/core/index.js'
+import callerPromiseFactoryFactory from './caller-promise-factory-factory.js'
+
 const RETURN_FROM_CALLBACK = 0
-const safetyExecutor = require('./detached-executor')
-const container = require('./container/core')
+
 // const f = function
 const coreFactory = () => {
   const core = function me (callback, state = false) {
@@ -27,7 +30,7 @@ const coreFactory = () => {
         state.setCommandArguments(callerArguments)}
       const data = callerRaw.data = state.getFrom(0)
       if (!coreData.command.has('noPromoises')) {
-        callerRaw.p = require('./caller-promise-factory-factory')(state, callback)}
+        callerRaw.p = callerPromiseFactoryFactory(state, callback)}
       // l(coreData, coreData.command)()
       const noTriggerEndOfExecution = coreData.command.has('noTriggerEndOfExecution')
       /* istanbul ignore else */
@@ -66,4 +69,4 @@ get (obj, prop) {
     this.coreData = data}
   return core}
 
-export default coreFactory()
+export default coreFactory

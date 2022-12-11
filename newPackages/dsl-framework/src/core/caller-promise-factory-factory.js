@@ -6,7 +6,7 @@
 // yep funny filename, but this is what it is.
 const RETURN_FROM_PROMISE = 1
 
-module.exports = exports = (state, callback) => () => new Promise((resolve, reject) => {
+export default (state, callback) => () => new Promise((resolve, reject) => {
   clearTimeout(state.timeoutSate)
   const clonedState = state.clone()
   let ret = false

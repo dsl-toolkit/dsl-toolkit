@@ -2,8 +2,7 @@
 /* eslint-disable block-spacing */
 /* eslint-disable brace-style */
 /* eslint-disable indent */
-
-const dslFrameworkFactory = require('./core')
+import dslFrameworkFactory from  './core/index.js'
 const dslFrameworkFactoryInitiator = dslFrameworkFactory((e, d) => {
   dslFrameworkFactory.setCoreData(d)
   return dslFrameworkFactory})

@@ -1,4 +1,4 @@
-module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework) => {
+export default (curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework) => {
   describe('return data consistency tests', function () {
     it('calling the same function multiple times', function () {
       const fn = dslFrameworkDefaultInstance(

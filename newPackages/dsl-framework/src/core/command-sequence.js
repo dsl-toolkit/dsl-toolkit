@@ -1,8 +1,10 @@
 /* eslint-disable brace-style */
 /* eslint-disable block-spacing */
-const commandParserFactory = (value) => (getProcess) => require('./arguments/parser')(value, getProcess)
+import parser from './arguments/parser.js'
 
-module.exports = exports = (returnObject) => function * () {
+const commandParserFactory = (value) => (getProcess) => parser(value, getProcess)
+
+export default (returnObject) => function * () {
   const commands = returnObject.data.returnArrayChunks
   for (let i = 0; i <= commands.length - 1; i++) {
     const value = commands[i]

@@ -43,4 +43,4 @@ function extractCallbackData () {
     falseCaseFunction
   }
 }
-exports.extractCallbackData = extractCallbackData
+export default extractCallbackData

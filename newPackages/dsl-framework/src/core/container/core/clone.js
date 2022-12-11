@@ -2,7 +2,7 @@
 /* eslint-disable brace-style */
 /* eslint-disable indent */
 
-module.exports = function () {
+export default () => {
   return {
     level: this.level,
     returnArray: this.returnArray.slice(0),

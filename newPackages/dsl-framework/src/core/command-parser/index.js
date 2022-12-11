@@ -1,10 +1,10 @@
 /* eslint-disable brace-style */
 /* eslint-disable block-spacing */
-const getArrayData = require('../lib/get-array-data')
-const getBaseKind = require('./get-base-kind')
-const getMoreKind = require('./get-more-kind')
+import getArrayData from '../lib/get-array-data.js'
+import getBaseKind from './get-base-kind.js'
+import getMoreKind from './get-more-kind.js'
 
-module.exports = exports = (returnObject) => {
+export default (returnObject) => {
   const baseObject = {
     init: () => {
       const baseKind = getBaseKind(baseObject, returnObject)

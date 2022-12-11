@@ -1,4 +1,4 @@
-module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework) => {
+export default (curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework) => {
   describe('Testing the "argumnets" member of the DSL callback functions data parameter', function () {
     const example = dslFrameworkDefaultInstance((e, d) => {
       return d

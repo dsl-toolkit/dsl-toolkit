@@ -1,6 +1,15 @@
 /* eslint-disable brace-style */
 /* eslint-disable block-spacing */
-const flat = require('flat')
+import flat from 'flat'
+import repeateMe from './repeate-me.js'
+import clone from './clone.js'
+import reset from './reset.js'
+// import commandParser from '../../command-parser.js'
+// import argumentsParser from '../../arguments.js'
+// import arguments from '../../arguments.js'
+import commandSequence from '../../command-sequence.js'
+
+
 const ia = Array.isArray
 const getFrom = function (from, returnArrayChunks = []) {
   if (this.reset) {
@@ -43,7 +52,7 @@ const getFrom = function (from, returnArrayChunks = []) {
 
     repeate: {
       // todo: generalize it
-      me: require('./repeate-me')
+      me: repeateMe
     }
   }
 
@@ -51,8 +60,8 @@ const getFrom = function (from, returnArrayChunks = []) {
 
   const me = this
   const returnObject = { data, getFrom: me.getFrom }
-  returnObject.command = require('../../command-parser')(returnObject)
-  const arg = require('../../arguments')(returnObject)
+  returnObject.command = commandSequence(returnObject)
+  const arg = arguments(returnObject)
   returnObject.arguments = arg
 
   returnObject.arguments.object = (commands, getProcess, defaultValue = false) => {
@@ -65,11 +74,11 @@ const getFrom = function (from, returnArrayChunks = []) {
     commands.forEach((command, i) => {
       returnObject[command] = arg(command, getProcess[i], defaultValue[i])})
     return returnObject}
-  returnObject.commandSequence = require('../../command-sequence')(returnObject)
+  returnObject.commandSequence = commandSequence(returnObject)
 
   return returnObject}
 
-module.exports = exports = () => ({
+export default () => ({
   p: null,
   getFrom,
   level: 0,
@@ -77,8 +86,8 @@ module.exports = exports = () => ({
   returnArrayChunks: [],
   commandName: false,
   resetMe: false,
-  reset: require('./reset'),
-  clone: require('./clone'),
+  reset: reset,
+  clone: clone,
   start () {
     this.reset()
     this.level++},

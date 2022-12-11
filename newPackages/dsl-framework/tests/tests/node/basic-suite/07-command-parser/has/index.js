@@ -1,5 +1,5 @@
 const assert = require('assert')
-module.exports = (
+export default(
   curryCallbackObject,
   expect,
   enviromentSupportsPromises,

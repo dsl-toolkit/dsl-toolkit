@@ -1,4 +1,4 @@
-module.exports = (curryCallbackObject, expect) => {
+export default(curryCallbackObject, expect) => {
   describe('dsl-framework parameters', function () {
     it('checking with noPromises', function (done) {
       const dslFrameworkDefaultInstanceWithParameter = require('../../../../src').noPromoises()
