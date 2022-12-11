@@ -6,15 +6,15 @@ import extractCallbackData from './extractCallbackData.js'
 
 export default (baseObject, returnObject) => {
   return kind =>
-    function () {
+    function (...args) {
       const {
         baseKindArguments,
         havingCaseFunction,
         trueCaseFunction,
         falseCaseFunction
-      } = extractCallbackData(...arguments)
+      } = extractCallbackData(...args)
 
-      const command = arguments[0]
+      const command = args[0]
 
       const returnValue =
         Array.isArray(command) || baseKindArguments.length > 1

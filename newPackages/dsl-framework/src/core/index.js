@@ -20,32 +20,35 @@ const coreFactory = () => {
       return container()
     }())
     coreData = coreData || container().getFrom(0)
-    const callerRaw = function () {
+    const callerRaw = function (...args) {
       // parameters
       if (!callerRaw.called) {
         callerRaw.called = true
         return caller}
-      const callerArguments = Array.from(arguments)
+      const callerArguments = Array.from(args)
       if (callerArguments.length) {
         state.setCommandArguments(callerArguments)}
       const data = callerRaw.data = state.getFrom(0)
+
+      console.log(coreData.command)
+
       if (!coreData.command.has('noPromoises')) {
         callerRaw.p = callerPromiseFactoryFactory(state, callback)}
       // l(coreData, coreData.command)()
       const noTriggerEndOfExecution = coreData.command.has('noTriggerEndOfExecution')
       /* istanbul ignore else */
-      if (!arguments.length && callback && typeof callback === 'function') {
+      if (!args.length && callback && typeof callback === 'function') {
         if (!noTriggerEndOfExecution) {
           clearTimeout(state.timeoutSate)}
         state.resetMe = true
         state.start()
         return callback(RETURN_FROM_CALLBACK, data)}
       /* istanbul ignore else */
-      if (!arguments.length && !callback) {
+      if (!args.length && !callback) {
         state.start()
         return data}
       /* istanbul ignore else */
-      if (arguments.length && !noTriggerEndOfExecution) {
+      if (args.length && !noTriggerEndOfExecution) {
         /* istanbul ignore else */
         if (state.timeoutSate) {
           clearTimeout(state.timeoutSate)}

@@ -1,12 +1,12 @@
 /* eslint-disable block-spacing */
 /* eslint-disable brace-style */
-import getArrayData from '../lib/get-array-data'
+import getArrayData from '../lib/get-array-data.js'
 
 import extractCallbackData from './extractCallbackData.js'
 
 export default (baseObject) => {
-  return (kind) => function () {
-    const commands = getArrayData(arguments)
+  return (kind) => function (...args) {
+    const commands = getArrayData(args)
 
     const {
       baseKindArguments,

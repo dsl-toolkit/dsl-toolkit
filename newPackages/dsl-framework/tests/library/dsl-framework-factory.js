@@ -1,4 +1,3 @@
-import dslFramework from '../../src/index.js'
-const dslFrameworkDefaultInstance = dslFramework()
-
-export default { dslFramework, dslFrameworkDefaultInstance }
+import dslf from '../../src/index.js'
+export const dslFramework = dslf
+export const dslFrameworkDefaultInstance = dslFramework()
