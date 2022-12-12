@@ -2,8 +2,8 @@
 /* eslint-disable brace-style */
 /* eslint-disable indent */
 
-function extractCallbackData () {
-  let baseKindArguments = Array.from(arguments)
+function extractCallbackData (...args) {
+  let baseKindArguments = Array.from(args)
   const argumentsLastIndex = baseKindArguments.length >= 2 ? baseKindArguments.length - 1 : false
   const argumentsOneBeforeLastIndex = baseKindArguments.length >= 3 ? argumentsLastIndex - 1 : false
   let trueCaseFunction = false
@@ -12,19 +12,19 @@ function extractCallbackData () {
   if (argumentsLastIndex) {
     if (argumentsOneBeforeLastIndex) {
       falseCaseFunction = argumentsLastIndex
-        ? typeof arguments[argumentsLastIndex] === 'function'
-            ? arguments[argumentsLastIndex]
+        ? typeof args[argumentsLastIndex] === 'function'
+            ? args[argumentsLastIndex]
             : false
         : false
       trueCaseFunction = argumentsOneBeforeLastIndex
-        ? typeof arguments[argumentsOneBeforeLastIndex] === 'function'
-            ? arguments[argumentsOneBeforeLastIndex]
+        ? typeof args[argumentsOneBeforeLastIndex] === 'function'
+            ? args[argumentsOneBeforeLastIndex]
             : false
         : false
     } else {
       trueCaseFunction = argumentsLastIndex
-        ? typeof arguments[argumentsLastIndex] === 'function'
-            ? arguments[argumentsLastIndex]
+        ? typeof args[argumentsLastIndex] === 'function'
+            ? args[argumentsLastIndex]
             : false
         : false
       falseCaseFunction = false
