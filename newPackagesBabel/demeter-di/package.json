@@ -1,0 +1,77 @@
+{
+  "name": "demeter-di",
+  "version": "1.7.51",
+  "description": "A most flexible container solution",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "scripts": {
+    "pub": "npm version patch --force && npm publish",
+    "test-dev": "npx mocha --recursive tests/tests/*-spec.js",
+    "test-dev-unit": "echo 1 || npm run clean && node_modules/.bin/mocha --recursive tests/tests/*-spec.js",
+    "test-old": "echo 1 || npm run build && npm run test-compiled && npm run clean",
+    "test": "npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
+    "test-project": "echo 1 || npm run license-check && node_modules/.bin/depcheck --ignores \"chai,@types/node,\" && echo npm run standard-fix",
+    "clean": "npx rimraf dist tmp && mkdir dist && mkdir tmp",
+    "standard-fix": "echo 1 || npx standard --fix",
+    "license-check": "npx license-checker --failOn unknown --summary"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
+  },
+  "keywords": [
+    "simple",
+    "functional",
+    "container",
+    "di",
+    "di container"
+  ],
+  "author": "Imre Toth",
+  "license": "MIT",
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/demeter-di",
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "depcheck": "^1.2.0",
+    "license-checker": "^25.0.1",
+    "mocha": "^10.1.0",
+    "nyc": "^15.1.0",
+    "require-dir": "^1.2.0",
+    "standard": "^14.3.4"
+  },
+  "engines": {
+    "node": ">=7.6.4"
+  },
+  "nyc": {
+    "exclude": [
+      "**/tests/**"
+    ]
+  },
+  "standard": {
+    "ignore": [
+      "/dist",
+      "/coverage/",
+      "/build/",
+      "/tmp/"
+    ],
+    "globals": [
+      "describe",
+      "context",
+      "before",
+      "beforeEach",
+      "after",
+      "afterEach",
+      "it",
+      "expect"
+    ]
+  },
+  "files": [
+    "src/**"
+  ],
+  "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
+  "dependencies": {
+    "array-dsl": "^1.6.59",
+    "dsl-framework": "^1.7.37",
+    "esprima": "^4.0.1",
+    "underscore": "^1.13.6"
+  }
+}
