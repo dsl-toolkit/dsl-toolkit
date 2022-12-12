@@ -18,16 +18,16 @@ module.exports = exports = (returnObject) => {
       baseObject.hasMore = baseObject.has.more
       baseObject.getMore = baseObject.get.more
 
-      const hasLogicalKind = (kind) => function () {
-        const commands = getArrayData(arguments)
+      const hasLogicalKind = (kind) => function (...args) {
+        const commands = getArrayData(args)
         return commands ? baseObject.has.more(commands).reduce(kind) : false}
 
       baseObject.has.and = hasLogicalKind((acc = true, currValue) => acc && currValue)
       baseObject.has.or = hasLogicalKind((acc = true, currValue) => acc || currValue)
       baseObject.hasAnd = baseObject.has.and
       baseObject.hasOr = baseObject.has.or
-      baseObject.has.xor = function () {
-        const commands = getArrayData(arguments)
+      baseObject.has.xor = function (...args2) {
+        const commands = getArrayData(args2)
 
         return commands
           ? baseObject.has.more(commands).filter((entry) => entry).length &&
@@ -35,9 +35,9 @@ module.exports = exports = (returnObject) => {
           : false}
       baseObject.hasXor = baseObject.has.xor
 
-      const toObjectKind = (kind) => function () {
+      const toObjectKind = (kind) => function (...args3) {
         const returnObject = {}
-        getArrayData(arguments).forEach(entry => {
+        getArrayData(args3).forEach(entry => {
           returnObject[entry] = baseObject[kind](entry)})
 
         return returnObject}
