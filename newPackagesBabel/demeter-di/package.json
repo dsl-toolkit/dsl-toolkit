@@ -1,8 +1,9 @@
 {
   "name": "demeter-di",
-  "version": "1.7.51",
+  "version": "1.8.1",
   "description": "A most flexible container solution",
-  "main": "src/index.js",
+  "main": "dist/src/index.js",
+  "type": "module",
   "types": "src/index.d.ts",
   "scripts": {
     "pub": "npm version patch --force && npm publish",
@@ -13,7 +14,9 @@
     "test-project": "echo 1 || npm run license-check && node_modules/.bin/depcheck --ignores \"chai,@types/node,\" && echo npm run standard-fix",
     "clean": "npx rimraf dist tmp && mkdir dist && mkdir tmp",
     "standard-fix": "echo 1 || npx standard --fix",
-    "license-check": "npx license-checker --failOn unknown --summary"
+    "license-check": "npx license-checker --failOn unknown --summary",
+    "babelsrc": "./node_modules/.bin/babel src -d dist/src",
+    "babel": "./node_modules/.bin/rimraf ./dist; npm run babelsrc"
   },
   "repository": {
     "type": "git",
@@ -30,12 +33,17 @@
   "license": "MIT",
   "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/demeter-di",
   "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "babel-plugin-transform-commonjs": "^1.1.6",
     "chai": "^4.3.6",
     "depcheck": "^1.2.0",
     "license-checker": "^25.0.1",
     "mocha": "^10.1.0",
     "nyc": "^15.1.0",
     "require-dir": "^1.2.0",
+    "rimraf": "^3.0.2",
     "standard": "^14.3.4"
   },
   "engines": {
@@ -69,8 +77,8 @@
   ],
   "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
   "dependencies": {
-    "array-dsl": "^1.6.59",
-    "dsl-framework": "^1.7.37",
+    "arrify": "^3.0.0",
+    "dsl-framework": "^1.8.1",
     "esprima": "^4.0.1",
     "underscore": "^1.13.6"
   }
