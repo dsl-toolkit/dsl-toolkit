@@ -3,12 +3,9 @@
 /* eslint-disable brace-style */
 /* eslint-disable indent */
 
-import safetyExecutor from './detached-executor.js'
-import container from './container/core/index.js'
-import callerPromiseFactoryFactory from './caller-promise-factory-factory.js'
-
 const RETURN_FROM_CALLBACK = 0
-
+const safetyExecutor = require('./detached-executor')
+const container = require('./container/core')
 // const f = function
 const coreFactory = () => {
   const core = function me (callback, state = false) {
@@ -20,35 +17,32 @@ const coreFactory = () => {
       return container()
     }())
     coreData = coreData || container().getFrom(0)
-    const callerRaw = function (...args) {
+    const callerRaw = function () {
       // parameters
       if (!callerRaw.called) {
         callerRaw.called = true
         return caller}
-      const callerArguments = Array.from(args)
+      const callerArguments = Array.from(arguments)
       if (callerArguments.length) {
         state.setCommandArguments(callerArguments)}
       const data = callerRaw.data = state.getFrom(0)
-
-      console.log(coreData.command)
-
       if (!coreData.command.has('noPromoises')) {
-        callerRaw.p = callerPromiseFactoryFactory(state, callback)}
+        callerRaw.p = require('./caller-promise-factory-factory')(state, callback)}
       // l(coreData, coreData.command)()
       const noTriggerEndOfExecution = coreData.command.has('noTriggerEndOfExecution')
       /* istanbul ignore else */
-      if (!args.length && callback && typeof callback === 'function') {
+      if (!arguments.length && callback && typeof callback === 'function') {
         if (!noTriggerEndOfExecution) {
           clearTimeout(state.timeoutSate)}
         state.resetMe = true
         state.start()
         return callback(RETURN_FROM_CALLBACK, data)}
       /* istanbul ignore else */
-      if (!args.length && !callback) {
+      if (!arguments.length && !callback) {
         state.start()
         return data}
       /* istanbul ignore else */
-      if (args.length && !noTriggerEndOfExecution) {
+      if (arguments.length && !noTriggerEndOfExecution) {
         /* istanbul ignore else */
         if (state.timeoutSate) {
           clearTimeout(state.timeoutSate)}
@@ -63,7 +57,8 @@ get (obj, prop) {
             return obj[prop]}
           state.setCommandName(prop)
           return caller},
-          apply (target, thisArg, argumentsList) {return target(...argumentsList)}
+        apply (target, thisArg, argumentsList) {
+          return target(...argumentsList)}
 })
     return caller()}
 
@@ -71,4 +66,4 @@ get (obj, prop) {
     this.coreData = data}
   return core}
 
-export default coreFactory
+module.exports = coreFactory()

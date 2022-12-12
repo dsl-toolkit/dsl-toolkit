@@ -1,13 +1,12 @@
 /* eslint-disable block-spacing */
 /* eslint-disable brace-style */
-import getArrayData from '../lib/get-array-data.js'
 
-import extractCallbackData from './extractCallbackData.js'
+const getArrayData = require('../lib/get-array-data')
+const { extractCallbackData } = require('./extractCallbackData')
 
-export default (baseObject) => {
-  return (kind) => function (...args) {
-
-    const commands = getArrayData(args)
+module.exports = (baseObject) => {
+  return (kind) => function () {
+    const commands = getArrayData(arguments)
 
     const {
       baseKindArguments,

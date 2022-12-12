@@ -1,10 +1,10 @@
 /* eslint-disable block-spacing */
 /* eslint-disable brace-style */
 /* eslint-disable indent */
-import core from '../../../../src/index.js'
-export default function (dslFrameworkInstance) {
+
+module.exports = function (dslFrameworkInstance) {
   const { returnArrayChunks } = this.parent
-  return core()((e, d) => {
+  return require('../../../..')()((e, d) => {
     returnArrayChunks.forEach(commandAndArguments => {
       const command = commandAndArguments[0]
       const arg = commandAndArguments.slice(1, commandAndArguments.length)
