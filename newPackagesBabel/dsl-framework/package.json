@@ -18,7 +18,10 @@
     "web": "npm run browserify && npm run minify && node tools/create-sample-page",
     "browserify": "mkdir dist/web -p && node_modules/.bin/browserify -o dist/web/dsl-framework.js -e src/index.js --exclude src/examples",
     "minify": "node_modules/.bin/minify dist/web/dsl-framework.js > dist/web/dsl-framework.min.js",
-    "karma": "node_modules/.bin/karma start my.conf.js"
+    "karma": "node_modules/.bin/karma start my.conf.js",
+    "babelsrc": "./node_modules/.bin/babel src -d dist/src ",
+    "babeltest": "./node_modules/.bin/babel src -d dist/src ",
+    "babel": "npm run babelsrc && npm run babeltest"
   },
   "repository": {
     "type": "git",
@@ -60,6 +63,10 @@
   },
   "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/dsl-framework",
   "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "babel-plugin-transform-commonjs": "^1.1.6",
     "browserify": "^17.0.0",
     "chai": "^4.3.4",
     "depcheck": "^1.4.2",
@@ -113,6 +120,7 @@
   ],
   "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "flat": "^5.0.2"
   }
 }
