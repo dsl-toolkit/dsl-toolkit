@@ -2,7 +2,7 @@
 /* eslint-disable brace-style */
 /* eslint-disable indent */
 
-const { extractCallbackData } = require('./extractCallbackData')
+const { extractCallbackData } = require('./extractCallbackData.js')
 
 module.exports = (baseObject, returnObject) => {
   return kind =>

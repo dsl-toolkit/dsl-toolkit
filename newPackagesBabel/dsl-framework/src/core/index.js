@@ -4,8 +4,8 @@
 /* eslint-disable indent */
 
 const RETURN_FROM_CALLBACK = 0
-const safetyExecutor = require('./detached-executor')
-const container = require('./container/core')
+const safetyExecutor = require('./detached-executor.js')
+const container = require('./container/core.js')
 // const f = function
 const coreFactory = () => {
   const core = function me (callback, state = false) {
