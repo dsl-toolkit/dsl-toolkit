@@ -1,6 +1,6 @@
 {
   "name": "demeter-di",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "description": "A most flexible container solution",
   "main": "dist/src/index.js",
   "type": "module",
@@ -73,7 +73,7 @@
     ]
   },
   "files": [
-    "src/**"
+    "dist/**"
   ],
   "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
   "dependencies": {
