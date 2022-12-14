@@ -5,7 +5,7 @@
 
 const RETURN_FROM_CALLBACK = 0
 const safetyExecutor = require('./detached-executor.js')
-const container = require('./container/core.js')
+const container = require('./container/core/index.js')
 // const f = function
 const coreFactory = () => {
   const core = function me (callback, state = false) {
@@ -27,7 +27,7 @@ const coreFactory = () => {
         state.setCommandArguments(callerArguments)}
       const data = callerRaw.data = state.getFrom(0)
       if (!coreData.command.has('noPromoises')) {
-        callerRaw.p = require('./caller-promise-factory-factory')(state, callback)}
+        callerRaw.p = require('./caller-promise-factory-factory.js')(state, callback)}
       // l(coreData, coreData.command)()
       const noTriggerEndOfExecution = coreData.command.has('noTriggerEndOfExecution')
       /* istanbul ignore else */

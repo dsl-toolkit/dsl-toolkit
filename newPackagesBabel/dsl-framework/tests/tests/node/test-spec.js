@@ -36,7 +36,7 @@ describe('Basic Test Suite', function () {
 
   require('./basic-suite/09-dsl-framework-parameters')(curryCallbackObject, expect)
   require('./basic-suite/10-DSL-of-the-framework-initialization')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance)
-  require('./basic-suite/11-repeate-me')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance)
+  require('./basic-suite/11-repeate-me.js')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance)
   require('./basic-suite/12-factory')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework)
   require('./basic-suite/12-factory-delta')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework)
 })

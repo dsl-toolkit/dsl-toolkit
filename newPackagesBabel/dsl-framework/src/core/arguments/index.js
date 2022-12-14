@@ -16,7 +16,7 @@ const process = (parameters) => (command, getProcess, defaultValue) => {
     if (returnValue === defaultValue) { return returnValue }
 
     const commandValue = parameters.command.get(command)
-    return require('./parser')(commandValue, getProcess)}}
+    return require('./parser.js')(commandValue, getProcess)}}
 
 module.exports = exports = (parameters) => process(parameters)
 // exports.toObject = (command, getProcess, defailtValue = false) => {

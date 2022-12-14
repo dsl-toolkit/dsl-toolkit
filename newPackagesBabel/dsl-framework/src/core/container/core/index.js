@@ -43,7 +43,7 @@ const getFrom = function (from, returnArrayChunks = []) {
 
     repeate: {
       // todo: generalize it
-      me: require('./repeate-me')
+      me: require('./repeate-me.js')
     }
   }
 
@@ -51,8 +51,8 @@ const getFrom = function (from, returnArrayChunks = []) {
 
   const me = this
   const returnObject = { data, getFrom: me.getFrom }
-  returnObject.command = require('../../command-parser')(returnObject)
-  const arg = require('../../arguments')(returnObject)
+  returnObject.command = require('../../command-parser/index.js')(returnObject)
+  const arg = require('../../arguments/index.js')(returnObject)
   returnObject.arguments = arg
 
   returnObject.arguments.object = (commands, getProcess, defaultValue = false) => {
@@ -65,7 +65,7 @@ const getFrom = function (from, returnArrayChunks = []) {
     commands.forEach((command, i) => {
       returnObject[command] = arg(command, getProcess[i], defaultValue[i])})
     return returnObject}
-  returnObject.commandSequence = require('../../command-sequence')(returnObject)
+  returnObject.commandSequence = require('../../command-sequence.js')(returnObject)
 
   return returnObject}
 
@@ -77,8 +77,8 @@ module.exports = exports = () => ({
   returnArrayChunks: [],
   commandName: false,
   resetMe: false,
-  reset: require('./reset'),
-  clone: require('./clone'),
+  reset: require('./reset.js'),
+  clone: require('./clone.js'),
   start () {
     this.reset()
     this.level++},
