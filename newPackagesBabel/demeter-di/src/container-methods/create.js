@@ -1,5 +1,10 @@
-const { parseScript } = require('esprima')
-const arrayDsl = require('array-dsl')
+import arrify from 'arrify'
+import { parseScript } from 'esprima'
+import dslFramework from 'dsl-framework'
+
+// const { parseScript } = require('esprima')
+// const arrayDsl = require('array-dsl')
+
 
 module.exports = (parameters, infoList, results, requireModuleInstance, proxy) => {
   const create = parameters.arguments('create', 'allEntries', [])
@@ -11,7 +16,7 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy) =
         ? requireModuleInstance(createDetails[1])
         : createDetails[1]
       const parameterNames = createDetails[2]
-        ? arrayDsl(createDetails[2]).arrify()
+        ? arrify(createDetails[2])
         : parseScript(factoryDefinition.toString()).body[0].expression.params.map(e => e.name)
       infoList[createDetails[0]] = { head: '*di factory result* ' }
       infoList[createDetails[0] + 'Factory'] = { head: '*di factory* ' }
@@ -25,5 +30,5 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy) =
     }).forEach(composed => Object.assign(results, composed))
   })()
 
-  return require('./lib/get-keys')(create, 'factory')
+  return require('./lib/get-keys.js')(create, 'factory')
 }
