@@ -1,13 +1,14 @@
-const _ = require('underscore')
+import _ from 'underscore'
+import dslf from 'dsl-framework'
 
 module.exports = (dslFrameworkParameters, results) => {
   dslFrameworkParameters.data.returnArrayChunks = objectMapper(dslFrameworkParameters.data.returnArrayChunks)
-  const parameters = require('./parameterGetter')(dslFrameworkParameters)
-  const services = require('./servicesGetter')(dslFrameworkParameters)
-  const factories = require('./factoriesGetter')(dslFrameworkParameters)
+  const parameters = require('./parameterGetter.js')(dslFrameworkParameters)
+  const services = require('./servicesGetter.js')(dslFrameworkParameters)
+  const factories = require('./factoriesGetter.js')(dslFrameworkParameters)
   const composedStore = {}
 
-  return require('./containerProxyFactory')
+  return require('./containerProxyFactory.js')
   (results,factories, services, parameters, composedStore)}
 
 
@@ -16,7 +17,7 @@ module.exports = (dslFrameworkParameters, results) => {
       const possibleObjectDefinition = line[1]
       return _.isObject(possibleObjectDefinition)?
         (()=>{
-          let adsl = require('dsl-framework').noPromoises()()
+          let adsl = dslf.noPromoises()()
           Object.keys(possibleObjectDefinition).forEach(objectKey=>{
             const value = possibleObjectDefinition[objectKey]
             adsl[objectKey](value)

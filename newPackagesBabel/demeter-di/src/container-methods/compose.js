@@ -22,4 +22,4 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy) =
       return composed}).
         forEach(composed => Object.assign(results, composed))})()
 
-  return require('./lib/get-keys')(composes, 'service')}
+  return require('./lib/get-keys.js')(composes, 'service')}
