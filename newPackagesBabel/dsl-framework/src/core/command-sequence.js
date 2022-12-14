@@ -1,6 +1,6 @@
 /* eslint-disable brace-style */
 /* eslint-disable block-spacing */
-const commandParserFactory = (value) => (getProcess) => require('./arguments/parser')(value, getProcess)
+const commandParserFactory = (value) => (getProcess) => require('./arguments/parser.js')(value, getProcess)
 
 module.exports = exports = (returnObject) => function * () {
   const commands = returnObject.data.returnArrayChunks

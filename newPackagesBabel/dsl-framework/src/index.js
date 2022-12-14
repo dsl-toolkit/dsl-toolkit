@@ -3,7 +3,7 @@
 /* eslint-disable brace-style */
 /* eslint-disable indent */
 
-const dslFrameworkFactory = require('./core')
+const dslFrameworkFactory = require('./core/index.js')
 const dslFrameworkFactoryInitiator = dslFrameworkFactory((e, d) => {
   dslFrameworkFactory.setCoreData(d)
   return dslFrameworkFactory})

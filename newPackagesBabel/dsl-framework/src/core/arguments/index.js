@@ -2,7 +2,7 @@
 /* eslint-disable brace-style */
 /* eslint-disable indent */
 
-const getArrayData = require('../lib/get-array-data')
+const getArrayData = require('../lib/get-array-data.js')
 const process = (parameters) => (command, getProcess, defaultValue) => {
   defaultValue = typeof defaultValue === 'undefined' ? false : defaultValue
   if (Array.isArray(command)) {
