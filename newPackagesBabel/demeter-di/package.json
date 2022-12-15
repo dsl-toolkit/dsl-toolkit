@@ -1,6 +1,6 @@
 {
   "name": "demeter-di",
-  "version": "1.8.4",
+  "version": "1.8.6",
   "description": "A most flexible container solution",
   "main": "dist/src/index.js",
   "type": "module",
@@ -78,8 +78,7 @@
   "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
   "dependencies": {
     "arrify": "^3.0.0",
-    "dsl-framework": "^1.8.7",
-    "esprima": "^4.0.1",
+    "get-function-arguments": "^1.0.0",
     "underscore": "^1.13.6"
   }
 }
