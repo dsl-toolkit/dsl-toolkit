@@ -1,7 +1,6 @@
 import arrify from 'arrify'
-import { parseScript } from 'esprima'
-import dslFramework from 'dsl-framework'
-
+import functionArgumentsGeter  from 'get-function-arguments'
+// import dslFramework from 'dsl-framework'
 // const { parseScript } = require('esprima')
 // const arrayDsl = require('array-dsl')
 
@@ -17,7 +16,7 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy) =
         : createDetails[1]
       const parameterNames = createDetails[2]
         ? arrify(createDetails[2])
-        : parseScript(factoryDefinition.toString()).body[0].expression.params.map(e => e.name)
+        : functionArgumentsGeter(factoryDefinition)
       infoList[createDetails[0]] = { head: '*di factory result* ' }
       infoList[createDetails[0] + 'Factory'] = { head: '*di factory* ' }
 
