@@ -1,13 +1,13 @@
 {
   "name": "demeter-di",
-  "version": "1.8.6",
+  "version": "1.8.7",
   "description": "A most flexible container solution",
   "main": "dist/src/index.js",
   "type": "module",
   "types": "src/index.d.ts",
   "scripts": {
     "pub": "npm version patch --force && npm publish",
-    "test-dev": "npx mocha --recursive tests/tests/*-spec.js",
+    "test-dev": "npx mocha --recursive dist/tests/tests/**/*-spec.js",
     "test-dev-unit": "echo 1 || npm run clean && node_modules/.bin/mocha --recursive tests/tests/*-spec.js",
     "test-old": "echo 1 || npm run build && npm run test-compiled && npm run clean",
     "test": "npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
@@ -15,7 +15,7 @@
     "clean": "npx rimraf dist tmp && mkdir dist && mkdir tmp",
     "standard-fix": "echo 1 || npx standard --fix",
     "license-check": "npx license-checker --failOn unknown --summary",
-    "babelsrc": "./node_modules/.bin/babel src -d dist/src",
+    "babelsrc": "./node_modules/.bin/babel ./  --ignore node_modules -d dist",
     "babel": "./node_modules/.bin/rimraf ./dist; npm run babelsrc"
   },
   "repository": {

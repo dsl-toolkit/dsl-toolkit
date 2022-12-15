@@ -1,6 +1,6 @@
 const assert = require('assert')
 
- const containerFactory = require('dsl-framework')()((e, parameters) => require('../../../../src')(parameters))
+ const containerFactory = require('dsl-framework')()((e, parameters) => require('../../../../src/index.js')(parameters))
 
 const basicInstance = containerFactory
   .define('a', 'AAA')
@@ -19,6 +19,9 @@ const basicInstance = containerFactory
       .compose('serviceC', (faa)=>({c:faa}))
       ()
     const {bbb, fuu, faa, factoryA, serviceB, serviceC} = data
+
+    console.log({bbb, fuu, faa, factoryA, serviceB, serviceC});
+
       assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
       assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
       assert(factoryA.a==='faa')
@@ -73,6 +76,7 @@ describe('checking constants', ()=>{
 
   it('tests if an undefined constant cannot be created',()=>{
     basicInstance.A = 'a'
+    console.log(basicInstance.A,'basicInstance.A');
     assert(basicInstance.A === undefined)})
 
   it('tests if an defined constant cannot be overwritten',()=>{
