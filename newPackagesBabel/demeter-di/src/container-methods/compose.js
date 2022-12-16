@@ -12,7 +12,9 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy) =
       const service = composeDetails[1]
 
       const parameterNames = composeDetails[2] ? arrify(composeDetails[2])
-      : functionArgumentsGeter(service)
+      : (()=>{
+        // console.log('service', service.toString(), '++++',functionArgumentsGeter(service));
+        return functionArgumentsGeter(service)})()
 
       composed[composeDetails[0]] = () =>
         service(...parameterNames.map(dependecyName => proxy[dependecyName]))
