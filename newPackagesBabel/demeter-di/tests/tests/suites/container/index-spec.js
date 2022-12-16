@@ -7,27 +7,27 @@ const basicInstance = containerFactory
   .compose('b', (a) => `${a}BBB`)
   .create('c', (b, a) => ({ b, a }))()
 
-  describe('object parameter', ()=>{
-    it('tests',()=>{
-      const data = containerFactory
-      .define({'fuu':'faa','faa':'fuu'})
-      .define('bbb', 'ccc')
-      .create({
-        factoryA:(fuu)=>({a:fuu})})
-      .compose({
-        serviceB:(faa)=>({b:faa})})
-      .compose('serviceC', (faa)=>({c:faa}))
-      ()
-    const {bbb, fuu, faa, factoryA, serviceB, serviceC} = data
+  // describe('object parameter', ()=>{
+  //   it('tests',()=>{
+  //     const data = containerFactory
+  //     .define({'fuu':'faa','faa':'fuu'})
+  //     .define('bbb', 'ccc')
+  //     .create({
+  //       factoryA:(fuu)=>({a:fuu})})
+  //     .compose({
+  //       serviceB:(faa)=>({b:faa})})
+  //     .compose('serviceC', (faa)=>({c:faa}))
+  //     ()
+  //   const {bbb, fuu, faa, factoryA, serviceB, serviceC} = data
 
-    console.log({bbb, fuu, faa, factoryA, serviceB, serviceC});
+  //   console.log({bbb, fuu, faa, factoryA, serviceB, serviceC});
 
-      assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
-      assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
-      assert(factoryA.a==='faa')
-      assert(serviceB.b==='fuu')
-      assert(serviceC.c==='fuu')
-    })})
+  //     assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
+  //     assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
+  //     assert(factoryA.a==='faa')
+  //     assert(serviceB.b==='fuu')
+  //     assert(serviceC.c==='fuu')
+  //   })})
 
   describe('checking services', ()=>{
   it('tests if defined services are in therir place', ()=>{
@@ -74,14 +74,16 @@ describe('checking constants', ()=>{
   it('tests if NOT defined constants/services... are undefined',()=>{
     assert(basicInstance.A === undefined)})
 
-  it('tests if an undefined constant cannot be created',()=>{
-    basicInstance.A = 'a'
-    console.log(basicInstance.A,'basicInstance.A');
-    assert(basicInstance.A === undefined)})
+  // it('tests if an undefined constant cannot be created',()=>{
+  //   basicInstance.A = 'a'
+  //   console.log(basicInstance.A,'basicInstance.A');
+  //   assert(basicInstance.A === undefined)})
 
-  it('tests if an defined constant cannot be overwritten',()=>{
-    basicInstance.a = 'aaa'
-    assert(basicInstance.a === 'AAA')})})
+  // it('tests if an defined constant cannot be overwritten',()=>{
+  //   basicInstance.a = 'aaa'
+  //   assert(basicInstance.a === 'AAA')})
+
+  })
 
 
   describe('container hidden variables', () => {
