@@ -127,16 +127,15 @@ describe('checking constants', ()=>{
         .define('a', 'AAA')
         .define('a', 'bbb')
         .compose('b', (a)=>{
-          console.log('faa'+a);
-          return 1
+          return 'faa'+a
         })
 
         .compose('b', (a)=>{
-          console.log('fuuu '+a);
-          return 2
+          return 'fuuu'+a
         })()
 
-        console.log(container.a,container.b);
+        console.log(container.a,container.b,"EEEEEEEEEEEEEEEEEEE");
+        // assert(container.b = 'fuubbb')
       })
 
       // it('no duplicates', () => {
