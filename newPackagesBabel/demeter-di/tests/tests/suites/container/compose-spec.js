@@ -2,13 +2,17 @@ const assert = require('assert')
 
  const containerFactory = require('dsl-framework')()((e, parameters) => require('../../../../src/index.js')(parameters))
 
-  describe('define', ()=>{
+ describe('compose', ()=>{
     it('tests',()=>{
       const data = containerFactory
-      .define({'fuu':'faa','faa':'fuu'})
+      .compose({
+        fuu: () => 'faa',
+        faa: (bbb) => bbb,
+      })
       .define('bbb', 'ccc')
       ()
-    const {bbb, fuu, faa} = data
-    assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
+    const {fuu, faa} = data
+    console.log({fuu, faa});
+    assert(fuu==='faa')
     })})
 
