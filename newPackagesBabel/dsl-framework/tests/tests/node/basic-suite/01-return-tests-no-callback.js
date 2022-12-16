@@ -1,4 +1,4 @@
-const { curryString, curryObject } = require('../../../library/curry-factory')
+const { curryString, curryObject } = require('../../../library/curry-factory.js')
 
 module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework) => {
   describe('return tests no callback', function () {
@@ -12,7 +12,7 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
 
     if (enviromentSupportsPromises) {
       const { testsPomiseMagic, testsPromistesIfCallbackVersionReturningPromiseGivesBackTheParametersProvided } =
-        require('../promise-tests')
+        require('../promise-tests.js')
       testsPomiseMagic(expect, curryCallbackObject, dslFrameworkDefaultInstance, curryString)
       testsPromistesIfCallbackVersionReturningPromiseGivesBackTheParametersProvided(expect, curryCallbackObject,
         dslFrameworkDefaultInstance, curryString)
