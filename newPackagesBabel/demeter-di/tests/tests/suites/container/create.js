@@ -19,6 +19,7 @@ const { create } = require('underscore')
     console.log({fuu, faa,fua});
     assert(fuu==='faa')
     assert(fua==='faaa')
+    
     assert (counter===3)
     })})
 
