@@ -12,13 +12,13 @@ const { create } = require('underscore')
         fuu: () => 'faa'&&counter++,
         faa: (bbb) => bbb&&counter++,
       })
-      create('fua', () => 'faa'&&counter++)
+      create('fua', () => 'faaa'&&counter++)
       .define('bbb', 'ccc')
       ()
     const {fuu, faa, fua} = data
     console.log({fuu, faa,fua});
     assert(fuu==='faa')
-    assert(fua==='faa')
+    assert(fua==='faaa')
     assert (counter===3)
     })})
 
