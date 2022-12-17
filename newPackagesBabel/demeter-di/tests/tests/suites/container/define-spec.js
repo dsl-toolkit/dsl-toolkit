@@ -11,4 +11,3 @@ const assert = require('assert')
     const {bbb, fuu, faa} = data
     assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
     })})
-
