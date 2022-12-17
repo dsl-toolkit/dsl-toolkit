@@ -14,5 +14,6 @@ const assert = require('assert')
     const {fuu, faa} = data
     console.log({fuu, faa});
     assert(fuu==='faa')
+    assert(faa==='bbb')
     })})
 
