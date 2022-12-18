@@ -6,8 +6,8 @@ const assert = require('assert')
     it('tests',()=>{
       const data = containerFactory
       .define({'fuu':'faa','faa':'fuu'})
-      .define('bbb', 'ccc')
+      .define('bbb', 'bbb')
       ()
     const {bbb, fuu, faa} = data
-    assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
+    assert(fuu==='faa' && faa==='fuu' && bbb === 'bbb')
     })})
