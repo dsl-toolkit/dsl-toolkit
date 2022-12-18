@@ -7,9 +7,7 @@
   "types": "src/index.d.ts",
   "scripts": {
     "pub": "npm version patch --force && npm publish",
-    "test-dev": "npm run clean && npm run babel && npx mocha --recursive dist/tests/tests/**/*-spec.js",
-    "test-dev-unit": "echo 1 || npm run clean && node_modules/.bin/mocha --recursive tests/tests/*-spec.js",
-    "test-old": "echo 1 || npm run build && npm run test-compiled && npm run clean",
+    "test-dev": "npm run clean && npm run babel && npx mocha --recursive dist/**/*-spec.js",
     "test": "npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
     "test-project": "echo 1 || npm run license-check && node_modules/.bin/depcheck --ignores \"chai,@types/node,\" && echo npm run standard-fix",
     "clean": "npx rimraf dist tmp && mkdir dist && mkdir tmp",
