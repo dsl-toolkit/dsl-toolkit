@@ -149,11 +149,11 @@ describe('checking constants', ()=>{
         // assert(container.b = 'fuubbb')
       })
 
-      // it('no duplicates', () => {
-      //   const ff = basicInstance
-      //   assert(Array.isArray(ff._duplicateKeys))
-      //   assert(ff._duplicateKeys.length === 0)
-      // })
+      it('no duplicates', () => {
+        const ff = basicInstance()
+        assert(Array.isArray(ff._duplicateKeys))
+        assert(ff._duplicateKeys.length === 0)
+      })
 
       // it('duplicates', () => {
       //   const ff = basicInstanceMaker()
@@ -167,7 +167,7 @@ describe('checking constants', ()=>{
       //   assert(duplicateContentInThisContainer._duplicateKeys.length === 1)
       //   assert(duplicateContentInThisContainer._duplicateKeys.length === 1)
       // })
-      
+
     })
     describe('_unused', () => {
       it('case1', () => {
