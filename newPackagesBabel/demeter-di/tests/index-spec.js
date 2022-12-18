@@ -102,11 +102,13 @@ describe('checking constants', ()=>{
       const ff = basicInstance
       assert(ff._compose.b)
       assert(ff._compose.b.kind === 'service')})
+
     // it('_create', () => {
     //   const ff = basicInstance()
     //   assert(ff._create.c)
     //   assert(ff._create.c.kind === 'factory')
     // })
+
     it('_allKeys', () => {
       const ff = basicInstance
       assert(Array.isArray(ff._allKeys))
