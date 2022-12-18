@@ -2,10 +2,12 @@ const assert = require('assert')
 
  const containerFactory = require('dsl-framework')()((e, parameters) => require('../src/index.js')(parameters))
 
-const basicInstance = containerFactory
-  .define('a', 'AAA')
-  .compose('b', (a) => `${a}BBB`)
-  .create('c', (b, a) => ({ b, a }))()
+const basicInstanceMaker=()=>containerFactory
+.define('a', 'AAA')
+.compose('b', (a) => `${a}BBB`)
+.create('c', (b, a) => ({ b, a }))()
+
+const basicInstance = basicInstanceMaker()
 
   describe('object parameter', ()=>{
     it('tests',()=>{
@@ -166,40 +168,39 @@ describe('checking constants', ()=>{
       //   assert(duplicateContentInThisContainer._duplicateKeys.length === 1)
       // })
     })
-//     describe('_unused', () => {
-//       it('case1', () => {
-//         const ff = basicInstance()
-//         assert(Array.isArray(ff._unused))
-//         assert(ff._unused.length > 0)
-//         assert.deepEqual(ff._unused, ['a', 'b', 'c'])
-//         ff.c
-//         assert.deepEqual(ff._unused, ['a', 'b'])
-//         ff.c
-//         assert.deepEqual(ff._unused, ['a', 'b'])
-//         ff.b
-//         assert.deepEqual(ff._unused, ['a'])
-//         ff.a
-//         assert.deepEqual(ff._unused, [])
-//       })
-//       it('case2', () => {
-//         const ff = basicInstance()
-//         assert(Array.isArray(ff._unused))
-//         assert(ff._unused.length > 0)
-//         assert.deepEqual(ff._unused, ['a', 'b', 'c'])
-//         ff.b
-//         assert.deepEqual(ff._unused, ['a', 'c'])
-//         ff.a
-//         assert.deepEqual(ff._unused, ['c'])
-//         ff.c
-//         assert.deepEqual(ff._unused, [])
-//       })
-//     })
-    describe('indefined container tags, shall return indefined.', () => {
+    describe('_unused', () => {
       it('case1', () => {
-        const ff = basicInstance
-        assert(ff.notDefined === undefined)
-
+        const ff = basicInstanceMaker()
+        assert(Array.isArray(ff._unused))
+        assert(ff._unused.length > 0)
+        assert.deepEqual(ff._unused, ['a', 'b', 'c'])
+        ff.c
+        assert.deepEqual(ff._unused, ['a', 'b'])
+        ff.c
+        assert.deepEqual(ff._unused, ['a', 'b'])
+        ff.b
+        assert.deepEqual(ff._unused, ['a'])
+        ff.a
+        assert.deepEqual(ff._unused, [])
+      })
+      it('case2', () => {
+        const ff = basicInstanceMaker()
+        assert(Array.isArray(ff._unused))
+        assert(ff._unused.length > 0)
+        assert.deepEqual(ff._unused, ['a', 'b', 'c'])
+        ff.b
+        assert.deepEqual(ff._unused, ['a', 'c'])
+        ff.a
+        assert.deepEqual(ff._unused, ['c'])
+        ff.c
+        assert.deepEqual(ff._unused, [])
       })
     })
+    describe('indefined container tags, shall return indefined.', () => {
+      it('case1', () => {
+        const ff = basicInstanceMaker()
+        console.log();
+        assert(ff.notDefined === undefined)
+        assert(ff._undefined, [])})})
   // })
 
