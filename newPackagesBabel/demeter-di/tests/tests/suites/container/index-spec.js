@@ -10,10 +10,13 @@ const basicInstance = containerFactory
   describe('object parameter', ()=>{
     it('tests',()=>{
       const data = containerFactory
-      .define({'fuu':'faa','faa':'fuu'})
+      .define({
+        'fuu':'faa',
+        'faa':'fuu'})
       .define('bbb', 'ccc')
       .create({
-        factoryA:(fuu)=>({a:fuu})})
+        factoryA:(fuu)=>({a:fuu}),
+        factoryAA:(fuu)=>fuu})
       .compose({
         serviceB:(faa)=>({b:faa})})
       .compose('serviceC', (faa)=>({c:faa}))
@@ -189,19 +192,12 @@ describe('checking constants', ()=>{
 //         assert.deepEqual(ff._unused, [])
 //       })
 //     })
-//     describe('_undefined', () => {
-//       it('case1', () => {
-//         const ff = basicInstance()
-//         assert(Array.isArray(ff._undefined))
-//         assert(ff._undefined.length === 0)
-//         assert.deepEqual(ff._undefined, [])
-//         ff.c
-//         assert.deepEqual(ff._undefined, [])
-//         ff.cc
-//         assert.deepEqual(ff._undefined, ['cc'])
-//         ff.fff
-//         assert.deepEqual(ff._undefined, ['cc', 'fff'])
-//       })
-//     })
+    describe('indefined container tags, shall return indefined.', () => {
+      it('case1', () => {
+        const ff = basicInstance
+        assert(ff.notDefined === undefined)
+
+      })
+    })
   // })
 
