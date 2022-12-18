@@ -32,6 +32,8 @@ const { create } = require('underscore')
 
     assert(fua==='faaa', 'Service fuu is defined and returend correctly. // fuu!="faaa" unfortunately')
     assert(faa==='bbb')
+    assert(fuu==='faa')
+    
     assert (counter===3)
     })})
 
