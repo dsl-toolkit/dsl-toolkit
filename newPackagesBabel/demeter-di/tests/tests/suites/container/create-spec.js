@@ -23,7 +23,7 @@ const { create } = require('underscore')
         return 'faaa'
       }
       )
-      .define('bbb', 'ccc')
+      .define('bbb', 'bbb')
       ()
     const {fuu, faa, fua} = data
 
@@ -31,7 +31,7 @@ const { create } = require('underscore')
     console.log({fua}, 'LLLL')
 
     assert(fua==='faaa', 'Service fuu is defined and returend correctly. // fuu!="faaa" unfortunately')
-    assert(faa==='ccc')
+    assert(faa==='bbb')
     assert (counter===3)
     })})
 

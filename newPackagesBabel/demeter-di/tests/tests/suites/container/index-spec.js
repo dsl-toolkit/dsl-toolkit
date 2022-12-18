@@ -25,7 +25,8 @@ const basicInstance = containerFactory
       assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
       assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
 
-      
+      console.log({factoryA, serviceB, serviceC}, 'NNNN')
+
       // assert(factoryA.a==='faa')
       // assert(serviceB.b==='fuu')
       // assert(serviceC.c==='fuu')
