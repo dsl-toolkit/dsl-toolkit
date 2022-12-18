@@ -1,7 +1,7 @@
 const assert = require('assert')
 const { create } = require('underscore')
 
- const containerFactory = require('dsl-framework')()((e, parameters) => require('../../../../src/index.js')(parameters))
+ const containerFactory = require('dsl-framework')()((e, parameters) => require('../src/index.js')(parameters))
 
  let counter = 0
 
