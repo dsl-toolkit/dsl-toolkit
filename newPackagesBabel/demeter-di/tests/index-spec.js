@@ -155,17 +155,17 @@ describe('checking constants', ()=>{
       //   assert(ff._duplicateKeys.length === 0)
       // })
 
-      // it('duplicates', () => {
-      //   const ff = basicInstance
-      //   const duplicateContentInThisContainer = require('../../../../src/app-container-factory')()
-      //     .define('a', 'AAA')
-      //     .compose('b', (a) => a)
-      //     .create('c', (b, a) => ({ b, a }))
-      //     .create('a', (b) => ({ b }))()
+      it('duplicates', () => {
+        const ff = basicInstanceMaker
+        const duplicateContentInThisContainer = require('../../../../src/app-container-factory')()
+          .define('a', 'AAA')
+          .compose('b', (a) => a)
+          .create('c', (b, a) => ({ b, a }))
+          .create('a', (b) => ({ b }))()
 
-      //   assert(Array.isArray(duplicateContentInThisContainer._duplicateKeys))
-      //   assert(duplicateContentInThisContainer._duplicateKeys.length === 1)
-      //   assert(duplicateContentInThisContainer._duplicateKeys.length === 1)
+        assert(Array.isArray(duplicateContentInThisContainer._duplicateKeys))
+        assert(duplicateContentInThisContainer._duplicateKeys.length === 1)
+        assert(duplicateContentInThisContainer._duplicateKeys.length === 1)
       // })
     })
     describe('_unused', () => {
