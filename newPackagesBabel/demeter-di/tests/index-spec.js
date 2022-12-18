@@ -11,28 +11,30 @@ const basicInstance = basicInstanceMaker()
 
   describe('object parameter', ()=>{
     it('tests',()=>{
-      const data = containerFactory
+      const {bbb, fuu, faa,
+        // factoryA, serviceB, serviceC
+      } = containerFactory
       .define({
         'fuu':'faa',
         'faa':'fuu'})
       .define('bbb', 'ccc')
       .create({
         factoryA:(fuu)=>({a:fuu}),
-        factoryAA:(fuu)=>fuu})
+        factoryAA:(fuu)=>fuu,
+        factoryAAA:(fuu)=>{a:fuu}
+      })
       .compose({
         serviceB:(faa)=>({b:faa})})
       .compose('serviceC', (faa)=>({c:faa}))
       ()
-    const {bbb, fuu, faa, factoryA, serviceB, serviceC} = data
-
-    console.log({bbb, fuu, faa, factoryA, serviceB, serviceC});
 
       assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
       assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
 
-      console.log({factoryA, serviceB, serviceC}, 'NNNN')
-
+      // console.log({factoryA,factoryAA,factoryAAA, serviceB, serviceC}, 'NNNN')
+      // console.log(factoryA);
       // assert(factoryA.a==='faa')
+      // assert(factoryAA.a==='faa')
       // assert(serviceB.b==='fuu')
       // assert(serviceC.c==='fuu')
 
@@ -149,11 +151,11 @@ describe('checking constants', ()=>{
         // assert(container.b = 'fuubbb')
       })
 
-      it('no duplicates', () => {
-        const ff = basicInstance()
-        assert(Array.isArray(ff._duplicateKeys))
-        assert(ff._duplicateKeys.length === 0)
-      })
+      // it('no duplicates', () => {
+      //   const ff = basicInstance()
+      //   assert(Array.isArray(ff._duplicateKeys))
+      //   assert(ff._duplicateKeys.length === 0)
+      // })
 
       // it('duplicates', () => {
       //   const ff = basicInstanceMaker()
