@@ -12,30 +12,57 @@ const basicInstance = basicInstanceMaker()
   describe('object parameter', ()=>{
     it('tests',()=>{
       const {bbb, fuu, faa,
-        // factoryA, serviceB, serviceC
+        factoryA,
+        factoryAA,
+        serviceB,
+        // serviceC
       } = containerFactory
       .define({
         'fuu':'faa',
         'faa':'fuu'})
       .define('bbb', 'ccc')
       .create({
-        factoryA:(fuu)=>({a:fuu}),
-        factoryAA:(fuu)=>fuu,
-        factoryAAA:(fuu)=>{a:fuu}
+        factoryA:(fuu)=>{
+          const returnThis = {a:fuu}
+          console.log(returnThis)
+          return returnThis
+        },
+        factoryAA:(fuu)=>{
+          const returnThis = fuu
+          console.log({returnThis},"rrrrr");
+          return returnThis
+        },
+        factoryAAA:(fuu)=>{
+          const returnThis = {a:fuu}
+          console.log({returnThis});
+          return returnThis
+        }
       })
       .compose({
-        serviceB:(faa)=>({b:faa})})
-      .compose('serviceC', (faa)=>({c:faa}))
+        serviceB:faa=>
+          //unfortunately this format is not workting so don't return an object like this.
+          // ({b:faa})
+
+        {
+          const ret= {b:faa}
+          console.log({ret},"LLLL");
+          return ret
+        }
+      })
+      .compose('serviceC', (faa)=>{
+        return {c:faa}
+      })
       ()
 
       assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
       assert(fuu==='faa' && faa==='fuu' && bbb === 'ccc')
 
-      // console.log({factoryA,factoryAA,factoryAAA, serviceB, serviceC}, 'NNNN')
-      // console.log(factoryA);
-      // assert(factoryA.a==='faa')
-      // assert(factoryAA.a==='faa')
-      // assert(serviceB.b==='fuu')
+      console.log({serviceB},"LLLLLLLLLLLLL", 'NNNN')
+
+      console.log({factoryA});
+      assert(factoryA.a==='faa')
+      assert(factoryAA==='faa')
+      assert(serviceB.b==='fuu')
       // assert(serviceC.c==='fuu')
 
     })})
