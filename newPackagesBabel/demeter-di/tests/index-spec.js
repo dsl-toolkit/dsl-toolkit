@@ -15,7 +15,7 @@ const basicInstance = basicInstanceMaker()
         factoryA,
         factoryAA,
         serviceB,
-        // serviceC
+        serviceC
       } = containerFactory
       .define({
         'fuu':'faa',
@@ -49,8 +49,10 @@ const basicInstance = basicInstanceMaker()
           return ret
         }
       })
-      .compose('serviceC', (faa)=>{
-        return {c:faa}
+      .compose('serviceC', (faa, fuu)=>{
+        const r = {c:faa,fuu}
+        console.log({r});
+        return {c:faa,fuu}
       })
       ()
 
@@ -63,7 +65,8 @@ const basicInstance = basicInstanceMaker()
       assert(factoryA.a==='faa')
       assert(factoryAA==='faa')
       assert(serviceB.b==='fuu')
-      // assert(serviceC.c==='fuu')
+      assert(serviceC.c==='fuu')
+      assert(serviceC.fuu==='faa')
 
     })})
 
