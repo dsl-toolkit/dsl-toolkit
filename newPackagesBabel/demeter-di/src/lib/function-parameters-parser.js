@@ -1,6 +1,10 @@
 "use strict";
 
-const debug = (...params)=>process.env.DEBUG && console.log(...params);
+let debug = (...params)=>
+process.env.DEBUG &&
+console.log(...params);
+
+debug=()=>{}
 
 const COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 const SPACES = /\s/mg;
