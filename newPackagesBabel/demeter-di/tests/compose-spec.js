@@ -8,17 +8,19 @@ describe('compose', ()=>{
     .compose({
       fuu: () => 'faa',
       faa: (bbb) => bbb,
+      faaa: bbb => bbb,
       // asy: async (bbb) => bbb,
     })
     .define('bbb', 'ccc')
     ()
-  const {fuu, faa, asy} = data
+  const {fuu, faa,faaa, asy} = data
   console.log({fuu, faa});
   assert(fuu==='faa')
 
     // todo: fix this. Constanst cannot be reached from services and factories.
-  assert(faa==='ccc')
-  // console.log(asy.toString(),"GGGG");
+    assert(faa==='ccc')
+    assert(faaa==='ccc')
+    // console.log(asy.toString(),"GGGG");
   // assert(asy==='ccc')
 
   console.log({asy})
