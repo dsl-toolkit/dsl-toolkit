@@ -16,7 +16,7 @@ module.exports = (results, factories, services, parameters, composedStore) =>
           if (!includesProperty) return composedStore[prop] = obj[prop]()}
 
         if (thisIsAFactory) return obj[prop]()
-        if (!thisIsAFactory || !thisIsAService) return obj[prop]
+        // if (!thisIsAFactory || !thisIsAService) return obj[prop]
       }},
 
     set: (obj, prop, value) => {
