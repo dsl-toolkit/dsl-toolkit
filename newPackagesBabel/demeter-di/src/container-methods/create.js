@@ -1,8 +1,6 @@
 import arrify from 'arrify'
-import functionArgumentsGeter  from 'get-function-arguments'
-
-
-console.log({functionArgumentsGeter},functionArgumentsGeter((a)=>a));
+// import functionArgumentsGeter  from 'get-function-arguments'
+import functionArgumentsGeter  from '../lib/function-parameters-parser.js'
 
 module.exports = (parameters, infoList, results, requireModuleInstance, proxy) => {
   const create = parameters.arguments('create', 'allEntries', [])
