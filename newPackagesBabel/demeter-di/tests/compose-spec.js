@@ -13,9 +13,15 @@ describe('compose', ()=>{
     .compose('faaaa', bbb=>{
       return bbb
     })
+    .compose('faaaaa', function(bbb,ccc
+        // test
+      ){
+      return bbb+ccc
+    })
     .define('bbb', 'ccc')
+    .define('ccc', 'ddd')
     ()
-  const {fuu, faa,faaa, asy, faaaa} = data
+  const {fuu, faa,faaa, asy, faaaa,faaaaa} = data
   console.log({fuu, faa});
   assert(fuu==='faa')
 
@@ -23,6 +29,7 @@ describe('compose', ()=>{
     assert(faa==='ccc')
     assert(faaa==='ccc')
     assert(faaaa==='ccc')
+    assert(faaaaa==='cccddd')
   // assert(asy==='ccc')
 
   console.log({asy})
