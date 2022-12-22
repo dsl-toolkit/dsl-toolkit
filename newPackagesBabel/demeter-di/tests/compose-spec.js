@@ -1,10 +1,19 @@
 const assert = require('assert')
 
-const containerFactory = require('dsl-framework')()((e, parameters) => require('../src/index.js')(parameters))
+const containerFactory = () =>require('dsl-framework')()((e, parameters) => require('../src/index.js')(parameters))
 
 describe('compose', ()=>{
+
+  it('gets the parameter names form an array as third parameter',()=>{
+    const data = containerFactory()
+    .define('bbb', 'ccc')
+    .compose('faa', (bbb) => bbb, ['bbb'])()
+
+    console.log(data.faa);
+  })
+
   it('tests compose and defines together',()=>{
-    const data = containerFactory
+    const data = containerFactory()
     .compose({
       fuu: () => 'faa',
       faa: (bbb) => bbb,
