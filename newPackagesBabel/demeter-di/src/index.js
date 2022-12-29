@@ -5,7 +5,9 @@ const define = require('./container-methods/define.js')
 const methods = {compose, create, define}
 
 module.exports = (parameters, results = {}, requireModuleInstance, infoList = {}) => {
-  const baseProxy = require('./proxy/index.js')(parameters, results)
+  const [loggerFromArguments]=parameters.arguments('logger', 'allEntries', [])
+  const logger = loggerFromArguments || console.log
+  const baseProxy = require('./proxy/index.js')(parameters, results, logger)
   const containerKindData = ['define', 'compose', 'create']
   const containerMethods = []
 
