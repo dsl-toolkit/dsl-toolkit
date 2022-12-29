@@ -1,4 +1,4 @@
-module.exports = (results, factories, services, parameters, composedStore, logger) =>
+module.exports = (results, factories, services, parameters, composedStore, loggerTool) =>
   new Proxy(results, {
     get: (obj, prop) => {
       if(prop instanceof Promise){
@@ -8,17 +8,17 @@ module.exports = (results, factories, services, parameters, composedStore, logge
         const thisIsAFactory = factories.includes(prop)
         const thisIsAService = services.includes(prop)
         if (parameters?.includes(prop)) {
-          logger(`getting parameter ${prop}`);
+          loggerTool()(`getting parameter ${prop}`);
           return obj[prop]}
 
         if (thisIsAService){
-          logger(`getting service ${prop}`);
+          loggerTool()(`getting service ${prop}`);
           const includesProperty = Object.keys(composedStore).includes(prop)
           if (includesProperty) return composedStore[prop]
           if (!includesProperty) return composedStore[prop] = obj[prop]()}
 
         if (thisIsAFactory){
-          logger(`getting factory ${prop}`);
+          loggerTool()(`getting factory ${prop}`);
           return obj[prop]()
         }
         // if (!thisIsAFactory || !thisIsAService) return obj[prop]
