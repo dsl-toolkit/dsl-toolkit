@@ -1,6 +1,6 @@
 {
   "name": "demeter-di",
-  "version": "1.8.13",
+  "version": "1.8.15",
   "description": "A most flexible container solution",
   "main": "dist/src/index.js",
   "type": "module",
@@ -44,7 +44,7 @@
     "standard": "^14.3.4"
   },
   "engines": {
-    "node": ">=7.6.4"
+    "node": ">=12"
   },
   "nyc": {
     "exclude": [

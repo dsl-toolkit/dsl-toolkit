@@ -1,15 +1,15 @@
 import _ from 'underscore'
 import dslf from 'dsl-framework'
 
-module.exports = (dslFrameworkParameters, results, logger) => {
+module.exports = (dslFrameworkParameters, results, loggerTool) => {
   dslFrameworkParameters.data.returnArrayChunks = objectMapper(dslFrameworkParameters.data.returnArrayChunks)
-  const parameters = require('./parameterGetter.js')(dslFrameworkParameters, logger)
-  const services = require('./servicesGetter.js')(dslFrameworkParameters, logger)
-  const factories = require('./factoriesGetter.js')(dslFrameworkParameters, logger)
+  const parameters = require('./parameterGetter.js')(dslFrameworkParameters, loggerTool)
+  const services = require('./servicesGetter.js')(dslFrameworkParameters, loggerTool)
+  const factories = require('./factoriesGetter.js')(dslFrameworkParameters, loggerTool)
   const composedStore = {}
 
   return require('./containerProxyFactory.js')
-  (results,factories, services, parameters, composedStore, logger)}
+  (results,factories, services, parameters, composedStore, loggerTool)}
 
 
   const objectMapper = (returnArrayChunks) =>{

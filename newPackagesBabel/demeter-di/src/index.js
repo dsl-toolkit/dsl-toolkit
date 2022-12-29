@@ -6,8 +6,12 @@ const methods = {compose, create, define}
 
 module.exports = (parameters, results = {}, requireModuleInstance, infoList = {}) => {
   const [loggerFromArguments]=parameters.arguments('logger', 'allEntries', [])
-  const logger = loggerFromArguments || console.log
-  const baseProxy = require('./proxy/index.js')(parameters, results, logger)
+
+  const loggerTool = () => (...args) =>{
+    (loggerFromArguments?.logger || console.log)(...args)
+  }
+
+  const baseProxy = require('./proxy/index.js')(parameters, results, loggerTool)
   const containerKindData = ['define', 'compose', 'create']
   const containerMethods = []
 
