@@ -5,16 +5,16 @@ const define = require('./container-methods/define.js')
 const methods = {compose, create, define}
 
 module.exports = (parameters, results = {}, requireModuleInstance, infoList = {}) => {
-  const [loggerFromArguments]=parameters.arguments('logger', 'allEntries', [])
-
-  const loggerTool = () => (...args) =>{
-    (loggerFromArguments?.logger || console.log)(...args)
-  }
-
-  const baseProxy = require('./proxy/index.js')(parameters, results, loggerTool)
-  const containerKindData = ['define', 'compose', 'create']
-  const containerMethods = []
-
+  const loggerArument = parameters.arguments('logger', 'allEntries', false)
+  const loggerToolContainerRow = loggerArument && loggerArument || false
+  const [loggerToolContainer] = loggerToolContainerRow && loggerToolContainerRow || [false],
+  loggerTool = () => (...args) => {
+      ;loggerToolContainer?.noLogsTillLoggerDefined ||
+      loggerToolContainer?.logger && (loggerToolContainer?.logger || console.log)(...args)
+    },
+    baseProxy = require('./proxy/index.js')(parameters, results, loggerTool),
+    containerKindData = ['define', 'compose', 'create'],
+    containerMethods = []
 
   containerKindData.forEach((kind) => {
     containerMethods.push(methods[kind])})
