@@ -5,12 +5,16 @@ const define = require('./container-methods/define.js')
 const methods = {compose, create, define}
 
 module.exports = (parameters, results = {}, requireModuleInstance, infoList = {}) => {
-  const loggerArument = parameters.arguments('logger', 'allEntries', false)
-  const loggerToolContainerRow = loggerArument && loggerArument || false
-  const [loggerToolContainer] = loggerToolContainerRow && loggerToolContainerRow || [false],
-  loggerTool = () => (...args) => {
-      ;loggerToolContainer?.noLogsTillLoggerDefined ||
-      loggerToolContainer?.logger && (loggerToolContainer?.logger || console.log)(...args)
+  const loggerArument = parameters.arguments('logger', 'allEntries', false),
+  loggerToolContainerRow = loggerArument && loggerArument || false,
+  [loggerToolContainer] = loggerToolContainerRow && loggerToolContainerRow[0] || [false]
+    const loggerTool = () => (...args) => {
+
+      !loggerToolContainer.logger &&
+      !loggerToolContainer.noLogsTillLoggerDefined &&
+      (console.log)(...args)
+
+      loggerToolContainer.logger && (loggerToolContainer.logger)('|demeter-di|',...args)
     },
     baseProxy = require('./proxy/index.js')(parameters, results, loggerTool),
     containerKindData = ['define', 'compose', 'create'],
