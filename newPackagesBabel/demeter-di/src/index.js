@@ -20,12 +20,10 @@ module.exports = (parameters, results = {}, requireModuleInstance, infoList = {}
     containerMethods.push(methods[kind])})
 
   const registeredKeys = containerMethods.map(method => method
-    (parameters, infoList, results,requireModuleInstance, baseProxy))
+    (parameters, infoList, results,requireModuleInstance, baseProxy, loggerTool))
 
-  const resultingObjectKeys = {}
-  containerKindData.forEach((kind, index) => {resultingObjectKeys[kind] = containerMethods[index]})
   const notHiddenReaches = {}
 
   return require('./proxy/hidden-tags-proxy/index.js')
     (notHiddenReaches)
-      (baseProxy, containerKindData, registeredKeys, containerMethods)}
+      (baseProxy, containerKindData, registeredKeys)}

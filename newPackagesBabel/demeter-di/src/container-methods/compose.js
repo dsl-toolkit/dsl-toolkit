@@ -1,9 +1,7 @@
 import arrify from 'arrify';
-// import functionArgumentsGeter  from 'get-function-arguments'
 import functionArgumentsGeter  from '../lib/function-parameters-parser.js'
-// import { parseScript } from 'esprima'
 
-module.exports = (parameters, infoList, results, requireModuleInstance, proxy) => {
+module.exports = (parameters, infoList, results, requireModuleInstance, proxy, loggerTool) => {
   const composes = parameters.arguments('compose', 'allEntries', [])
 
   composes.length &&
@@ -15,9 +13,8 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy) =
 
       const parameterNames = composeDetails[2] ? arrify(composeDetails[2])
       : (()=>{
-        // const argumentNames= parseScript(service.toString()).body[0].expression.params.map(e => e.name)
         const argumentNames=functionArgumentsGeter(service)
-        console.log({argumentNames}, 'for service', {service});
+        loggerTool()({argumentNames}, 'for service', {service});
         return argumentNames
       })()
 

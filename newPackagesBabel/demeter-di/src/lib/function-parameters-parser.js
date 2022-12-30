@@ -1,10 +1,5 @@
-"use strict";
-
-let debug = (...params)=>
-process.env.DEBUG &&
-console.log(...params);
-
-debug=()=>{}
+// use loggertool here too
+const debug=()=>{}
 
 const COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 const SPACES = /\s/mg;
