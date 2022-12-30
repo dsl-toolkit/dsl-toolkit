@@ -13,11 +13,16 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy, l
         ? requireModuleInstance(createDetails[1])
         : createDetails[1]
       const parameterNames = createDetails[2]
-        ? arrify(createDetails[2])
+        ? (()=>{
+          const ret = arrify(createDetails[2])
+          loggerTool()('Used services defined as array',{referredServices:ret})
+          return ret
+        })()
         : (()=>{
-          return functionArgumentsGeter(factoryDefinition)})()
-
-      // loggerTool()({parameterNames})
+          const ret = functionArgumentsGeter(factoryDefinition)
+          loggerTool()('Used services fetched form the service definition function parameters', {referredServices:ret})
+          return ret
+        })()
       infoList[createDetails[0]] = { head: '*di factory result* ' }
       infoList[createDetails[0] + 'Factory'] = { head: '*di factory* ' }
 

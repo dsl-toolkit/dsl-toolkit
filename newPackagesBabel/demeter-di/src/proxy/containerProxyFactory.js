@@ -21,7 +21,6 @@ module.exports = (results, factories, services, parameters, composedStore, logge
           loggerTool()(`getting factory ${prop}`);
           return obj[prop]()
         }
-        // if (!thisIsAFactory || !thisIsAService) return obj[prop]
       }},
 
     set: (obj, prop, value) => {
