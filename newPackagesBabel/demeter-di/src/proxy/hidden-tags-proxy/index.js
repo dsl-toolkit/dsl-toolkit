@@ -44,4 +44,6 @@ module.exports = (notHiddenVariablesReaches) => (baseProxy, containerKindData, r
           const allKeys = getAllKeys(registeredKeys)
           return usedSoFar.map((usedKey) => allKeys.indexOf(usedKey) < 0 ? usedKey : false)
             .filter((k) => k !== false)}}
-      return obj[prop]}})
+      return obj[prop]
+  }
+})

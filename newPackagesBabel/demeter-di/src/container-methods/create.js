@@ -2,12 +2,12 @@ import arrify from 'arrify'
 // import functionArgumentsGeter  from 'get-function-arguments'
 import functionArgumentsGeter  from '../lib/function-parameters-parser.js'
 
-module.exports = (parameters, infoList, results, requireModuleInstance, proxy) => {
+module.exports = (parameters, infoList, results, requireModuleInstance, proxy, loggerTool) => {
   const create = parameters.arguments('create', 'allEntries', [])
   create.length &&
   (() => {
     create.map(createDetails => {
-      console.log('createDetails', createDetails, '----')
+      loggerTool()('createDetails', createDetails, )
       const returnObject = {}
       const factoryDefinition = typeof createDetails[1] === 'string'
         ? requireModuleInstance(createDetails[1])
@@ -15,10 +15,9 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy) =
       const parameterNames = createDetails[2]
         ? arrify(createDetails[2])
         : (()=>{
-          // console.log('factoryDefinition', factoryDefinition.toString(), '----',functionArgumentsGeter(factoryDefinition))
           return functionArgumentsGeter(factoryDefinition)})()
 
-      console.log({parameterNames}, '----++++');
+      // loggerTool()({parameterNames})
       infoList[createDetails[0]] = { head: '*di factory result* ' }
       infoList[createDetails[0] + 'Factory'] = { head: '*di factory* ' }
 
