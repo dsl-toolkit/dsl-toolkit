@@ -1,12 +1,12 @@
 {
   "name": "demeter-di",
-  "version": "1.8.15",
+  "version": "1.8.16",
   "description": "A most flexible container solution",
   "main": "dist/src/index.js",
   "type": "module",
   "types": "src/index.d.ts",
   "scripts": {
-    "pub": "npm version patch --force && npm publish",
+    "pub": "npm version patch && npm run babel && npm publish",
     "test-dev": "npm run clean && npm run babel && npx mocha --recursive dist/**/*-spec.js",
     "test": "npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
     "test-project": "echo 1 || npm run license-check && node_modules/.bin/depcheck --ignores \"chai,@types/node,\" && echo npm run standard-fix",
