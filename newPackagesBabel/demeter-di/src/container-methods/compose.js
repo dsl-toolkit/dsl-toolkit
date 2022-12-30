@@ -11,11 +11,15 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy, l
       const composed = {}
       const service = composeDetails[1]
 
-      const parameterNames = composeDetails[2] ? arrify(composeDetails[2])
+      const parameterNames = composeDetails[2] ? (()=>{
+        const ret = arrify(composeDetails[2])
+        loggerTool()('Used container items defined as array',{referredServices:ret})
+        return ret
+      })()
       : (()=>{
-        const argumentNames=functionArgumentsGeter(service)
-        loggerTool()({argumentNames}, 'for service', {service});
-        return argumentNames
+        const ret = functionArgumentsGeter(service)
+        loggerTool()('Used container items form the service definition function parameters', {referredServices:ret})
+        return ret
       })()
 
       composed[composeDetails[0]] = () =>
