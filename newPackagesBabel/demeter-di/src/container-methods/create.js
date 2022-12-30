@@ -15,12 +15,12 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy, l
       const parameterNames = createDetails[2]
         ? (()=>{
           const ret = arrify(createDetails[2])
-          loggerTool()('Used services defined as array',{referredServices:ret})
+          loggerTool()('Used container items defined as array',{referredServices:ret})
           return ret
         })()
         : (()=>{
           const ret = functionArgumentsGeter(factoryDefinition)
-          loggerTool()('Used services fetched form the service definition function parameters', {referredServices:ret})
+          loggerTool()('Used container items fetched form the service definition function parameters', {referredServices:ret})
           return ret
         })()
       infoList[createDetails[0]] = { head: '*di factory result* ' }
