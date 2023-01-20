@@ -163,3 +163,84 @@ A DI container allows developers to define and compose services and constants wi
 In summary, all these concepts are closely related and complement each other, and are often used together to improve the design and maintainability of a software system. The Law of Demeter and the Inversion of Control principle are mainly focused on limiting the interactions between objects and inverting the control flow of a system respectively, while Dependency Injection (DI) containers are a tool to help developers manage the dependencies between objects and follow the principles of LoD and IoC.
 
 TLDR end;
+
+# Examples
+
+## React example
+Here's an example of how you can use the compose method to create JSX elements, a fetchData function, and a handleClick function in a container and use them in a React component:
+
+```jsx
+import React from 'react';
+import { containerFactory } from 'demeter-di';
+
+const container = containerFactory()
+  .define('API_URL', 'https://api.example.com')
+  .define('API_KEY', 'secret_key')
+  .compose('MyButton', (handleClick) => <button onClick={handleClick}>Fetch Users</button>)
+  .compose('MyData', (data) => <div>{JSON.stringify(data)}</div>)
+  .compose('handleClick', (fetchData, setData) => () => {
+    fetchData('/users')
+      .then((users) => setData(users));
+  })
+  .compose('setData', (useState) => useState(null)[1])
+  .compose('fetchData', (API_URL, API_KEY) => (endpoint) =>
+    fetch(`${API_URL}/${endpoint}`, { headers: { 'x-api-key': API_KEY } })
+      .then((res) => res.json())
+  )
+  .compose('MyComponent', (MyButton, MyData, handleClick, setData) => () => {
+    const data = setData;
+    return (
+      <div>
+        {MyButton}
+        {data && MyData(data)}
+      </div>
+    );
+  })();
+
+export default container.MyComponent;
+
+```
+
+## Nodejs Example
+
+```js
+const container = containerFactory()
+.define('host', 'localhost')
+.define('port', 3000)
+.define('secret', 'mysecret')
+.compose('server', (host, port) => new Hapi.Server({ host, port }))
+.compose('validateJWT', (secret) => (request, h) => {
+    try {
+        const token = request.headers.authorization;
+        JWT.verify(token, secret);
+        return h.continue;
+    } catch (e) {
+        return h.response({ message: 'Invalid token' }).code(401);
+    }
+  }, ['secret'])
+.compose('init', (validateJWT, server) => {
+    server.route({
+      method: 'GET',
+      path: '/',
+      handler: (request, h) => {
+        return 'Hello World!';
+      }
+    });
+    server.route({
+      method: 'GET',
+      path: '/private',
+      handler: (request, h) => {
+        return 'This is a private route';
+      },
+      options: {
+        auth: 'jwt'
+      }
+    });
+    server.auth.strategy('jwt', 'bearer-access-token', {
+        validate: validateJWT
+    });
+    return server.start();
+  }, ['validateJWT', 'server'])();
+
+  container.init
+```
