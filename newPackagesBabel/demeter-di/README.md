@@ -204,43 +204,38 @@ export default container.MyComponent;
 ## Nodejs Example
 
 ```js
-const container = containerFactory()
-.define('host', 'localhost')
-.define('port', 3000)
-.define('secret', 'mysecret')
-.compose('server', (host, port) => new Hapi.Server({ host, port }))
-.compose('validateJWT', (secret) => (request, h) => {
-    try {
-        const token = request.headers.authorization;
-        JWT.verify(token, secret);
-        return h.continue;
-    } catch (e) {
-        return h.response({ message: 'Invalid token' }).code(401);
-    }
-  }, ['secret'])
-.compose('init', (validateJWT, server) => {
+import Hapi from 'hapi';
+
+const container = (server = false) => containerFactory()
+  .define('host', process.env.API_HOST || 'localhost')
+  .define('port', process.env.API_PORT || 3000)
+  .define('secret', process.env.API_SECRET || 'mysecret')
+  .compose('validateJWT', (secret) => (request, h) => {
+    // JWT validation logic
+  })
+  .compose('server', (host, port) => server || new Hapi.Server({ host, port }))
+  .compose('init', (validateJWT, server) => {
     server.route({
       method: 'GET',
       path: '/',
       handler: (request, h) => {
-        return 'Hello World!';
-      }
-    });
-    server.route({
-      method: 'GET',
-      path: '/private',
-      handler: (request, h) => {
-        return 'This is a private route';
+        return 'Hello, World!';
       },
-      options: {
-        auth: 'jwt'
-      }
     });
-    server.auth.strategy('jwt', 'bearer-access-token', {
-        validate: validateJWT
-    });
-    return server.start();
-  }, ['validateJWT', 'server'])();
 
-  container.init
+    server.auth.strategy('jwt', 'jwt', {
+      key: container.secret,
+      validate: container.validateJWT,
+      verifyOptions: { algorithms: ['HS256'] },
+    });
+
+    server.auth.default('jwt');
+
+    await server.start();
+    console.log('Server running on %s', container.server.info.uri);
+  });
+
+container.init;
 ```
+
+This way, if a server is passed as an argument to the container function, it will be used instead of creating a new Hapi server. Also, the container.init is called at the end, to start the server and handle the routes.
