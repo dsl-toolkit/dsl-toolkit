@@ -1,6 +1,6 @@
 const assert = require('assert')
-
- const containerFactory = require('dsl-framework')()((e, parameters) => require('../src/index.js')(parameters))
+const demeterDi = require('../src/index.js')
+const containerFactory = demeterDi.containerFactory
 
 const basicInstanceMaker=()=>containerFactory
 .define('a', 'AAA')
