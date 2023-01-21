@@ -18,7 +18,7 @@ The compose and create methods of the container factory allow you to compose ser
 In summary, Demeter-DI is a simple and lightweight dependency injection container that helps developers follow the "Law of Demeter" principle by providing a clear and easy-to-use API for managing dependencies between objects. This makes the code more readable, maintainable, and less prone to bugs.
 
 
-# let's get int othe compose
+# let's get int to he compose
 
 ```js
 compose(name: string, service: Function, dependencies: string[])
@@ -36,7 +36,7 @@ This method returns the container object, which can be used to access the compos
 
 Example:
 ```js
-const container = containerFactory().compose('myService', (dependency1, dependency2) => dependency1 + dependency2, ['dependency1', 'dependency2'])();
+const container = containerFactory.compose('myService', (dependency1, dependency2) => dependency1 + dependency2, ['dependency1', 'dependency2'])();
 console.log(container.myService); // adition of depencency1 and dependecy2
 // if dependency1 evaluates to 1 and depencency2 evaluates to two this will print 3
 // most likey you will define dependency1 and 2 with the define method of this factory,
@@ -67,14 +67,12 @@ Here is an example of the difference between the "create" and "compose" methods:
 
 ```js
 
-const container = containerFactory();
-
-container.compose('singleton', () => {
+containerFactory.compose('singleton', () => {
   console.log('Creating singleton');
   return {};
 })();
 
-container.create('factory', () => {
+containerFactory.create('factory', () => {
   console.log('Creating factory');
   return {};
 });
@@ -101,7 +99,7 @@ The define method returns the container object, which can be used to access the 
 Here's an example of how to use the define method to define a constant PI with a value of 3.14:
 
 ```js
-const container = containerFactory().define('PI', 3.14)();
+const container = containerFactory.define('PI', 3.14)();
 console.log(container.PI); // Output: 3.14
 ```
 
@@ -173,7 +171,7 @@ Here's an example of how you can use the compose method to create JSX elements, 
 import React from 'react';
 import { containerFactory } from 'demeter-di';
 
-const container = containerFactory()
+const container = containerFactory
   .define('API_URL', 'https://api.example.com')
   .define('API_KEY', 'secret_key')
   .compose('MyButton', (handleClick) => <button onClick={handleClick}>Fetch Users</button>)
@@ -205,8 +203,9 @@ export default container.MyComponent;
 
 ```js
 import Hapi from 'hapi';
+import {containerFactory} from 'demeter-di'
 
-const container = (server = false) => containerFactory()
+const container = (server = false) => containerFactory
   .define('host', process.env.API_HOST || 'localhost')
   .define('port', process.env.API_PORT || 3000)
   .define('secret', process.env.API_SECRET || 'mysecret')

@@ -4,7 +4,7 @@ const define = require('./container-methods/define.js')
 
 const methods = {compose, create, define}
 
-module.exports = (parameters, results = {}, requireModuleInstance, infoList = {}) => {
+const demeterDi = module.exports = (parameters, results = {}, requireModuleInstance, infoList = {}) => {
   const loggerArument = parameters.arguments('logger', 'allEntries', false),
   loggerToolContainerRow = loggerArument && loggerArument || false,
   [loggerToolContainer] = loggerToolContainerRow && loggerToolContainerRow[0] || [false]
@@ -31,3 +31,7 @@ module.exports = (parameters, results = {}, requireModuleInstance, infoList = {}
   return require('./proxy/hidden-tags-proxy/index.js')
     (notHiddenReaches)
       (baseProxy, containerKindData, registeredKeys)}
+
+module.exports.containerFactory = require('dsl-framework')()((e, parameters) => demeterDi(parameters))
+
+module.exports.containerFactoryFactory = () => require('dsl-framework')()((e, parameters) => demeterDi(parameters))
