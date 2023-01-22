@@ -48,6 +48,9 @@ developers can chain the "compose", "create", and "define" functions in order to
 Here is an example of how to chain these functions
 
 ```js
+import demeterDi from 'demeter-di';
+const {containerFactory} = demeterDi;
+
 const container = containerFactory
   .define('one', 1)
   .compose('showOne', (one) => console.log(one))()
@@ -99,6 +102,9 @@ The define method returns the container object, which can be used to access the 
 Here's an example of how to use the define method to define a constant PI with a value of 3.14:
 
 ```js
+import demeterDi from 'demeter-di';
+const {containerFactory} = demeterDi;
+
 const container = containerFactory.define('PI', 3.14)();
 console.log(container.PI); // Output: 3.14
 ```
@@ -106,7 +112,10 @@ console.log(container.PI); // Output: 3.14
 You can also use the define method to define multiple constants at once by chaining multiple calls to define method.
 
 ```js
-const container = containerFactory()
+import demeterDi from 'demeter-di';
+const {containerFactory} = demeterDi;
+
+const container = containerFactory
     .define('PI', 3.14)
     .define('E', 2.72)
     .define('GOLDEN_RATIO', 1.618)();
@@ -145,22 +154,22 @@ You can use this technique to provide different test fixtures to your tests and 
 
 This will override the existing 'complexService' with a new service that returns the array ['fixture','data'] regardless of the dependencies passed to it.
 
-# More intellectual munition for you
-TLDR begin;
+# some more details about demeter-di
 
-The Law of Demeter (LoD), the Inversion of Control (IoC) principle, also known as the Hollywood Principle, and Dependency Injection (DI) containers are all related concepts in software design that aim to promote loose coupling and maintainability in the code.
+You access a service or constant through the container, it returns a proxy object that automatically resolves the service or constant when it's invoked. In this case, you don't need to invoke the service with parenthesis, just by accessing it through the container will execute the service.
+Example:
 
-The Law of Demeter states that an object should only interact with its immediate neighbors, and not with objects that are further away. It helps to reduce the number of connections between objects and the impact of changes in one part of the code on other parts of the code. The LoD is mainly focused on the interactions between objects, and how they should be limited to reduce dependencies.
+const container = containerFactory
+.define('one', 1)
+.compose('showOne', (one) => console.log(one))();
+console.log(container.one) // Output: 1
+container.showOne // Output: 1
 
-The Inversion of Control principle, on the other hand, is mainly focused on the control flow of a system. It states that the control of a system should be inverted, meaning that instead of the objects controlling the flow of the program, the flow of the program should control the objects. This is achieved by having objects that are dependent on other objects, rather than objects that are tightly coupled to one another.
+const showOne1 = container.showOne;
+console.log(showOne1) // Output: [Function: showOne]
 
-Dependency Injection (DI) containers are tools that help developers manage the dependencies between objects and follow the principles of LoD and IoC. They provide an API for defining and composing services and constants, and managing their dependencies in a way that follows the LoD and IoC principles.
+The 'showOne1' variable is a reference to the function that is returned by 'container.showOne', but it does not execute the function automatically. If you want to execute the function, you need to invoke it with parenthesis like 'showOne1()'.
 
-A DI container allows developers to define and compose services and constants within a container, and manage their dependencies in a way that follows the LoD and IoC principles. It can be used to create instances of objects and manage their dependencies, it also allows you to create a new instance of a service each time it's accessed, and it can also be used to create a singleton service that's only created once.
-
-In summary, all these concepts are closely related and complement each other, and are often used together to improve the design and maintainability of a software system. The Law of Demeter and the Inversion of Control principle are mainly focused on limiting the interactions between objects and inverting the control flow of a system respectively, while Dependency Injection (DI) containers are a tool to help developers manage the dependencies between objects and follow the principles of LoD and IoC.
-
-TLDR end;
 
 # Examples
 
@@ -169,7 +178,8 @@ Here's an example of how you can use the compose method to create JSX elements, 
 
 ```jsx
 import React from 'react';
-import { containerFactory } from 'demeter-di';
+import demeterDi from 'demeter-di';
+const {containerFactory} = demeterDi;
 
 const container = containerFactory
   .define('API_URL', 'https://api.example.com')
@@ -203,7 +213,8 @@ export default container.MyComponent;
 
 ```js
 import Hapi from 'hapi';
-import {containerFactory} from 'demeter-di'
+import demeterDi from 'demeter-di';
+const {containerFactory} = demeterDi;
 
 const container = (server = false) => containerFactory
   .define('host', process.env.API_HOST || 'localhost')
@@ -238,3 +249,20 @@ container.init;
 ```
 
 This way, if a server is passed as an argument to the container function, it will be used instead of creating a new Hapi server. Also, the container.init is called at the end, to start the server and handle the routes.
+
+# More intellectual munition for you
+TLDR begin;
+
+The Law of Demeter (LoD), the Inversion of Control (IoC) principle, also known as the Hollywood Principle, and Dependency Injection (DI) containers are all related concepts in software design that aim to promote loose coupling and maintainability in the code.
+
+The Law of Demeter states that an object should only interact with its immediate neighbors, and not with objects that are further away. It helps to reduce the number of connections between objects and the impact of changes in one part of the code on other parts of the code. The LoD is mainly focused on the interactions between objects, and how they should be limited to reduce dependencies.
+
+The Inversion of Control principle, on the other hand, is mainly focused on the control flow of a system. It states that the control of a system should be inverted, meaning that instead of the objects controlling the flow of the program, the flow of the program should control the objects. This is achieved by having objects that are dependent on other objects, rather than objects that are tightly coupled to one another.
+
+Dependency Injection (DI) containers are tools that help developers manage the dependencies between objects and follow the principles of LoD and IoC. They provide an API for defining and composing services and constants, and managing their dependencies in a way that follows the LoD and IoC principles.
+
+A DI container allows developers to define and compose services and constants within a container, and manage their dependencies in a way that follows the LoD and IoC principles. It can be used to create instances of objects and manage their dependencies, it also allows you to create a new instance of a service each time it's accessed, and it can also be used to create a singleton service that's only created once.
+
+In summary, all these concepts are closely related and complement each other, and are often used together to improve the design and maintainability of a software system. The Law of Demeter and the Inversion of Control principle are mainly focused on limiting the interactions between objects and inverting the control flow of a system respectively, while Dependency Injection (DI) containers are a tool to help developers manage the dependencies between objects and follow the principles of LoD and IoC.
+
+TLDR end;
