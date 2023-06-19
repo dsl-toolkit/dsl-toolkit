@@ -11,7 +11,7 @@ const demeterDi = module.exports = (parameters, results = {}, requireModuleInsta
     const loggerTool = () => (...args) => {
 
       !loggerToolContainer.logger &&
-      !loggerToolContainer.noLogsTillLoggerDefined &&
+      loggerToolContainer.logsTillLoggerDefined &&
       (console.log)(...args)
 
       loggerToolContainer.logger && (loggerToolContainer.logger)('|demeter-di|',...args)
@@ -35,3 +35,5 @@ const demeterDi = module.exports = (parameters, results = {}, requireModuleInsta
 module.exports.containerFactory = require('dsl-framework')()((e, parameters) => demeterDi(parameters))
 
 module.exports.containerFactoryFactory = () => require('dsl-framework')()((e, parameters) => demeterDi(parameters))
+
+module.exports.DslFrameworkFactory = (callbackFunction) => require('dsl-framework')()(callbackFunction)
