@@ -63,17 +63,17 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
       }).a.b.c()
     })
 
-    it('tests if callback gets the parameters', function (done) {
-      dslFrameworkDefaultInstance((e, d) => {
-        expect(d.data.returnArrayChunks[0][0]).to.be.equal('a')
-        expect(d.data.returnArrayChunks[0][1]).to.be.equal('b')
-        expect(d.data.returnArrayChunks[0][2]).to.be.equal('c')
-        expect(d.data.returnArrayChunks[1][0]).to.be.equal('d')
-        expect(d.data.returnArrayChunks[2][0]).to.be.equal('e')
-        expect(d.data.returnArrayChunks[2][1]).to.be.equal('f')
-        // abcTester(d)
-        done()
-      }).a('b', 'c').d.e('f')
-    })
+    // it('tests if callback gets the parameters 2', function (done) {
+    //   dslFrameworkDefaultInstance((e, d) => {
+    //     expect(d.data.returnArrayChunks[0][0]).to.be.equal('a')
+    //     expect(d.data.returnArrayChunks[0][1]).to.be.equal('b')
+    //     expect(d.data.returnArrayChunks[0][2]).to.be.equal('c')
+    //     expect(d.data.returnArrayChunks[1][0]).to.be.equal('d')
+    //     expect(d.data.returnArrayChunks[2][0]).to.be.equal('e')
+    //     expect(d.data.returnArrayChunks[2][1]).to.be.equal('f')
+    //     // abcTester(d)
+    //     done()
+    //   }).a('b', 'c').d.e('f')
+    // })
   })
 }

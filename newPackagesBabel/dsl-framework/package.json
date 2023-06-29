@@ -1,13 +1,13 @@
 {
   "name": "dsl-framework",
-  "version": "1.8.9",
+  "version": "1.8.16",
   "description": "Easy function chaining.",
   "main": "dist/src/index.js",
   "type": "module",
-
   "scripts": {
-    "pub": "npm version patch --force && npm publish",
-    "test-dev": "npm run clean &&npm run babel && npx mocha --recursive dist/tests/tests/**/*-spec.js",
+    "pub": "npm run clean; npm run babel; npm version patch --force && npm publish",
+    "test-common": "npm run clean && npx mocha --recursive tests/tests/**/*-spec.js",
+    "test-dev": "npm run clean &&npm run babel-test && npx mocha --recursive dist/tests/tests/**/*-spec.js",
     "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/node/unit/*-spec.js",
     "test": "PROD=true npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
     "test-project": "npm run license-check && node_modules/.bin/depcheck --ignores \"@types/node,require-a-lot,cowlog,flat,lodash,rimraf,generic-text-linker,jasmine-core,karma-chrome-launcher,karma-jasmine,eslint*\" && npm run standard-fix",
@@ -20,7 +20,8 @@
     "browserify": "mkdir dist/web -p && node_modules/.bin/browserify -o dist/web/dsl-framework.js -e src/index.js --exclude src/examples",
     "minify": "node_modules/.bin/minify dist/web/dsl-framework.js > dist/web/dsl-framework.min.js",
     "karma": "node_modules/.bin/karma start my.conf.js",
-    "babel": "./node_modules/.bin/babel ./ --ignore node_modules,dist -d dist"
+    "babel": "./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tests,tools,my.conf.js -d dist",
+    "babel-test": "./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tools,my.conf.js -d dist"
   },
   "repository": {
     "type": "git",
@@ -119,7 +120,6 @@
   ],
   "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
   "dependencies": {
-    "@babel/polyfill": "^7.12.1",
-    "flat": "^5.0.2"
+    "@babel/polyfill": "^7.12.1"
   }
 }

@@ -17,15 +17,15 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
     //   callingSameCalls(expect, dslFrameworkDefaultInstance)
     // }
 
-    it('calling detached call', function (done) {
-      const fn = dslFrameworkDefaultInstance(
-        (e, parameters) => {
-          done()
-        }
-      )
-      fn('1')('2')(3)
-      fn('4', 5)('6')('7')('8')
-      fn('9')
-    })
+    // it('calling detached call', function (done) {
+    //   const fn = dslFrameworkDefaultInstance(
+    //     (e, parameters) => {
+    //       done()
+    //     }
+    //   )
+    //   fn('1')('2')(3)
+    //   fn('4', 5)('6')('7')('8')
+    //   fn('9')
+    // })
   })
 }

@@ -4,7 +4,7 @@
 /* eslint-disable indent */
 
 const RETURN_FROM_CALLBACK = 0
-const safetyExecutor = require('./detached-executor.js')
+// const safetyExecutor = require('./detached-executor.js')
 const container = require('./container/core/index.js')
 // const f = function
 const coreFactory = () => {
@@ -26,14 +26,16 @@ const coreFactory = () => {
       if (callerArguments.length) {
         state.setCommandArguments(callerArguments)}
       const data = callerRaw.data = state.getFrom(0)
-      if (!coreData.command.has('noPromoises')) {
-        callerRaw.p = require('./caller-promise-factory-factory.js')(state, callback)}
+      // if (!coreData.command.has('noPromoises')) {
+      //   callerRaw.p = require('./caller-promise-factory-factory.js')(state, callback)
+      // }
       // l(coreData, coreData.command)()
-      const noTriggerEndOfExecution = coreData.command.has('noTriggerEndOfExecution')
+      // const noTriggerEndOfExecution = coreData.command.has('noTriggerEndOfExecution')
       /* istanbul ignore else */
       if (!args.length && callback && typeof callback === 'function') {
-        if (!noTriggerEndOfExecution) {
-          clearTimeout(state.timeoutSate)}
+        // if (!noTriggerEndOfExecution) {
+        //   clearTimeout(state.timeoutSate)
+        // }
         state.resetMe = true
         state.start()
         return callback(RETURN_FROM_CALLBACK, data)}
@@ -42,24 +44,26 @@ const coreFactory = () => {
         state.start()
         return data}
       /* istanbul ignore else */
-      if (args.length && !noTriggerEndOfExecution) {
-        /* istanbul ignore else */
-        if (state.timeoutSate) {
-          clearTimeout(state.timeoutSate)}
-        state.timeoutSate = safetyExecutor(data, callback)}
+      // if (args.length && !noTriggerEndOfExecution) {
+      //   /* istanbul ignore else */
+      //   if (state.timeoutSate) {
+      //     clearTimeout(state.timeoutSate)
+      //   }
+      //   state.timeoutSate = safetyExecutor(data, callback)
+      // }
       state.level++
       return caller}
 
     const caller = new Proxy(callerRaw,
       {
-get (obj, prop) {
+        get (obj, prop) {
           if (prop === 'p' || prop === 'data' || prop === 'apply') {
             return obj[prop]}
           state.setCommandName(prop)
           return caller},
         apply (target, thisArg, argumentsList) {
           return target(...argumentsList)}
-})
+        })
     return caller()}
 
   core.setCoreData = function (data) {
