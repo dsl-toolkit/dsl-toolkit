@@ -57,7 +57,7 @@ const coreFactory = () => {
     const caller = new Proxy(callerRaw,
       {
         get (obj, prop) {
-          if (prop === 'p' || prop === 'data' || prop === 'apply') {
+          if (prop === 'p' || prop === 'data' || prop === 'apply'|| prop === 'then') {
             return obj[prop]}
           state.setCommandName(prop)
           return caller},
