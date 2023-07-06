@@ -1,8 +1,12 @@
 {
   "name": "dsl-framework",
-  "version": "1.8.17",
+  "version": "1.8.24",
   "description": "Easy function chaining.",
   "main": "dist/src/index.js",
+  "exports": {
+    "types": "./dist/src/index.js",
+    "default": "./dist/src/index.d.ts"
+  },
   "type": "module",
   "scripts": {
     "pub": "npm run clean; npm run babel; npm version patch --force && npm publish",
@@ -20,7 +24,7 @@
     "browserify": "mkdir dist/web -p && node_modules/.bin/browserify -o dist/web/dsl-framework.js -e src/index.js --exclude src/examples",
     "minify": "node_modules/.bin/minify dist/web/dsl-framework.js > dist/web/dsl-framework.min.js",
     "karma": "node_modules/.bin/karma start my.conf.js",
-    "babel": "./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tests,tools,my.conf.js -d dist",
+    "babel": "npm run clean; ./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tests,tools,my.conf.js -d dist; cp src/index.d.ts dist/src",
     "babel-test": "./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tools,my.conf.js -d dist"
   },
   "repository": {
@@ -66,6 +70,7 @@
     "@babel/cli": "^7.19.3",
     "@babel/core": "^7.20.5",
     "@babel/preset-env": "^7.20.2",
+    "@babel/polyfill": "^7.12.1",
     "babel-plugin-transform-commonjs": "^1.1.6",
     "browserify": "^17.0.0",
     "chai": "^4.3.4",
@@ -120,6 +125,5 @@
   ],
   "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
   "dependencies": {
-    "@babel/polyfill": "^7.12.1"
   }
 }
