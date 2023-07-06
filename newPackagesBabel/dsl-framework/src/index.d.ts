@@ -51,8 +51,10 @@ export type coreFactory = () => {
 
 // export const instance = ():core|function(returnCallback):core => {
 export const instance = ():core => {
-  ()=>any
+  ()=>core
   noPromises: this;
 };
 
 instance.noPromises = instance;
+
+export default instance;

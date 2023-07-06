@@ -1,10 +1,13 @@
 {
   "name": "demeter-di",
-  "version": "1.8.39",
+  "version": "1.8.45",
   "description": "A most flexible container solution",
   "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
   "type": "module",
+  "exports": {
+    "types": "./dist/src/index.js",
+    "default": "./dist/src/index.d.ts"
+  },
   "scripts": {
     "pub": "npm run clean; npm version patch --force && npm run babel && npm publish",
     "test-dev-old": "npm run clean && npx mocha --recursive **/*-spec.js",
@@ -14,7 +17,7 @@
     "clean": "npx rimraf dist tmp && mkdir dist && mkdir tmp",
     "standard-fix": "echo 1 || npx standard --fix",
     "license-check": "npx license-checker --failOn unknown --summary",
-    "babel": "./node_modules/.bin/babel ./ --ignore node_modules,dist -d dist"
+    "babel": "npx rimraf dist; npx babel ./ --ignore node_modules,dist -d dist; cp src/index.d.ts dist/src"
   },
   "repository": {
     "type": "git",
@@ -71,14 +74,14 @@
     ]
   },
   "files": [
-    "dist/src/**"
+    "dist/src/**",
+    "dist/src/*"
   ],
   "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
   "dependencies": {
     "@captemulation/get-parameter-names": "^1.4.2",
     "arrify": "^3.0.0",
-    "dsl-framework": "^1.8.17",
-    "jest": "^29.3.1",
+    "dsl-framework": "^1.8.23",
     "underscore": "^1.13.6"
   }
 }
