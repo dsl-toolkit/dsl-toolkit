@@ -1,13 +1,10 @@
 {
   "name": "demeter-di",
-  "version": "1.8.45",
+  "version": "1.8.47",
   "description": "A most flexible container solution",
-  "main": "dist/src/index.js",
   "type": "module",
-  "exports": {
-    "types": "./dist/src/index.js",
-    "default": "./dist/src/index.d.ts"
-  },
+  "main": "./dist/src/index.js",
+  "module": "./dist/src/index.js",
   "scripts": {
     "pub": "npm run clean; npm version patch --force && npm run babel && npm publish",
     "test-dev-old": "npm run clean && npx mocha --recursive **/*-spec.js",
@@ -81,7 +78,7 @@
   "dependencies": {
     "@captemulation/get-parameter-names": "^1.4.2",
     "arrify": "^3.0.0",
-    "dsl-framework": "^1.8.23",
+    "dsl-framework": "^1.8.26",
     "underscore": "^1.13.6"
   }
 }
