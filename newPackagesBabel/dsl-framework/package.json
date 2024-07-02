@@ -1,13 +1,13 @@
 {
   "name": "dsl-framework",
-  "version": "1.8.28",
+  "version": "1.8.31",
   "description": "Easy function chaining.",
   "main": "./src/index.js",
-  "module": "./dist/src/index.cjs",
+  "module": "./dist/src/index.mjs",
   "exports": {
     ".": {
-      "import": "./dist/src/index.js",
-      "require": "./src/index.cjs"
+      "require": "./src/index.js",
+      "import": "./dist/src/index.mjs"
     }
   },
   "scripts": {
@@ -26,7 +26,7 @@
     "browserify": "mkdir dist/web -p && node_modules/.bin/browserify -o dist/web/dsl-framework.js -e src/index.js --exclude src/examples",
     "minify": "node_modules/.bin/minify dist/web/dsl-framework.js > dist/web/dsl-framework.min.js",
     "karma": "node_modules/.bin/karma start my.conf.js",
-    "babel": "npm run clean; ./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tests,tools,my.conf.js -d dist; cp src/index.d.ts dist/src",
+    "babel": "npm run clean; ./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tests,tools,my.conf.js -d dist; cp src/index.d.ts dist/src;node bin/renameFilesAndImports.js js mjs dist/src/",
     "babel-test": "./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tools,my.conf.js -d dist"
   },
   "repository": {
