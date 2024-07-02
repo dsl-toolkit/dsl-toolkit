@@ -1,7 +1,7 @@
-const { parseScript } = require('esprima')
-const arrayDsl = require('array-dsl')
+const arrify = require('./lib/arrify.js')
+const functionArgumentsGeter = require('../lib/function-parameters-parser.js')
 
-module.exports = (parameters, infoList, results, requireModuleInstance, proxy) => {
+module.exports = (parameters, infoList, results, requireModuleInstance, proxy, loggerTool) => {
   const composes = parameters.arguments('compose', 'allEntries', [])
 
   composes.length &&
@@ -11,8 +11,16 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy) =
       const composed = {}
       const service = composeDetails[1]
 
-      const parameterNames = composeDetails[2] ? arrayDsl(composeDetails[2]).arrify()
-      : parseScript(service.toString()).body[0].expression.params.map(e => e.name)
+      const parameterNames = composeDetails[2] ? (()=>{
+        const ret = arrify(composeDetails[2])
+        loggerTool()('Used container items defined as array',{referredServices:ret})
+        return ret
+      })()
+      : (()=>{
+        const ret = functionArgumentsGeter(service)
+        loggerTool()('Used container items form the service definition function parameters', {referredServices:ret})
+        return ret
+      })()
 
       composed[composeDetails[0]] = () =>
         service(...parameterNames.map(dependecyName => proxy[dependecyName]))
@@ -20,4 +28,4 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy) =
       return composed}).
         forEach(composed => Object.assign(results, composed))})()
 
-  return require('./lib/get-keys')(composes, 'service')}
+  return require('./lib/get-keys.js')(composes, 'service')}

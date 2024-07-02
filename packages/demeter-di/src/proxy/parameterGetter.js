@@ -1,6 +1,6 @@
 module.exports = exports = (parameters) =>{
-  const arguments = parameters.arguments('define', 'allEntries', [])
-  return arguments.map(e =>e[0])
+  const args = parameters.arguments('define', 'allEntries', [])
+  return args.map(e =>e[0])
 }
 
 

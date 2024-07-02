@@ -10,5 +10,5 @@ module.exports = (parameters, infoList, results) => {
     }).forEach(composed => Object.assign(results, composed))
   })()
 
-  return require('./lib/get-keys')(define, 'parameter')
+  return require('./lib/get-keys.js')(define, 'parameter')
 }

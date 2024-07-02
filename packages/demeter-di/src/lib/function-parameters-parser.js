@@ -1,55 +1,55 @@
 // use loggertool here too
 const debug=()=>{}
 
-const COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
-const SPACES = /\s/mg;
-const NEW_LINES = /\r?\n|\r/mg;
-const ASYNC = /^\s*async(\s*|\()(?!\s*\=)/;
-const ES6_STATIC = /static.*$/mg;
-const nonVarChars = ['=', '(', ')', ','];
+const COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg
+const SPACES = /\s/mg
+const NEW_LINES = /\r?\n|\r/mg
+const ASYNC = /^\s*async(\s*|\()(?!\s*\=)/
+const ES6_STATIC = /static.*$/mg
+const nonVarChars = ['=', '(', ')', ',']
 function* matchNexter(string) {
-    debug(`Chopping ${string}`);
+    debug(`Chopping ${string}`)
     function updateIndex(stringIndex) {
-        debug(`Updating index starting at: ${stringIndex}`);
+        debug(`Updating index starting at: ${stringIndex}`)
         return indexes.map((foundAt, i) => {
             if (foundAt === stringIndex) {
-                return string.indexOf(nonVarChars[i], foundAt + 1);
+                return string.indexOf(nonVarChars[i], foundAt + 1)
             }
-            return foundAt;
-        });
+            return foundAt
+        })
     }
     function minIndex() {
         return Math.min.apply(Math, indexes
-            .filter(i => i > -1));
+            .filter(i => i > -1))
     }
     let indexes = nonVarChars
-        .map(c => string.indexOf(c));
-    let index = 0;
+        .map(c => string.indexOf(c))
+    let index = 0
     while (index !== Infinity) {
-        const nextIndex = minIndex();
-        debug(`String: ${string}\nIndexes: ${indexes}\nIndex: ${index}\nNextIndex: ${nextIndex}`);
+        const nextIndex = minIndex()
+        debug(`String: ${string}\nIndexes: ${indexes}\nIndex: ${index}\nNextIndex: ${nextIndex}`)
         if (nextIndex !== Infinity) {
-            const subString = string.slice(index, nextIndex);
+            const subString = string.slice(index, nextIndex)
             const ret = {
                 subString,
                 start: index,
                 end: nextIndex
-            };
-            debug(ret);
-            yield ret;
+            }
+            debug(ret)
+            yield ret
         }
         else if (string.length) {
-            const subString = string.slice(index);
+            const subString = string.slice(index)
             const ret = {
                 subString,
                 start: index,
                 end: string.length
-            };
-            debug(ret);
-            yield ret;
+            }
+            debug(ret)
+            yield ret
         }
-        index = nextIndex;
-        indexes = updateIndex(index);
+        index = nextIndex
+        indexes = updateIndex(index)
     }
 }
 function parse(input) {
@@ -59,77 +59,77 @@ function parse(input) {
         .replace(NEW_LINES, '')
         .replace(COMMENTS, '')
         .replace(ASYNC, '')
-        .replace(SPACES, ''));
-    let next = gen.next();
-    let value = next.value;
-    let argsEnded = false;
-    let firstVar = true;
+        .replace(SPACES, ''))
+    let next = gen.next()
+    let value = next.value
+    let argsEnded = false
+    let firstVar = true
     let depth = {
         defaultParams: 0,
         parenthesis: 0
-    };
-    const vars = [];
-    if (value && value.subString && value.subString.length) {
-        debug(`Pushing ${value.subString} to vars to start`);
-        vars.push(value.subString);
     }
-    debug(`Starting var: ${vars}`);
-    next = gen.next();
-    value = next.value;
+    const vars = []
+    if (value && value.subString && value.subString.length) {
+        debug(`Pushing ${value.subString} to vars to start`)
+        vars.push(value.subString)
+    }
+    debug(`Starting var: ${vars}`)
+    next = gen.next()
+    value = next.value
     while (value !== undefined && !argsEnded) {
-        debug(`Continuing with ${value.subString}`);
-        const firstChar = value.subString[0];
-        debug(`firstChar: ${firstChar}`);
-        debug(`firstVar: ${firstVar}`);
-        debug(`argsEnded: ${argsEnded}`);
-        debug(`depth: ${JSON.stringify(depth)}`);
-        debug(`Current vars: ${vars}`);
+        debug(`Continuing with ${value.subString}`)
+        const firstChar = value.subString[0]
+        debug(`firstChar: ${firstChar}`)
+        debug(`firstVar: ${firstVar}`)
+        debug(`argsEnded: ${argsEnded}`)
+        debug(`depth: ${JSON.stringify(depth)}`)
+        debug(`Current vars: ${vars}`)
         if (firstChar === '=') {
             if (value.subString[1] === '>' && depth.defaultParams === 0) {
-                debug('Found =>');
-                argsEnded = true;
+                debug('Found =>')
+                argsEnded = true
             }
             else {
-                debug('Found =');
-                depth.defaultParams++;
+                debug('Found =')
+                depth.defaultParams++
             }
         }
         else if (firstChar === '(' && !firstVar && vars.length) {
-            firstVar = true;
-            debug('Found (');
-            depth.parenthesis++;
+            firstVar = true
+            debug('Found (')
+            depth.parenthesis++
         }
         else if (firstChar === '(' && firstVar) {
-            debug(`Removing function name from vars`);
-            vars.pop();
-            const newVar = value.subString.slice(1);
+            debug(`Removing function name from vars`)
+            vars.pop()
+            const newVar = value.subString.slice(1)
             if (newVar.length) {
-                debug(`Pushing to vars: ${newVar}`);
-                vars.push(newVar);
+                debug(`Pushing to vars: ${newVar}`)
+                vars.push(newVar)
             }
-            firstVar = false;
+            firstVar = false
         }
         else if (firstChar === ')' && depth.parenthesis > 0) {
-            debug('Found )');
-            depth.parenthesis--;
+            debug('Found )')
+            depth.parenthesis--
         }
         else if (firstChar === ')' && depth.parenthesis === 0) {
-            debug('Found ) and we are done');
-            argsEnded = true;
+            debug('Found ) and we are done')
+            argsEnded = true
         }
         else if (firstChar === ',' || (firstChar === '(' && vars.length === 0)) {
-            const newVar = value.subString.slice(1);
-            debug(`Found '${newVar}'`);
+            const newVar = value.subString.slice(1)
+            debug(`Found '${newVar}'`)
             if (depth.parenthesis === 0) {
-                depth.defaultParams = 0;
-                debug(`Pushing to vars: ${newVar}`);
-                vars.push(newVar);
+                depth.defaultParams = 0
+                debug(`Pushing to vars: ${newVar}`)
+                vars.push(newVar)
             }
         }
-        next = gen.next();
-        value = next.value;
+        next = gen.next()
+        value = next.value
     }
-    return vars;
+    return vars
 }
 
-export default parse;
+module.exports = parse
