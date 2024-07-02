@@ -1,18 +1,28 @@
-const { parseScript } = require('esprima')
-const arrayDsl = require('array-dsl')
+const arrify = require('./lib/arrify.js')
+// import functionArgumentsGeter  from 'get-function-arguments'
+const functionArgumentsGeter = require('../lib/function-parameters-parser.js')
 
-module.exports = (parameters, infoList, results, requireModuleInstance, proxy) => {
+module.exports = (parameters, infoList, results, requireModuleInstance, proxy, loggerTool) => {
   const create = parameters.arguments('create', 'allEntries', [])
   create.length &&
   (() => {
     create.map(createDetails => {
+      loggerTool()('createDetails', createDetails, )
       const returnObject = {}
       const factoryDefinition = typeof createDetails[1] === 'string'
         ? requireModuleInstance(createDetails[1])
         : createDetails[1]
       const parameterNames = createDetails[2]
-        ? arrayDsl(createDetails[2]).arrify()
-        : parseScript(factoryDefinition.toString()).body[0].expression.params.map(e => e.name)
+        ? (()=>{
+          const ret = arrify(createDetails[2])
+          loggerTool()('Used container items defined as array',{referredServices:ret})
+          return ret
+        })()
+        : (()=>{
+          const ret = functionArgumentsGeter(factoryDefinition)
+          loggerTool()('Used container items fetched form the service definition function parameters', {referredServices:ret})
+          return ret
+        })()
       infoList[createDetails[0]] = { head: '*di factory result* ' }
       infoList[createDetails[0] + 'Factory'] = { head: '*di factory* ' }
 
@@ -25,5 +35,5 @@ module.exports = (parameters, infoList, results, requireModuleInstance, proxy) =
     }).forEach(composed => Object.assign(results, composed))
   })()
 
-  return require('./lib/get-keys')(create, 'factory')
+  return require('./lib/get-keys.js')(create, 'factory')
 }

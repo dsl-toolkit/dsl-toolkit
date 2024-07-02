@@ -1,19 +1,25 @@
 {
   "name": "demeter-di",
-  "version": "1.7.51",
+  "version": "1.8.53",
   "description": "A most flexible container solution",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
+  "main": "./src/index.js",
+  "module": "./dist/src/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./src/index.js",
+      "import": "./dist/src/index.mjs"
+    }
+  },
   "scripts": {
-    "pub": "npm version patch --force && npm publish",
-    "test-dev": "npx mocha --recursive tests/tests/*-spec.js",
-    "test-dev-unit": "echo 1 || npm run clean && node_modules/.bin/mocha --recursive tests/tests/*-spec.js",
-    "test-old": "echo 1 || npm run build && npm run test-compiled && npm run clean",
-    "test": "npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
+    "pub": "npm run clean; npm version patch --force && npm run babel && npm publish",
+    "test-common": "npm run clean && npx mocha --recursive  tests/**/*-spec.js",
+    "test-dev": "npm run clean && npm run babel && npx mocha --recursive dist/**/*-spec.js",
+    "test": "npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-common",
     "test-project": "echo 1 || npm run license-check && node_modules/.bin/depcheck --ignores \"chai,@types/node,\" && echo npm run standard-fix",
     "clean": "npx rimraf dist tmp && mkdir dist && mkdir tmp",
     "standard-fix": "echo 1 || npx standard --fix",
-    "license-check": "npx license-checker --failOn unknown --summary"
+    "license-check": "npx license-checker --failOn unknown --summary",
+    "babel": "npx rimraf dist; npx babel ./ --ignore node_modules,dist,bin,test -d dist; cp src/index.d.ts dist/src; node bin/renameFilesAndImports.js js mjs dist/src/"
   },
   "repository": {
     "type": "git",
@@ -30,16 +36,21 @@
   "license": "MIT",
   "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/demeter-di",
   "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "babel-plugin-transform-commonjs": "^1.1.6",
     "chai": "^4.3.6",
     "depcheck": "^1.2.0",
     "license-checker": "^25.0.1",
     "mocha": "^10.1.0",
     "nyc": "^15.1.0",
     "require-dir": "^1.2.0",
+    "rimraf": "^3.0.2",
     "standard": "^14.3.4"
   },
   "engines": {
-    "node": ">=7.6.4"
+    "node": ">=12"
   },
   "nyc": {
     "exclude": [
@@ -65,13 +76,12 @@
     ]
   },
   "files": [
+    "dist/src/**",
     "src/**"
   ],
   "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
   "dependencies": {
-    "array-dsl": "^1.6.59",
-    "dsl-framework": "^1.7.37",
-    "esprima": "^4.0.1",
+    "dsl-framework": "^1.8.27",
     "underscore": "^1.13.6"
   }
 }
