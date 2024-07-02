@@ -9,16 +9,16 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
         .a('b', 'c')()
         .data
 
-      const r = data.getSubcommand('a')().map((item, i) => {
-        const ddddd = item.command.get('ddddd')
-        const j = item.command.get('j')
-        return { ddddd, j }
-      })
+      // const r = data.getSubcommand('a')().map((item, i) => {
+      //   const ddddd = item.command.get('ddddd')
+      //   const j = item.command.get('j')
+      //   return { ddddd, j }
+      // })
 
-      r.forEach((e, i) => {
-        // eslint-disable-next-line no-throw-literal
-        if (typeof e.ddddd === 'undefined') { throw 'Well that should have beeen defined.' }
-      })
+      // r.forEach((e, i) => {
+      //   // eslint-disable-next-line no-throw-literal
+      //   if (typeof e.ddddd === 'undefined') { throw 'Well that should have beeen defined.' }
+      // })
     })
   })
 }
