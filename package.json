@@ -1,41 +1,132 @@
 {
-  "devDependencies": {
-    "array-dsl": "^1.6.59",
-    "depcheck": "^1.4.2",
-    "diff": "^5.0.0",
-    "directory-fixture-provider": "^1.7.1",
-    "execa": "^5.1.1",
-    "generic-text-linker": "^1.7.1",
-    "lerna": "^6.0.1",
-    "license-checker": "^25.0.1",
-    "nyc": "^15.1.0",
-    "shelljs": "^0.8.4"
+  "name": "dsl-framework",
+  "version": "1.8.28",
+  "description": "Easy function chaining.",
+  "main": "./src/index.js",
+  "module": "./dist/src/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./src/index.js",
+      "import": "./dist/src/index.mjs"
+    }
   },
   "scripts": {
-    "build": "npm run build-src && npm run build-test",
-    "build-src": "npx lerna run build-src",
-    "build-test": "npx lerna run build-test",
-    "docs-gen": "npx lerna run docs-gen",
-    "license-check": "npx license-checker --failOn unknown --summary",
-    "prepublish": "npx lerna run publish",
-    "standard-fix": "npx lerna run standard-fix",
-    "postinstall_": "npx lerna bootstrap",
-    "test": "npm run test-project && npx nyc --reporter=lcov --reporter=clover --reporter=text npx lerna run --concurrency=4 test-all",
-    "test-all": "npm test",
+    "pub": "npm run clean; npm run babel; npm version patch --force && npm publish",
+    "test-common": "npm run clean && npx mocha --recursive tests/tests/**/*-spec.js",
+    "test-dev": "npm run clean &&npm run babel-test && npx mocha --recursive dist/tests/tests/**/*-spec.js",
+    "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/node/unit/*-spec.js",
+    "test": "PROD=true npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
+    "test-project": "npm run license-check && node_modules/.bin/depcheck --ignores \"@types/node,require-a-lot,cowlog,flat,lodash,rimraf,generic-text-linker,jasmine-core,karma-chrome-launcher,karma-jasmine,eslint*\" && npm run standard-fix",
+    "test-all": "npm run test-project && npm test",
     "test-all-dev": "npm run test-project && npm run test-dev",
-    "test-clean": "npx lerna clean --yes && npx lerna bootstrap --no-ci",
-    "test-compiled": "npm run test-project && npm test",
-    "test-dev": "npx lerna run test-dev",
-    "test-dev-unit": "npx lerna run test-dev-unit",
-    "test-old": "npx nyc --reporter=lcov --reporter=clover --reporter=text npx lerna run test-old",
-    "test-project": "npm run license-check && npx depcheck --ignores 'directory-fixture-provider' && npm run standard-fix "
+    "clean": "npx rimraf dist tmp && mkdir dist && mkdir tmp",
+    "standard-fix": "npx standard --fix",
+    "license-check": "npx license-checker --failOn unknown --summary",
+    "web": "npm run browserify && npm run minify && node tools/create-sample-page",
+    "browserify": "mkdir dist/web -p && node_modules/.bin/browserify -o dist/web/dsl-framework.js -e src/index.js --exclude src/examples",
+    "minify": "node_modules/.bin/minify dist/web/dsl-framework.js > dist/web/dsl-framework.min.js",
+    "karma": "node_modules/.bin/karma start my.conf.js",
+    "babel": "npm run clean; ./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tests,tools,my.conf.js -d dist; cp src/index.d.ts dist/src",
+    "babel-test": "./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tools,my.conf.js -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
+  },
+  "keywords": [
+    "curry",
+    "currying",
+    "unlimited",
+    "arguments",
+    "unlimited",
+    "arguments",
+    "wrapper",
+    "tool",
+    "tooling",
+    "functional programming",
+    "programming",
+    "functional",
+    "function",
+    "chaining",
+    "method",
+    "method chaining",
+    "chaining",
+    "fluent interface",
+    "fluent",
+    "interface",
+    "domain specific",
+    "domanin specific language",
+    "method cascading",
+    "cascading",
+    "builder pattern",
+    "builder",
+    "pattern"
+  ],
+  "author": "Imre Toth",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dsl-toolkit/refresh-me/issues"
+  },
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/dsl-framework",
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/polyfill": "^7.12.1",
+    "babel-plugin-transform-commonjs": "^1.1.6",
+    "browserify": "^17.0.0",
+    "chai": "^4.3.4",
+    "depcheck": "^1.4.2",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^8.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "generic-text-linker": "^1.7.30",
+    "jasmine-core": "^3.6.0",
+    "karma": "^6.1.1",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-jasmine": "^4.0.1",
+    "license-checker": "^25.0.1",
+    "minify": "^7.0.1",
+    "mocha": "^10.0.0",
+    "nyc": "^15.1.0",
+    "rimraf": "^3.0.2",
+    "semver": "^7.3.4",
+    "standard": "^16.0.3"
+  },
+  "engines": {
+    "node": ">=7.6.4"
   },
   "nyc": {
     "exclude": [
-      "**/dist/**",
-      "**/lib/juggler/**",
       "**/tests/**"
     ]
   },
-  "name": "dsl-toolkit"
+  "standard": {
+    "ignore": [
+      "/dist",
+      "/coverage/",
+      "/build/",
+      "/tmp/"
+    ],
+    "globals": [
+      "describe",
+      "context",
+      "before",
+      "beforeEach",
+      "after",
+      "afterEach",
+      "it",
+      "expect"
+    ]
+  },
+  "files": [
+    "dist/src/**",
+    "src/**"
+  ],
+  "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
+  "dependencies": {
+  }
 }
