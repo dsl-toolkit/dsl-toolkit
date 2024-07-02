@@ -13,9 +13,9 @@
   "scripts": {
     "pub": "npm run clean; npm run babel; npm version patch --force && npm publish",
     "test-common": "npm run clean && npx mocha --recursive tests/tests/**/*-spec.js",
-    "test-dev": "npm run clean &&npm run babel-test && npx mocha --recursive dist/tests/tests/**/*-spec.js",
+    "test-dev": "npm run clean && npm run babel-test && npx mocha --recursive dist/tests/tests/**/*-spec.js",
     "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/node/unit/*-spec.js",
-    "test": "PROD=true npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
+    "test": "PROD=true npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-common",
     "test-project": "npm run license-check && node_modules/.bin/depcheck --ignores \"@types/node,require-a-lot,cowlog,flat,lodash,rimraf,generic-text-linker,jasmine-core,karma-chrome-launcher,karma-jasmine,eslint*\" && npm run standard-fix",
     "test-all": "npm run test-project && npm test",
     "test-all-dev": "npm run test-project && npm run test-dev",
@@ -27,7 +27,7 @@
     "minify": "node_modules/.bin/minify dist/web/dsl-framework.js > dist/web/dsl-framework.min.js",
     "karma": "node_modules/.bin/karma start my.conf.js",
     "babel": "npm run clean; ./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tests,tools,my.conf.js -d dist; cp src/index.d.ts dist/src;node bin/renameFilesAndImports.js js mjs dist/src/",
-    "babel-test": "./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tools,my.conf.js -d dist"
+    "babel-test": "npm run babel; ./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tools,my.conf.js -d dist ; node bin/renameFilesAndImports.js js mjs dist/tests/"
   },
   "repository": {
     "type": "git",
