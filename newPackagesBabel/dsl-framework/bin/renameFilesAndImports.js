@@ -22,7 +22,8 @@ function renameFilesAndImports(oldExt, newExt, startDir) {
     let content = fs.readFileSync(file, 'utf8')
 
     // Update import statements
-    const importRegex = new RegExp(`(import\\s.*?from\\s+['"])\\.\\/(.*?\\.${oldExt})(['"])`, 'g')
+    // const importRegex = new RegExp(`(import\\s.*?from\\s+['"])\\.\\/(.*?\\.${oldExt})(['"])`, 'g')
+    const importRegex = new RegExp(`(import\\s.*?from\\s+['"])(\\.\\.?\\/.*?\\.${oldExt})(['"])`, 'g')
     content = content.replace(importRegex, (match, p1, p2, p3) => {
       return `${p1}./${p2.replace(`.${oldExt}`, `.${newExt}`)}${p3}`
     })
