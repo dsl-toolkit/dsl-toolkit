@@ -1,6 +1,6 @@
 {
   "name": "demeter-di",
-  "version": "1.8.47",
+  "version": "1.8.48",
   "description": "A most flexible container solution",
   "type": "module",
   "main": "./dist/src/index.js",
@@ -78,7 +78,7 @@
   "dependencies": {
     "@captemulation/get-parameter-names": "^1.4.2",
     "arrify": "^3.0.0",
-    "dsl-framework": "^1.8.26",
+    "dsl-framework": "^1.8.27",
     "underscore": "^1.13.6"
   }
 }
