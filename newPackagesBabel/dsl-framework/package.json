@@ -1,13 +1,15 @@
 {
   "name": "dsl-framework",
-  "version": "1.8.24",
+  "version": "1.8.28",
   "description": "Easy function chaining.",
-  "main": "dist/src/index.js",
+  "main": "./src/index.js",
+  "module": "./dist/src/index.cjs",
   "exports": {
-    "types": "./dist/src/index.js",
-    "default": "./dist/src/index.d.ts"
+    ".": {
+      "import": "./dist/src/index.js",
+      "require": "./src/index.cjs"
+    }
   },
-  "type": "module",
   "scripts": {
     "pub": "npm run clean; npm run babel; npm version patch --force && npm publish",
     "test-common": "npm run clean && npx mocha --recursive tests/tests/**/*-spec.js",
@@ -121,7 +123,8 @@
     ]
   },
   "files": [
-    "dist/src/**"
+    "dist/src/**",
+    "src/**"
   ],
   "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
   "dependencies": {
