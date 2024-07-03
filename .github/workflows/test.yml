@@ -4,10 +4,10 @@ on: [push]
 
 jobs:
   install-test-flow:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest # self-hosted
     strategy:
       matrix:
-        node: [ 14 ]
+        node: [ 22 ]
     container:
       image: node:current-buster-slim
     steps:
@@ -35,16 +35,16 @@ jobs:
     - run: |
         whoami &&
         apt-get update &&
-        chown -R 1000:1000 "/github/home/.npm" &&
-        apt-get update &&
-        apt-get -y install git &&
-        git config --global user.email "you@example.com" &&
-        git config --global user.name "Your Name" &&
-        node -v &&
-        npm i &&
-        chown -R 1000:1000 "./" &&
-        chown -R 1000:1000 "/github/home/.cache/" &&
-        mkdir /github/home/.standard-v14-cache/ &&
-        chown -R 1000:1000 /github/home/.standard-v14-cache
+        # chown -R 1000:1000 "/github/home/.npm" &&
+        # apt-get update &&
+        # apt-get -y install git &&
+        # git config --global user.email "you@example.com" &&
+        # git config --global user.name "Your Name" &&
+        # node -v &&
+        # npm i &&
+        # chown -R 1000:1000 "./" &&
+        # chown -R 1000:1000 "/github/home/.cache/" &&
+        # mkdir /github/home/.standard-v14-cache/ &&
+        # chown -R 1000:1000 /github/home/.standard-v14-cache
         npx lerna bootstrap &&
         npm test

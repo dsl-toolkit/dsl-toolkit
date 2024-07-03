@@ -26,8 +26,8 @@
     "browserify": "mkdir dist/web -p && node_modules/.bin/browserify -o dist/web/dsl-framework.js -e src/index.js --exclude src/examples",
     "minify": "node_modules/.bin/minify dist/web/dsl-framework.js > dist/web/dsl-framework.min.js",
     "karma": "node_modules/.bin/karma start my.conf.js",
-    "babel": "npm run clean; ./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tests,tools,my.conf.js -d dist; cp src/index.d.ts dist/src;node bin/renameFilesAndImports.js js mjs dist/src/",
-    "babel-test": "npm run babel; ./node_modules/.bin/babel ./ --ignore node_modules,dist,coverage,tmp,tools,my.conf.js -d dist ; node bin/renameFilesAndImports.js js mjs dist/tests/"
+    "babel": "npm run clean; npx babel ./ --ignore node_modules,dist,coverage,tmp,tests,tools,my.conf.js -d dist; cp src/index.d.ts dist/src;node bin/renameFilesAndImports.js js mjs dist/src/",
+    "babel-test": "npm run babel; npx babel ./ --ignore node_modules,dist,coverage,tmp,tools,my.conf.js -d dist ; node bin/renameFilesAndImports.js js mjs dist/tests/"
   },
   "repository": {
     "type": "git",
@@ -83,7 +83,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "eslint-plugin-standard": "^5.0.0",
-    "generic-text-linker": "^1.7.30",
     "jasmine-core": "^3.6.0",
     "karma": "^6.1.1",
     "karma-chrome-launcher": "^3.1.0",

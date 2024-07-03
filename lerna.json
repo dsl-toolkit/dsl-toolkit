@@ -1,7 +1,6 @@
 {
   "packages": [
-    "packages/*",
-    "packages/dsl-framework/examples/auto-publish/parenting"
+    "packages/*"
   ],
   "publishConfig": {
     "ignore": [

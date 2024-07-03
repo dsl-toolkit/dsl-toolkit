@@ -1,41 +1,44 @@
-name: npm push
+# name: npm push
 
-on:
-  push:
-    branches:
-      - master
-    paths:
-      - packages/dsl-framework
+# on:
+#   push:
+#     branches:
+#       - master
+#     paths:
+#       - packages/dsl-framework
 
-jobs:
-  publish:
-    runs-on: [self-hosted]
-    container:
-      image: node:current-buster-slim
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-    # cool stuff to play with
-    # - uses: actions/github-script@v6
-      with:
-        node-version: 14
-    - name: Check out repository code
-      uses: actions/checkout@v3
-    - uses: JS-DevTools/npm-publish@v1
-      with:
-        token: ${{ secrets.NPM_TOKEN }}
-        package: ./packages/dsl-framework
-        
-  # publish-dsl-framework:
-  #   runs-on: [self-hosted]
-  #   container:
-  #     image: node:current-buster-slim
-  #   steps:
-  #   - run : |
-  #       cd packages/dsl-framework && echo happy
-  #   rules:
-  #     - changes:
-  #       - packages/dsl-framework/package*.json
-  #       - packages/dsl-framework/src/*
-  #       - packages/dsl-framework/src/**/*
+# jobs:
+#   publish:
+#     runs-on: [self-hosted]
+#     container:
+#       image: node:current-buster-slim
+#     steps:
+#     - uses: actions/checkout@v3
+#     - uses: actions/setup-node@v3
+#     # cool stuff to play with
+#     # - uses: actions/github-script@v6
+#       with:
+#         node-version: 14
+#     - name: Check out repository code
+#       uses: actions/checkout@v3
+#     - uses: JS-DevTools/npm-publish@v1
+#       with:
+#         token: ${{ secrets.NPM_TOKEN }}
+#         package: ./packages/dsl-framework
+
+
+
+
+#   # publish-dsl-framework:
+#   #   runs-on: [self-hosted]
+#   #   container:
+#   #     image: node:current-buster-slim
+#   #   steps:
+#   #   - run : |
+#   #       cd packages/dsl-framework && echo happy
+#   #   rules:
+#   #     - changes:
+#   #       - packages/dsl-framework/package*.json
+#   #       - packages/dsl-framework/src/*
+#   #       - packages/dsl-framework/src/**/*
 
