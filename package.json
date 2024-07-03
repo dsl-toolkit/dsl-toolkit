@@ -17,5 +17,8 @@
   },
   "dependencies": {
     "lerna": "^8.1.5"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

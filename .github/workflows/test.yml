@@ -34,7 +34,7 @@ jobs:
         node-version: ${{ matrix.node }}
     - run: |
         whoami &&
-        apt-get update &&
+        # apt-get update &&
         # chown -R 1000:1000 "/github/home/.npm" &&
         # apt-get update &&
         # apt-get -y install git &&
@@ -46,5 +46,5 @@ jobs:
         # chown -R 1000:1000 "/github/home/.cache/" &&
         # mkdir /github/home/.standard-v14-cache/ &&
         # chown -R 1000:1000 /github/home/.standard-v14-cache
-        npx lerna bootstrap &&
+        npm i && npm link
         npm test
