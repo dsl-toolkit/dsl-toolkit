@@ -30,6 +30,7 @@ module.exports = (
     it('.has.and', function () {
       assert(data.command.has.and('g'))
       assert(!data.command.has.and('gg'))
+      assert(!data.command.hasAnd('gg'))
       assert(data.command.has.and(['g', 'd']))
       assert(data.command.has.and(['g'], 'd'))
       assert(data.command.has.and(['g'], ['d', 'a', 'b']))
@@ -42,6 +43,7 @@ module.exports = (
 
     it('.has.or', function () {
       assert(data.command.has.or(['g', 'd', 'aa']))
+      assert(data.command.hasOr(['g', 'd', 'aa']))
       assert(!data.command.has.or(['gg', 'dd', 'aa']))
       assert(!data.command.has.or('gg', ['dd', 'aa']))
 
@@ -49,6 +51,7 @@ module.exports = (
     })
 
     it('.has.xor', function () {
+      assert(data.command.hasXor(['g', 'd', 'aa']))
       assert(data.command.has.xor(['g', 'd', 'aa']))
       assert(data.command.has.xor(['g', 'd', 'j']))
       assert(!data.command.has.xor(['gg', 'dd', 'aa']))
@@ -58,6 +61,7 @@ module.exports = (
     })
 
     it('.has.object', function () {
+      assert.deepEqual(data.command.hasObject('g'), { g: true })
       assert.deepEqual(data.command.has.object('g'), { g: true })
       assert.deepEqual(data.command.has.object('g', 'a'), { g: true, a: true })
       assert.deepEqual(data.command.has.object(['g', 'a']), {
@@ -131,6 +135,7 @@ module.exports = (
     })
 
     it('.get.object', function () {
+      assert.deepEqual(data.command.getObject(['b']), { b: [['b', 'c']] })
       assert.deepEqual(data.command.get.object(['b']), { b: [['b', 'c']] })
       assert.deepEqual(data.command.get.object(['b'], 'jj'), {
         b: [['b', 'c']],

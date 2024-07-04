@@ -2,7 +2,7 @@
 /* eslint-disable block-spacing */
 // const flat = require('flat')
 const ia = Array.isArray
-const getFrom = function (from, returnArrayChunks = []) {
+const getFrom = function () {
   if (this.reset) {
     returnArrayChunks = this.returnArrayChunks
     if (this.commandName) {
@@ -82,8 +82,6 @@ module.exports = exports = () => ({
   start () {
     this.reset()
     this.level++},
-  getData: function () {
-    return this.getFrom(0)},
   setCommandArguments (commandArguments) {
     commandArguments = commandArguments || []
     let newChain = false

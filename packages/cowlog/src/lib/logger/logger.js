@@ -67,36 +67,34 @@ module.exports = exports = function (container) {
 
     let returnFuction = dslFramework((e, data)=>{
       const lol = data.command.has('lol')
-      // const lolFreq = data.arguments('lol', 'lastArgument', 0.3)
       let printer = printToConsole(lol, 0.3)
-      const commands = data.getFrom(1, data.data.returnArrayChunks)
       const stackTrace = loggerStackTraceFactory()
       const stack = stackTrace.stack
       let origArguments = data.data.returnArrayChunks[0]
       origArguments = require('./parser/keys-command')(data, origArguments)
       let lodashPrinters = []
-      require('./parser/underscore-commands-preparations')(module, underscoreFunctions, printer, lodashPrinters, commands, stack)
+      require('./parser/underscore-commands-preparations')(module, underscoreFunctions, printer, lodashPrinters, data, stack)
       let exitState = require('./parser/exit-state')()
-      if(commands.command.has('mute')){
+      if(data.command.has('mute')){
         exitState.muted = true
       }
       if(!exitState.muted && !exitState.printed){
         exitState.printed = true
 
-        if(!commands.command.has('forget')) {
+        if(!data.command.has('forget')) {
           let sessionLogFile = container.get('log-file-creator')('', 'session.log')
           module.runtimeVariables.sessionLogFile = sessionLogFile
         }
           const logEntry = module.createLogEntry(createBody, stackTrace.stackTraceString, stack, origArguments)
 
         // todo: add documentation, also implement correctly
-        if(!commands.command.has('forget')){
+        if(!data.command.has('forget')){
           let consoleMessage = '\n' + messageCreator(module.calculatedParameters, logEntry, false, false) +
             dictionary.delimiterInFiles
             fs.appendFileSync(module.runtimeVariables.sessionLogFile , consoleMessage)
         }
         let result = messageCreator(module.calculatedParameters, logEntry, true, true)
-        require('./parser/after-print-commands')(commands, afterPrintCommandOrder, module, exitState, returnValueObject, data, logEntry)
+        require('./parser/after-print-commands')(data, afterPrintCommandOrder, module, exitState, returnValueObject, data, logEntry)
 
         if(lodashPrinters.length){
           lodashPrinters.forEach(printer=>printer(result))

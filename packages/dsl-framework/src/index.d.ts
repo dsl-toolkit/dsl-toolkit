@@ -28,6 +28,37 @@ interface Core {
   [index: string]: Core;
 }
 
+type HasFunction = (name: string) => boolean;
+type GetFunction = (name: string) => ast[]|[]
+type HasMoreFunction = (...args: string[]) => boolean[];
+type getMoreFunction = (...args: string[]) => []|[]&ast[];
+
+type GetObjectFunction = (...args: string[]) => {
+  [key: string]: ast;
+};
+
+interface Command {
+  getObject: GetObjectFunction;
+  hasObject: (...args: string[]) => { [key: string]: boolean };
+  hasXor: (...args: string[]) => boolean;
+  hasOr: (...args: string[]) => boolean;
+  hasAnd: (...args: string[]) => boolean;
+  getMore:getMoreFunction;
+  hasMore: HasMoreFunction;
+  get: GetFunction & {
+    more: getMoreFunction;
+    object: GetObjectFunction;
+  };
+  has: HasFunction & {
+    more: HasMoreFunction;
+    and: (...args: string[]) => boolean[];
+    or: (...args: string[]) => boolean;
+    xor: (...args: string[]) => boolean;
+    object: (...args: string[]) => { [key: string]: boolean };
+  };
+  getArguments: (...argument: string[]) => [...any[]];
+}
+
 // The 'DslState' type represents the state of the DSL.
 export interface DslState {
   commandSequence: () => any;
@@ -36,28 +67,15 @@ export interface DslState {
     getProcess: "allEntries" | "firstArgument" | "firstEntry" | "lastArgument" | "lastEntry",
     defaultValue?: any
   ) => ast;
-  command: {
-    getObject: (...args: string[]) => ast[] | [];
-    hasObject: (...args: string[]) => { [key: string]: boolean };
-    hasXor: (...args: string[]) => any;
-    hasOr: (...args: string[]) => any;
-    hasAnd: (...args: string[]) => boolean;
-    getMore: (...args: string[]) => ast[];
-    hasMore: (...args: string[]) => boolean[];
-    get: (name: string) => ast;
-    has: (name: string) => boolean;
-    getArguments: (argument: string) => ast;
-  };
+  command: Command;
   data: {
     returnArrayChunks: ast;
     returnArray: () => any[]; // Flattened array
     getSubcommand: (keyword: string) => ast;
     repeate: {
-      parent: any;
       me: (mecore: Core) => Core;
     };
   };
-  getFrom: (fromNthItem: number, ast: ast) => DslState;
 }
 
 // The 'ReturnCallback' type represents the return callback function.
