@@ -5,18 +5,11 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
     it('tests the output of a', function () {
       expect(curryCallbackObject).to.be.a('function')
     })
+    
     it('tests the immediate datatag of an uncalled callbacked one', function () {
       const data = curryCallbackObject('a')(curryString).data
       expect(data).to.be.an('object').that.have.all.keys('data', 'getFrom', 'command', 'arguments', 'commandSequence')
     })
-
-    // if (enviromentSupportsPromises) {
-    //   const { testsPomiseMagic, testsPromistesIfCallbackVersionReturningPromiseGivesBackTheParametersProvided } =
-    //     require('../promise-tests.js')
-    //   testsPomiseMagic(expect, curryCallbackObject, dslFrameworkDefaultInstance, curryString)
-    //   testsPromistesIfCallbackVersionReturningPromiseGivesBackTheParametersProvided(expect, curryCallbackObject,
-    //     dslFrameworkDefaultInstance, curryString)
-    // }
 
     it('tests the curryObject', function () {
       const returnArray = curryObject.data.returnArray()

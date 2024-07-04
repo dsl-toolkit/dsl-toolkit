@@ -1,63 +1,71 @@
-// export type ast = Array<Array<any>>
+// dsl-framework.d.ts
 
-// export type dState = {
-//   // make it a generator function:
-//   commandSequence: ()=>any
-//   arguments: (
-//     command: string, 
-//     getProcess: "allEntries"|
-//     "firstArgument"|"firstEntry"|
-//     "lastArgument"|"lastEntry",
-//     defaultValue?: any)=>ast 
-//   // (command:string, getProcess: boolean, defaultValue?: any) =>
-//   command:{
-//     getObject:(...args : string[])=>ast[]|[],
-//     hasObject:(...args : string[])=>{[key:string]: boolean},
-//     hasXor:(...args : string[])=>any,
-//     hasOr:(...args : string[])=>any,
-//     hasAnd:(...args : string[])=>boolean,
-//     getMore:(...args : string[])=>ast[],
-//     hasMore:(...args : string[])=>boolean[],
-//     get:(name:string)=>ast,
-//     has:(name:string)=>boolean,
-//     getArguments:(argument:string)=>ast,
-//   },
-//   data:{
-//     returnArrayChunks: ast,
-//     returnArray: () => ast,
-//     getSubcommand: (keyword:string) => ast
-//     repeate:{
-//       parent: any,
-//       me: (mecore: core)=>core
-//     }
-//   }
-//   getFrom:(fromNthItem:number, ast:ast)=>dState
-// }
+// The abstract syntax tree type
+export type ast = any[][]; // Array<Array<any>>
 
-// // It can be promise too. todo: add pomise too
-// export type returnCallback = (callback: number, state: dState)=> void;
+// Default export is a function that returns an instance of the framework.
+declare function dslFramework(): DslFrameworkInstance;
 
-// declare type core = {
-//   (returnCallback): core
-//   (): dState | any;
-//   (...args : any[]): core;
-//   [index: string]: core;
-// };
+declare namespace dslFramework {
+  export const anyType: any;
+  export default dslFramework;
+}
 
-// export type coreFactory = () => {
-//   (): core;
-//   noPromises: coreFactory;
-// };
+// The 'DslFrameworkInstance' type represents the main interface of the DSL framework.
+interface DslFrameworkInstance {
+  (): Core;
+  (callback: Callback): DslState;
+}
 
-// // export const instance = ():core|function(returnCallback):core => {
-// export const instance = ():core => {
-//   ()=>core
-//   noPromises: this;
-// };
+// The 'Callback' type represents the callback function used in the DSL framework.
+type Callback = (error: any, data: DslState) => void;
 
-// instance.noPromises = instance;
+// The 'Core' type represents the core function.
+interface Core {
+  (returnCallback: ReturnCallback): Core;
+  (): DslState;
+  (...args: any[]): Core;
+  [index: string]: Core;
+}
 
-// export default instance;
+// The 'DslState' type represents the state of the DSL.
+export interface DslState {
+  commandSequence: () => any;
+  arguments: (
+    command: string,
+    getProcess: "allEntries" | "firstArgument" | "firstEntry" | "lastArgument" | "lastEntry",
+    defaultValue?: any
+  ) => ast;
+  command: {
+    getObject: (...args: string[]) => ast[] | [];
+    hasObject: (...args: string[]) => { [key: string]: boolean };
+    hasXor: (...args: string[]) => any;
+    hasOr: (...args: string[]) => any;
+    hasAnd: (...args: string[]) => boolean;
+    getMore: (...args: string[]) => ast[];
+    hasMore: (...args: string[]) => boolean[];
+    get: (name: string) => ast;
+    has: (name: string) => boolean;
+    getArguments: (argument: string) => ast;
+  };
+  data: {
+    returnArrayChunks: ast;
+    returnArray: () => any[]; // Flattened array
+    getSubcommand: (keyword: string) => ast;
+    repeate: {
+      parent: any;
+      me: (mecore: Core) => Core;
+    };
+  };
+  getFrom: (fromNthItem: number, ast: ast) => DslState;
+}
 
-export const anyType: any
-export default anyType
+// The 'ReturnCallback' type represents the return callback function.
+export type ReturnCallback = (callback: number, state: DslState) => void | any;
+
+// The 'CoreFactory' type represents the factory for creating core instances.
+export type CoreFactory = () => Core;
+
+// Exporting 'anyType' as any
+export const anyType: any;
+export default dslFramework;
