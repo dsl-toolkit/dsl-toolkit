@@ -1,6 +1,6 @@
 {
   "name": "dsl-framework",
-  "version": "1.8.31",
+  "version": "1.8.33",
   "description": "Easy function chaining.",
   "main": "./src/index.js",
   "module": "./dist/src/index.mjs",
