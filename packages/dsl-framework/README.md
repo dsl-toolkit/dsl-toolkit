@@ -11,17 +11,40 @@
 npm install dsl-framework --save
 ```
 
-# Hello world
+# Introduction to dsl-framework
+## Hello world
+
+Imagine you're constructing a sentence, word by word, or drawing a picture, stroke by stroke. That's similar to how dsl-framework works. Each command you chain adds to or modifies a piece of structured data, which we call returnArrayChunks. It's like a command tree where each node represents a command or its argument.
 
 ```javascript
-const { dslFramework } = require('dsl-framework')
-const defaultFactory = dslFramework()
+const { dslFramework } = require('dsl-framework');
+const defaultFactory = dslFramework();
 
-console.log(
-  defaultFactory()
-  .Hello.world()
-  .data.returnArrayChunks.flat().join(' ')) // => Hello world
+const result = defaultFactory().Hello.world();
+console.log(result.data.returnArrayChunks); // [['Hello'], ['world']]
 ```
+
+Adding Parameters to DSL Chain Functions and Dynamic Command Creation
+A key feature of dsl-framework is its ability to accept parameters directly within the chain of commands. This flexibility allows you to customize commands or add additional data points as needed, enhancing the expressiveness of your DSL. Moreover, you can also introduce new commands dynamically, without needing to predefine them in your code. Here's an example where we both add parameters to functions in the chain and create a new command on-the-fly:
+
+
+```javascript
+
+const { dslFramework } = require('dsl-framework');
+const defaultFactory = dslFramework();
+
+// Adding a new command 'greet' dynamically
+defaultFactory().greet('world', '!').with('enthusiasm');
+
+console.log(defaultFactory().greet('world', '!').with('enthusiasm').data.returnArrayChunks);
+// [['greet', 'world', '!'], ['with', 'enthusiasm']]
+
+```
+
+
+
+
+
 This is the easies use of the dsl framework. `data.returnArrayChunks` represents a matrix of data, in other wods an arrays in an array, in other works and abstract syntax tree (AST). with the current exaple you can see it as:
 ```javascript
 [['Hello'],['world']]
