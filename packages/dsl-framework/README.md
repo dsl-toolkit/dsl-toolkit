@@ -41,185 +41,112 @@ console.log(defaultFactory().greet('world', '!').with('enthusiasm').data.returnA
 
 ```
 
+# Working with Data
+While you can directly interact with returnArrayChunks for simple tasks, 
+dsl-framework provides utilities to help you process, filter, and analyze the data 
+without having to manually sift through raw arrays. Here’s why:
 
+* Abstraction: Direct manipulation of the raw array can be error-prone and less intuitive, particularly for complex data structures. The framework offers methods that abstract away these complexities.
+* Ease of Use: These utility functions make it easier to perform common operations like filtering, querying, or extracting data based on certain conditions.
+* Consistency: Using these methods ensures consistency in how data is handled across your application, making your code more maintainable.
 
-
-
-This is the easies use of the dsl framework. `data.returnArrayChunks` represents a matrix of data, in other wods an arrays in an array, in other works and abstract syntax tree (AST). with the current exaple you can see it as:
-```javascript
-[['Hello'],['world']]
-```
-The next exaple:
-```javascript
-console.log(
-  defaultFactory()('Hello')('world')()
-  .data.returnArrayChunks.flat().join(' ')) // => Hello world
-```
-gives the exact same output, the first example. It is just a different way to inject data into the AST. Your choice is how you want to use it.
-
-Most of the times you will use the framework with the callback function like this:
-```javascript
-defaultFactory((e, data) => {
-  console.log(data.data.returnArrayChunks.flat().join(' '))
-}).Hello.world() // => Hello world
-```
-
-Most of the times you might want to create a function/module/export or variable like this:
+## Examples of Data Processing:
+### Accessing and Flattening Data:
 
 ```javascript
-const sayIt = defaultFactory((e, data) => {
-  console.log(data.data.returnArrayChunks.flat().join(' '))
-})
+const result = defaultFactory().Hello.world().data;
+console.log(result.returnArray()); // ['Hello', 'world']
+```
 
-sayIt.Hello.world() // => Hello world
-```
-So you can play with it like below:
-```javascript
-sayIt.Hello.world() // => Hello world
-sayIt.Hello.world('!')() // => Hello world !
-sayIt.Hello.world['!']() // => Hello world !
-sayIt('Hello').world['!']() // => Hello world !
-```
-Let's create a `harvester` that returns the raw data:
+Filtering Commands:
 
 ```javascript
-const harvester = defaultFactory((e, data) => {
-  return (data.data.returnArrayChunks)
-})
+const commandData = defaultFactory().Hello.world().add('more')().data;
+const hasHello = commandData.command.has('Hello'); // true
+const onlyHelloCommands = commandData.command.get('Hello'); // [['Hello']]
 ```
-With the `harvester` we can show the date that comes back:
-```javascript
-console.log(
-  harvester.Hello.world()
-  ) // => [['Hello'],['world']]
-  
-console.log(
-  harvester.Hello.world('!')()
-  ) // => [['Hello'],['world', '!']]
-```
-If you see the last example above, this is the first time we have given a parameter to a function we call. you can see how it escalates in the data, the excamation sign is arrived next to the world as the second item in its array. The rest of this segment of examples are easy, so I will not explain them.
-```javascript  
-console.log(
-  harvester.Hello.world['!']()
-  ) // => [['Hello'],['world'],['!']]
-  
-console.log(
-  harvester('Hello').world['!']()
-  ) // => [['Hello'],['world'],['!']]
-  
-```
+
+Querying Complex Structures:
 
 ```javascript
-const processor = defaultFactory((e, data) => {
-  return (data.data.returnArrayChunks.flat().join(' '))
-})
+const complexData = defaultFactory()
+  .Task.create('Code review', { due: '2023-10-05' })
+  .Task.create('Deploy', { due: '2023-10-07' })()
+  .data;
 
-console.log(processor('Hello').world(), 'oh yeah'); // => Hello world oh yeah
+// Function to check if 'Task' followed by whatever command exists in the command sequence
+const processTaskCreation = (data) => {
+  let tasks = [];
 
-(async () => {
-  const result = await processor.hello.world.form.this.promise.p()
-  console.log(result + '.', '"p" is sPecial!, I can say in other world, preserved, pointing to a promise factory')
-})() // => hello world form this promise. "p" is sPecial!, I can say in other world, preserved, pointing to a promise factory
-
-const processorReturndPromise = defaultFactory((e, data) => {
-  return async () => (data.data.returnArrayChunks.flat().join(' '))
-});
-(async () => {
-  const result = await processorReturndPromise.Hello.You.too('!!!')()()
-  console.log(result, 'I hope got you!')
-})() // => Hello You too !!! I hope got you!
-
-const processorChecksHello = defaultFactory((e, data) => {
-  if (data.command.has('Hello')) {
-    return (data.data.returnArrayChunks.flat().join(' '))
+  for (let i = 0; i < data.returnArrayChunks.length - 1; i++) {
+    if (data.returnArrayChunks[i][0].toLowerCase() === 'task') {
+      tasks.push(data.returnArrayChunks[i + 1]);
+    }
   }
-  return 'The message does not contain the word Hello'
+
+  return tasks;
+};
+
+const createdTasks = processTaskCreation(complexData);
+console.log('Created Tasks:', createdTasks); 
+const complexData = defaultFactory()
+  .Task.create('Code review', { due: '2023-10-05' })
+  .Task.create('Deploy', { due: '2023-10-07' })()
+  .data;
+
+
+const createdTasks = processTaskCreation(complexData);
+console.log('Created Tasks:', createdTasks); 
+// The data now looks like: 
+//   [
+//     ['create', 'Code review', { due: '2023-10-05' }], 
+//     ['create', 'Deploy', { due: '2023-10-07' }]
+//   ]
+```
+
+### Embedding Processing in Callbacks
+
+Using callbacks for data processing:
+
+Allows for immediate execution post-DSL chain.
+Keeps DSL chain clean, processing logic encapsulated.
+Can handle errors inline with data generation.
+
+Here's how to use callbacks:
+
+
+```javascript
+const { dslFramework } = require('dsl-framework');
+const defaultFactory = dslFramework();
+
+// Function to check if 'Task' followed by whatever command exists in the command sequence
+const processTaskCreation = (data) => {
+  let tasks = [];
+
+  for (let i = 0; i < data.returnArrayChunks.length - 1; i++) {
+    if (data.returnArrayChunks[i][0].toLowerCase() === 'task') {
+      tasks.push(data.returnArrayChunks[i + 1]);
+    }
+  }
+
+  return tasks;
+};
+
+// Using callbacks to process data directly within the DSL chain
+defaultFactory((e, data) => {
+  const createdTasks = processTaskCreation(data);
+  console.log('Created Tasks:', createdTasks); 
+  // The data now looks like: 
+  //   [
+  //     ['create', 'Code review', { due: '2023-10-05' }], 
+  //     ['create', 'Deploy', { due: '2023-10-07' }]
+  //   ]
 })
-
-console.log(processorChecksHello.Hi.World()) // => The message does not contain the word Hello
-console.log(processorChecksHello.Hello.World('!', 'Hello again')('and').again()) // => Hello World ! Hello again and again
-
-```
-The rest of the motivation is kept here for a while because of clarity, and for historical reasons. I don't consider it complete or good enough for grasping how the framework works. Still coul containg some inspiration for someone. I plan continue and polish the hello world examples further to show and cover the abilities of the tool. if you want to see how it really works see the projects in the monorepo of this project, and see the tests within this project.
-# Motivation
-I wanted to have an easy to use function configuring method.
-so that I can develop domain-specific languages easily and keep its application close to the code,
-Moreover, use it for different kind of tasks. I started
-educating myself to LISP and tying to transpiring back to my daily work life some practical concept,
-using data as code and creating small domain specific languages, this is an attempt for that.
-
-I wrote **[dsl-toolkit](https://github.com/311ecode/dsl-toolkit/tree/master/packages/dsl-toolkit)** and the central point of the application
-is the usage of its specific small DSL trough chained function calls. The code that creates this possibility was
-complex and precise, really too hard to understand, maintain develop and refactor; entirely the worst kind. The idea
-was if we extract this necessarily complex monster into and external reusable library.
-
-# Usage
-I present the usage of the library with the example below; there are many ways to use it, let's start with the most
-practically applicable one.
-
-## Example sync basic
-
-In this example, you can see the library if you do callback needs to have two of them the first receives the error code
-that is 0 at the moment only, in the future it will change and the second that is all the parameters you chained trough.
-
-```javascript 1.8
-const unlimitedCurry = require('dsl-framework')
-const fn = unlimitedCurry(
-  (e, parameters) => {
-    //will not return anything, will be execited anyways
-  },
-    parameters=>`${parameters.data.returnArray[0]}${parameters.data.returnArray[1]}${parameters.data.returnArray[2]}`
-  )
-const returnValue = await fn('a')('b')('c')()
-console.log(returnValue)
-expect(returnValue).to.be.equal('abc')
-```
-
-## Example async basic
-As you see this example looks just a bit different, but his small difference not calling the empty parenthesis makes the first callbacks execution async as well.
-Technically it is a setTimeout(()=>{}, 0) you can google it, that was enlightening for me, maybe you would enjoy that doing so. Later in this documentation, for now, please consult the source.
-Maybe **[this](https://www.youtube.com/watch?v=8aGhZQkoFbQ) video** will help as well.
-
-```javascript 1.8
-const unlimitedCurry = require('dsl-framework')
-
-const fn = unlimitedCurry(
-  (e, parameters) => {
-    return parameters.data.returnArray[0]
-      + parameters.data.returnArray[1]
-      + parameters.data.returnArray[2]
-  })
-const returnValue = await fn('a')('b')('c').p().then(data=>data)
-console.log(returnValue)
-expect(returnValue).to.be.equal('abc')
+.Task.create('Code review', { due: '2023-10-05' })
+.Task.create('Deploy', { due: '2023-10-07' })();
 
 ```
-If you don't use the promise the `p()` function, as it is a detached execution you will not be able to get back anything.
 
-## split call example
+These examples showcase how you can work with the data provided by the DSL without directly manipulating the returnArrayChunks. This approach leverages the power of the framework to make data processing more intuitive and aligned with your domain logic.
 
-This few lines also comes from the test suite, but you will get how you can use it in real life.
-```javascript 1.8
-const getMyCurry = () => unlimitedCurry(
-  (e, parameters) => {
-  },
-  parameters=>parameters.data.returnArray[0]
-    + parameters.data.returnArray[1]
-    + parameters.data.returnArray[2]
-)
-let fn = getMyCurry()
-fn('a')
-let returnValue = fn('b', 'c')()
-expect(returnValue).to.be.equal('abc')
 
-fn = getMyCurry()
-fn('a', 'b')
-returnValue =  fn('c')()
-expect(returnValue).to.be.equal('abc')
-
-fn = getMyCurry()
-fn('a')
-fn('b')
-returnValue = fn('c')()
-expect(returnValue).to.be.equal('abc')
-```
