@@ -213,3 +213,41 @@ const result2 = await myAsyncDsl.Hello.world.capital();
 console.log('Result with capital:', result2); // This will log "HELLO WORLD"
 ```
 
+## Different Kinds of Conditionals in DSL
+The dsl-framework provides several methods for conditional checks within the DSL chain:
+
+has: Checks if a specific command or property exists in the chain. 
+hasMore: Similar to has, but can check for multiple commands at once, returning an array of booleans indicating the presence of each command.
+hasAnd: Checks if all specified commands or properties are present in the chain. Useful for ensuring multiple conditions are met.
+hasOr: Checks if at least one of the specified commands or properties is present in the chain. Helpful for scenarios where any one condition can trigger an action.
+hasXor: Checks for the exclusive presence of one command or property from a list, ensuring only one exists, not multiple.
+
+Example: Using hasAnd for Complex Conditions
+Imagine you are creating a DSL for managing tasks in a project management tool. You might want to check if both a Task and a Deadline command have been used in sequence to confirm that a task has been properly scheduled:
+
+```javascript
+const { dslFramework } = require('dsl-framework');
+const defaultFactory = dslFramework();
+
+const taskManagerDsl = defaultFactory(async (error, data) => {
+  if (error) {
+    console.error('Error in task management DSL:', error);
+    return;
+  } else {
+    if (data.command.hasAnd('Task', 'Deadline')) {
+      const taskDetails = data.returnArray().join(' - ');
+      console.log('Task scheduled with deadline:', taskDetails);
+      return taskDetails; // Return details of the scheduled task
+    } else {
+      console.log('Task not fully scheduled, missing either Task or Deadline command.');
+      return ''; // Indicate that the task wasn't fully scheduled
+    }
+  }
+});
+
+// Example usage
+const result = await taskManagerDsl.Task('Write Report').Deadline('2023-12-31')();
+console.log('Task management result:', result); // Logs the task details if both commands are present
+```
+
+In this use case, hasAnd ensures that both "Task" and "Deadline" commands are in the sequence before proceeding with task scheduling. This demonstrates how conditional logic can be used to validate complex command sequences or ensure that all necessary components for an operation are present.
