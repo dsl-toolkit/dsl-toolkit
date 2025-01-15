@@ -251,3 +251,86 @@ console.log('Task management result:', result); // Logs the task details if both
 ```
 
 In this use case, hasAnd ensures that both "Task" and "Deadline" commands are in the sequence before proceeding with task scheduling. This demonstrates how conditional logic can be used to validate complex command sequences or ensure that all necessary components for an operation are present.
+
+# Command Sequences
+In this example, we'll create different DSL chains to demonstrate how commands can be validated based on their presence, order, and parameters. We'll define four checks:
+
+ - Check for 'hello' and 'world' presence
+ - Check if there are only 'hello' and 'world'
+ - Check if any command has more than one argument
+ - Check if 'hello' comes before 'world'
+
+```javascript
+const { dslFramework } = require('dsl-framework');
+const defaultFactory = dslFramework();
+
+// Check if 'hello' and 'world' are present
+const hasHelloAndWorld = (data) => data.command.hasAnd('hello', 'world');
+
+// Check if only 'hello' and 'world' are used
+const onlyHelloAndWorld = (data) => {
+  const commands = data.commandSequence();
+  return Array.from(commands).every(cmd => ['hello', 'world'].includes(cmd.command)) && 
+         Array.from(commands).length === 2;
+};
+
+// Check if any command has more than one argument
+const noCommandWithMultipleArgs = (data) => {
+  for (const cmd of data.commandSequence()) {
+    if (cmd.arguments.length > 1) return false;
+  }
+  return true;
+};
+
+// Check if 'hello' is before 'world'
+const helloBeforeWorld = (data) => {
+  const commands = Array.from(data.commandSequence());
+  const helloIndex = commands.findIndex(cmd => cmd.command === 'hello');
+  const worldIndex = commands.findIndex(cmd => cmd.command === 'world');
+  return helloIndex !== -1 && worldIndex !== -1 && helloIndex < worldIndex;
+};
+
+const validateDSL = defaultFactory((error, data) => {
+  if (error) {
+    console.error('Error in DSL validation:', error);
+    return;
+  }
+
+  if (!hasHelloAndWorld(data)) {
+    console.log('Validation failed: Missing hello or world');
+    return false;
+  }
+  if (!onlyHelloAndWorld(data)) {
+    console.log('Validation failed: More than hello and world used');
+    return false;
+  }
+  if (!noCommandWithMultipleArgs(data)) {
+    console.log('Validation failed: Command with multiple arguments found');
+    return false;
+  }
+  if (!helloBeforeWorld(data)) {
+    console.log('Validation failed: World before Hello');
+    return false;
+  }
+
+  console.log('Validation passed:', data.returnArray().join(' '));
+  return true;
+});
+
+// Testing different scenarios
+console.log('Scenario 1:');
+await validateDSL.hello.world(); // Should pass
+
+console.log('\nScenario 2:');
+await validateDSL.hello.extra.world(); // Should fail due to extra command
+
+console.log('\nScenario 3:');
+await validateDSL.hello('arg1', 'arg2').world(); // Should fail due to multiple arguments
+
+console.log('\nScenario 4:');
+await validateDSL.world.hello()(); // Should fail due to order
+```
+
+In this example, we've created a DSL chain where we validate various aspects of the command sequence in the callback function. Each validation function checks for different criteria, demonstrating how you can chain commands and validate their sequence, presence, and parameters in a way that mirrors monadic behavior by maintaining state and context across transformations.
+
+
