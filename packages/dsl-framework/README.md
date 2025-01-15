@@ -179,5 +179,37 @@ const result = await myAsyncDsl.Hello.world();
 console.log('Processed result:', result); // This will log "Hello world"
 ```
 
+# Using Conditional Commands in DSL Chains
+Building on the asynchronous operations, dsl-framework also allows for conditional command execution within the DSL chain. This example introduces the use of a hypothetical capital command to demonstrate how you can dynamically alter the output based on the presence of specific commands in the chain. Here, we'll check if the capital command exists to decide whether to return the result in all capital letters or not. This approach showcases the flexibility of DSLs in processing commands conditionally, based on the structure of the command sequence.
 
+
+```javascript
+const { dslFramework } = require('dsl-framework');
+const defaultFactory = dslFramework();
+
+const myAsyncDsl = defaultFactory(async (error, data) => {
+  if (error) {
+    console.error('Error in DSL processing:', error);
+    return; // Since we're not in a Promise context, we can't use resolve directly
+  } else {
+    // Check if 'capital' command is in the chain
+    if (data.command.has('capital')) {
+      const result = data.returnArray().join(' ').toUpperCase();
+      console.log('Returning in CAPITALS:', result);
+      return result; // Return the capitalized string
+    } else {
+      console.log('No capital command found, returning nothing.');
+      return ''; // Return an empty string or null if you prefer
+    }
+  }
+});
+
+// First scenario without 'capital'
+const result1 = await myAsyncDsl.Hello.world();
+console.log('Result without capital:', result1); // This will log an empty string or nothing
+
+// Second scenario with 'capital'
+const result2 = await myAsyncDsl.Hello.world.capital();
+console.log('Result with capital:', result2); // This will log "HELLO WORLD"
+```
 
