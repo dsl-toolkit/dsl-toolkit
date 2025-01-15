@@ -149,4 +149,35 @@ defaultFactory((e, data) => {
 
 These examples showcase how you can work with the data provided by the DSL without directly manipulating the returnArrayChunks. This approach leverages the power of the framework to make data processing more intuitive and aligned with your domain logic.
 
+# Asynchronous Operations in DSL Chains and returning values from callbacks
+
+One of the key features of dsl-framework is the ability to handle asynchronous operations within the DSL chain. Below is an example demonstrating how you can integrate asynchronous callbacks into your DSL workflow. This method is particularly useful when your DSL commands need to wait for external resources or perform time-consuming operations. Importantly, this approach also allows for returning values from callback functions, providing a way to pass processed data back to the caller. Whether the callback is asynchronous or not, you can return any value, but in an async context, this is particularly useful for chaining further operations or making decisions based on the returned data.
+
+
+```javascript
+const { dslFramework } = require('dsl-framework');
+const defaultFactory = dslFramework();
+
+const myAsyncDsl = defaultFactory(async (error, data) => {
+  if (error) {
+    console.error('Error in DSL processing:', error);
+    return; // Since we're not in a Promise context, we can't use resolve directly
+  } else {
+    // Simulate some async operation with data
+    await new Promise(r => setTimeout(r, 1000)); // Wait for 1 second
+    console.log('Data processed asynchronously');
+    
+    // Join the returnArray to get "Hello world" string
+    const result = data.returnArray().join(' ');
+    console.log('Returning:', result);
+    return result; // Return the joined string
+  }
+});
+
+// Await the DSL chain execution and log the returned string
+const result = await myAsyncDsl.Hello.world();
+console.log('Processed result:', result); // This will log "Hello world"
+```
+
+
 
