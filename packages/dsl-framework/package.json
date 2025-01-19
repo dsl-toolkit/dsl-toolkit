@@ -1,6 +1,6 @@
 {
   "name": "dsl-framework",
-  "version": "1.8.33",
+  "version": "1.8.34",
   "description": "Easy function chaining.",
   "main": "./src/index.js",
   "module": "./dist/src/index.mjs",
@@ -71,8 +71,8 @@
   "devDependencies": {
     "@babel/cli": "^7.19.3",
     "@babel/core": "^7.20.5",
-    "@babel/preset-env": "^7.20.2",
     "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.20.2",
     "babel-plugin-transform-commonjs": "^1.1.6",
     "browserify": "^17.0.0",
     "chai": "^4.3.4",
@@ -125,7 +125,5 @@
     "dist/src/**",
     "src/**"
   ],
-  "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
-  "dependencies": {
-  }
+  "gitHead": "19e8b21012acf44b1ab3282334728383af893416"
 }
