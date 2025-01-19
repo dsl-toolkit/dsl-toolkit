@@ -10,6 +10,7 @@
       "import": "./dist/src/index.mjs"
     }
   },
+  "types": "./dist/src/index.d.ts", 
   "scripts": {
     "pub": "npm run clean; npm version patch --force && npm run babel && npm publish",
     "test-common": "npm run clean && npx mocha --recursive  tests/**/*-spec.js",
