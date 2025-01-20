@@ -3,6 +3,7 @@
 // const flat = require('flat')
 const ia = Array.isArray
 const getFrom = function () {
+  let returnArrayChunks
   if (this.reset) {
     returnArrayChunks = this.returnArrayChunks
     if (this.commandName) {

@@ -80,7 +80,7 @@
     "dist/src/**",
     "src/**"
   ],
-  "gitHead": "19e8b21012acf44b1ab3282334728383af893416",
+  "gitHead": "6cd4fffe64dddbaed6414089fe1684400fda626b",
   "dependencies": {
     "dsl-framework": "^1.8.34",
     "underscore": "^1.13.6"
