@@ -1,6 +1,6 @@
 {
   "name": "generic-text-linker",
-  "version": "1.7.32",
+  "version": "1.7.33",
   "description": "Generic text linker for NodeJs",
   "main": "src/index.js",
   "scripts": {
@@ -47,7 +47,7 @@
   "devDependencies": {
     "chai": "^4.3.6",
     "depcheck": "^1.4.0",
-    "directory-fixture-provider": "^1.7.29",
+    "directory-fixture-provider": "^1.7.30",
     "license-checker": "^25.0.1",
     "mocha": "^10.1.0",
     "nyc": "^15.1.0",
