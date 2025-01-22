@@ -36,7 +36,7 @@ This method returns the container object, which can be used to access the compos
 
 Example:
 ```js
-const container = containerFactory.compose('myService', (dependency1, dependency2) => dependency1 + dependency2, ['dependency1', 'dependency2'])();
+const container = containerFactoryFactory.compose('myService', (dependency1, dependency2) => dependency1 + dependency2, ['dependency1', 'dependency2'])();
 console.log(container.myService); // adition of depencency1 and dependecy2
 // if dependency1 evaluates to 1 and depencency2 evaluates to two this will print 3
 // most likey you will define dependency1 and 2 with the define method of this factory,
@@ -49,9 +49,9 @@ Here is an example of how to chain these functions
 
 ```js
 import demeterDi from 'demeter-di';
-const {containerFactory} = demeterDi;
+const {containerFactoryFactory} = demeterDi;
 
-const container = containerFactory
+const container = containerFactoryFactory
   .define('one', 1)
   .compose('showOne', (one) => console.log(one))()
 
@@ -113,7 +113,7 @@ You can also use the define method to define multiple constants at once by chain
 
 ```js
 import demeterDi from 'demeter-di';
-const {containerFactory} = demeterDi;
+const {containerFactoryFactory} = demeterDi;
 
 const container = containerFactory
     .define('PI', 3.14)
@@ -140,13 +140,13 @@ You can override the functionality of this service for testing purposes by simpl
 
 
 ```js
-containerFactory.create('complexService', (A, lot, of, dependencies) => ... ... [] /* returns an output of an array */)
+containerFactoryFactory.create('complexService', (A, lot, of, dependencies) => ... ... [] /* returns an output of an array */)
 ```
 
 You can override the functionality of this service for testing purposes by simply redefining the service with the create method, like this:
 
 ```js
-containerFactory.create('complexService', () => ['fixture','data'])
+containerFactoryFactory.create('complexService', () => ['fixture','data'])
 ```
 again: It's important to note that the create method will create a new instance of the service each time it's accessed, this means that the service will be evaluated again and the new value returned.
 
@@ -159,7 +159,7 @@ This will override the existing 'complexService' with a new service that returns
 You access a service or constant through the container, it returns a proxy object that automatically resolves the service or constant when it's invoked. In this case, you don't need to invoke the service with parenthesis, just by accessing it through the container will execute the service.
 Example:
 
-const container = containerFactory
+const container = containerFactoryFactory
 .define('one', 1)
 .compose('showOne', (one) => console.log(one))();
 console.log(container.one) // Output: 1
@@ -179,9 +179,9 @@ Here's an example of how you can use the compose method to create JSX elements, 
 ```jsx
 import React from 'react';
 import demeterDi from 'demeter-di';
-const {containerFactory} = demeterDi;
+const {containerFactoryFactory} = demeterDi;
 
-const container = containerFactory
+const container = containerFactoryFactory
   .define('API_URL', 'https://api.example.com')
   .define('API_KEY', 'secret_key')
   .compose('MyButton', (handleClick) => <button onClick={handleClick}>Fetch Users</button>)
@@ -214,7 +214,7 @@ export default container.MyComponent;
 ```js
 import Hapi from 'hapi';
 import demeterDi from 'demeter-di';
-const {containerFactory} = demeterDi;
+const {containerFactoryFactory} = demeterDi;
 
 const container = (server = false) => containerFactory
   .define('host', process.env.API_HOST || 'localhost')
