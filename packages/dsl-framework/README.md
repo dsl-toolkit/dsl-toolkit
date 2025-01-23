@@ -11,6 +11,17 @@
 npm install dsl-framework --save
 ```
 
+# Module Support
+The dsl-framework supports both ESM (ECMAScript Modules) and CommonJS module systems, working seamlessly across client-side and server-side JavaScript environments. You can import the library using either syntax:
+
+```javascript
+// ESM 
+import dslFramework from "dsl-framework";
+
+// CommonJS
+const dslFramework = require("dsl-framework");
+```
+
 # dsl-framework: Evolve Your Code, Not Your Plans
 
 Ever felt bogged down by endless planning before writing a single line of code?  What if you could start simple and evolve your software naturally, adapting to new requirements without massive refactorings?
@@ -23,7 +34,12 @@ Ever felt bogged down by endless planning before writing a single line of code? 
 Imagine you're constructing a sentence, word by word, or drawing a picture, stroke by stroke. That's similar to how dsl-framework works. Each command you chain adds to or modifies a piece of structured data, which we call returnArrayChunks. It's like a command tree where each node represents a command or its argument.
 
 ```javascript
-const { dslFramework } = require('dsl-framework');
+// ESM 
+import dslFramework from "dsl-framework";
+
+// CommonJS
+const dslFramework = require("dsl-framework");
+
 const defaultFactory = dslFramework();
 
 const result = defaultFactory().Hello.world();
@@ -36,7 +52,12 @@ A key feature of dsl-framework is its ability to accept parameters directly with
 
 ```javascript
 
-const { dslFramework } = require('dsl-framework');
+// ESM 
+import dslFramework from "dsl-framework";
+
+// CommonJS
+const dslFramework = require("dsl-framework");
+
 const defaultFactory = dslFramework();
 
 // Adding a new command 'greet' dynamically
@@ -60,7 +81,12 @@ It quickly becomes difficult to remember the order of parameters and what each o
 
 dsl-framework offers a better way:
 ```JavaScript
-const { dslFramework } = require('dsl-framework');
+// ESM 
+import dslFramework from "dsl-framework";
+
+// CommonJS
+const dslFramework = require("dsl-framework");
+
 const defaultFactory = dslFramework();
 
 const userCreator = defaultFactory((err, data) => {
@@ -228,7 +254,12 @@ One of the key features of dsl-framework is the ability to handle asynchronous o
 
 
 ```javascript
-const { dslFramework } = require('dsl-framework');
+// ESM 
+import dslFramework from "dsl-framework";
+
+// CommonJS
+const dslFramework = require("dsl-framework");
+
 const defaultFactory = dslFramework();
 
 const myAsyncDsl = defaultFactory(async (error, data) => {
@@ -257,7 +288,12 @@ Building on the asynchronous operations, dsl-framework also allows for condition
 
 
 ```javascript
-const { dslFramework } = require('dsl-framework');
+// ESM 
+import dslFramework from "dsl-framework";
+
+// CommonJS
+const dslFramework = require("dsl-framework");
+
 const defaultFactory = dslFramework();
 
 const myAsyncDsl = defaultFactory(async (error, data) => {
@@ -299,7 +335,12 @@ Example: Using hasAnd for Complex Conditions
 Imagine you are creating a DSL for managing tasks in a project management tool. You might want to check if both a Task and a Deadline command have been used in sequence to confirm that a task has been properly scheduled:
 
 ```javascript
-const { dslFramework } = require('dsl-framework');
+// ESM 
+import dslFramework from "dsl-framework";
+
+// CommonJS
+const dslFramework = require("dsl-framework");
+
 const defaultFactory = dslFramework();
 
 const taskManagerDsl = defaultFactory(async (error, data) => {
@@ -334,7 +375,12 @@ In this example, we'll create different DSL chains to demonstrate how commands c
  - Check if 'hello' comes before 'world'
 
 ```javascript
-const { dslFramework } = require('dsl-framework');
+// ESM 
+import dslFramework from "dsl-framework";
+
+// CommonJS
+const dslFramework = require("dsl-framework");
+
 const defaultFactory = dslFramework();
 
 // Check if 'hello' and 'world' are present

@@ -7,6 +7,9 @@
 <!--- destination qa rewrite end -->
 
 # What does it help you with?
+
+Demeter-DI is a versatile dependency injection container that supports both ESM (ECMAScript Modules) and CommonJS module systems. It works seamlessly across client-side and server-side JavaScript environments, providing a flexible dependency injection solution for various JavaScript projects.
+
 The "Law of Demeter" (LoD) is a principle in object-oriented programming that states that an object should only interact with its immediate neighbors, and not with objects that are further away. The LoD helps to promote loose coupling and maintainability in the code by limiting the number of connections between objects and reducing the impact of changes in one part of the code on other parts of the code.
 
 Demeter-DI is a dependency injection container that follows the "Law of Demeter" principle. It allows developers to define and compose services and constants within a container, and manage their dependencies in a way that follows the LoD.
@@ -48,7 +51,12 @@ developers can chain the "compose", "create", and "define" functions in order to
 Here is an example of how to chain these functions
 
 ```js
+// ESM (ECMAScript Modules) import
 import demeterDi from 'demeter-di';
+const {containerFactoryFactory} = demeterDi;
+
+// CommonJS require
+const demeterDi = require('demeter-di');
 const {containerFactoryFactory} = demeterDi;
 
 const container = containerFactoryFactory
