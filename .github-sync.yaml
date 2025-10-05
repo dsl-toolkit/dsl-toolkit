@@ -1,0 +1,12 @@
+github_user: 311ecode
+json_output: /tmp/.github-sync-output.json
+
+projects:
+  - path: packages/demeter-di
+    private: false
+  - path: packages/dsl-framework
+    private: false
+
+  # - path: development/fun
+  #   private: false
+  #   repo_name: rain-alert-desk-manager
