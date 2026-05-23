@@ -115,14 +115,13 @@ describe('checking constants', ()=>{
   it('tests if NOT defined constants/services... are undefined',()=>{
     assert(basicInstance.A === undefined)})
 
-  // it('tests if an undefined constant cannot be created',()=>{
-  //   basicInstance.A = 'a'
-  //   console.log(basicInstance.A,'basicInstance.A');
-  //   assert(basicInstance.A === undefined)})
+  it('tests if an undefined constant cannot be created',()=>{
+    basicInstance.A = 'a'
+    assert(basicInstance.A === undefined)})
 
-  // it('tests if an defined constant cannot be overwritten',()=>{
-  //   basicInstance.a = 'aaa'
-  //   assert(basicInstance.a === 'AAA')})
+  it('tests if a defined constant cannot be overwritten',()=>{
+    basicInstance.a = 'aaa'
+    assert(basicInstance.a === 'AAA')})
 
   })
 
@@ -137,11 +136,11 @@ describe('checking constants', ()=>{
       assert(ff._compose.b)
       assert(ff._compose.b.kind === 'service')})
 
-    // it('_create', () => {
-    //   const ff = basicInstance()
-    //   assert(ff._create.c)
-    //   assert(ff._create.c.kind === 'factory')
-    // })
+    it('_create', () => {
+      const ff = basicInstance
+      assert(ff._create.c)
+      assert(ff._create.c.kind === 'factory')
+    })
 
     it('_allKeys', () => {
       const ff = basicInstance
@@ -165,41 +164,49 @@ describe('checking constants', ()=>{
           assert(e.toString().startsWith('ReferenceError: a is not defined'))}})})})
 
     describe('_duplicateKeys', () => {
-      it('test defining constants and compose services.', ()=>{
-        const container = containerFactory
-        .define('a', 'AAA')
-        .define('a', 'bbb')
-        .compose('b', (a)=>{
-          return 'faa'+a
-        })
-
-        .compose('b', (a)=>{
-          return 'fuuu'+a
-        })()
-
-        console.log(container.a,container.b,"EEEEEEEEEEEEEEEEEEE");
-        // assert(container.b = 'fuubbb')
+      it('no duplicates returns empty array', function () {
+        const ff = basicInstance
+        assert(Array.isArray(ff._duplicateKeys))
+        assert.equal(ff._duplicateKeys.length, 0)
       })
 
-      // it('no duplicates', () => {
-      //   const ff = basicInstance()
-      //   assert(Array.isArray(ff._duplicateKeys))
-      //   assert(ff._duplicateKeys.length === 0)
-      // })
+      it('detects duplicates across define and create', function () {
+        const container = containerFactory
+        .define('a', 'AAA')
+        .compose('b', function (a) { return a })
+        .create('c', function (b, a) { return { b: b, a: a } })
+        .create('a', function (b) { return { b: b } })()
 
-      // it('duplicates', () => {
-      //   const ff = basicInstanceMaker()
-      //   // const duplicateContentInThisContainer = require('../../../../src/app-container-factory')()
-      //     ff.define('a', 'AAA')
-      //     .compose('b', (a) => a)
-      //     .create('c', (b, a) => ({ b, a }))
-      //     .create('a', (b) => ({ b }))()
+        assert(Array.isArray(container._duplicateKeys))
+        assert.equal(container._duplicateKeys.length, 1)
+        assert.deepEqual(container._duplicateKeys, ['a'])
+      })
 
-      //   assert(Array.isArray(duplicateContentInThisContainer._duplicateKeys))
-      //   assert(duplicateContentInThisContainer._duplicateKeys.length === 1)
-      //   assert(duplicateContentInThisContainer._duplicateKeys.length === 1)
-      // })
+      it('detects duplicate across define and compose', function () {
+        const container = containerFactory
+        .define('shared', 'value')
+        .compose('shared', function () { return 'overridden' })()
 
+        assert(Array.isArray(container._duplicateKeys))
+        assert.deepEqual(container._duplicateKeys, ['shared'])
+      })
+
+      it('detects duplicate across compose and create', function () {
+        const container = containerFactory
+        .compose('dup', function () { return 'service' })
+        .create('dup', function () { return 'factory' })()
+        assert(Array.isArray(container._duplicateKeys))
+        assert.deepEqual(container._duplicateKeys, ['dup'])
+      })
+
+      it('detects multiple duplicated keys across kinds', function () {
+        const container = containerFactory
+        .define('x', 1)
+        .compose('x', function () { return 2 })
+        .compose('y', function () { return 3 })
+        .create('y', function () { return 4 })()
+        assert.deepEqual(container._duplicateKeys.sort(), ['x', 'y'])
+      })
     })
     describe('_unused', () => {
       it('case1', () => {
@@ -234,6 +241,8 @@ describe('checking constants', ()=>{
         const ff = basicInstanceMaker()
         console.log();
         assert(ff.notDefined === undefined)
-        assert(ff._undefined, [])})})
+        assert.deepEqual(ff._undefined, ['notDefined'])
+      })
+    })
   // })
 
