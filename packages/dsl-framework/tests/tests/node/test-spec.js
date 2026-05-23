@@ -38,5 +38,6 @@ describe('Basic Test Suite', function () {
   require('./basic-suite/10-DSL-of-the-framework-initialization.js')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance)
   require('./basic-suite/11-repeate-me.js')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance)
   require('./basic-suite/12-factory.js')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework)
-  // require('./basic-suite/12-factory-delta')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework)
+  require('./basic-suite/12-factory-delta.js')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework)
+  require('./basic-suite/13-subcommand.js')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance, dslFramework)
 })
