@@ -9,19 +9,19 @@
     "test-common": "npx mocha --recursive tests/tests",
     "test-dev-unit": "npm run clean && npx mocha --recursive tests/tests/unit",
     "test-project": "echo directory-fixture-provider;pwd && node_modules/.bin/depcheck && npm run standard-fix",
-    "test": "node_modules/.bin/nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-common",
+    "test": "nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-common",
     "test-all": "npm run test-project && npm test",
     "test-all-dev": "npm run test-project && npm run test-dev",
-    "test-compiled": "node_modules/.bin/mocha --require babel-core/register --require babel-polyfill --recursive dist/tests/tests",
+    "test-compiled": "mocha --require babel-core/register --require babel-polyfill --recursive dist/tests/tests",
     "build-src": "echo 1",
     "build-test": "echo 1",
     "prepublish": "npm run build-src && npm run build-test",
-    "clean": "node_modules/.bin/rimraf dist tmp && mkdir dist && mkdir tmp",
-    "standard-fix": "node_modules/.bin/standard --fix"
+    "clean": "rimraf dist tmp && mkdir dist && mkdir tmp",
+    "standard-fix": "standard --fix"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
+    "url": "git+https://github.com/dsl-toolkit/dsl-toolkit.git"
   },
   "keywords": [
     "testing",
@@ -56,7 +56,7 @@
     "chai": "^4.3.6",
     "depcheck": "^1.4.0",
     "is-directory": "^0.3.1",
-    "mocha": "^10.1.0",
+    "mocha": "^12.0.1",
     "nyc": "^15.1.0",
     "shelljs": "^0.8.4",
     "standard": "^16.0.3"

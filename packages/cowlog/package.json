@@ -27,11 +27,11 @@
     "build-test": "echo 1",
     "prepublish": "npm run build-src && npm run build-test",
     "clean": "echo 1",
-    "standard-fix": "node_modules/.bin/standard --fix src/index.js src/**/*.js tests/**/*.js"
+    "standard-fix": "standard --fix src/index.js src/**/*.js tests/**/*.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
+    "url": "git+https://github.com/dsl-toolkit/dsl-toolkit.git"
   },
   "license": "SEE LICENSE IN LICENSE.md",
   "author": {
@@ -78,7 +78,7 @@
     "eslint-plugin-standard": "^5.0.0",
     "generic-text-linker": "^1.7.36",
     "glob": "^7.1.6",
-    "mocha": "^10.0.0",
+    "mocha": "^12.0.1",
     "nyc": "^15.1.0",
     "standard": "^16.0.4",
     "strip-ansi": "^6.0.0"

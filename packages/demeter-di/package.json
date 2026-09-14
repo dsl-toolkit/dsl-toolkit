@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dsl-toolkit/dsl-toolkit.git"
+    "url": "git+https://github.com/dsl-toolkit/dsl-toolkit.git"
   },
   "keywords": [
     "simple",
@@ -46,7 +46,7 @@
     "babel-plugin-transform-commonjs": "^1.1.6",
     "chai": "^4.3.6",
     "depcheck": "^1.2.0",
-    "mocha": "^10.1.0",
+    "mocha": "^12.0.1",
     "nyc": "^15.1.0",
     "require-dir": "^1.2.0",
     "rimraf": "^3.0.2",
