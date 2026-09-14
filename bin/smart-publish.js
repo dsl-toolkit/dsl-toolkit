@@ -3,6 +3,8 @@
 
 const cp = require('child_process')
 const readline = require('readline')
+const fs = require('fs')
+const path = require('path')
 
 function run(cmd, args, options = {}) {
   const res = cp.spawnSync(cmd, args, {
@@ -44,51 +46,74 @@ function getNpmVersion(pkgName) {
 }
 
 async function main() {
-  console.log('--- Inspecting workspace packages vs npm registry ---')
-  const packages = getLocalPackages()
-  const stranded = []
+  const projectRoot = path.join(__dirname, '..')
+  const npmToken = process.env.NPM_TOKEN || process.env.NODE_AUTH_TOKEN
+  const env = { ...process.env }
 
-  for (const pkg of packages) {
-    if (pkg.private) continue
-    const npmVer = getNpmVersion(pkg.name)
-    console.log(`- ${pkg.name}: local=${pkg.version} | npm=${npmVer || '(none)'}`)
-    if (npmVer !== pkg.version) {
-      stranded.push({ name: pkg.name, local: pkg.version, npm: npmVer })
+  // If NPM_TOKEN is passed, create a project-level .npmrc for npm/lerna sub-processes
+  const localNpmrc = path.join(projectRoot, '.npmrc')
+  let createdNpmrc = false
+
+  if (npmToken && !fs.existsSync(localNpmrc)) {
+    fs.writeFileSync(localNpmrc, `//registry.npmjs.org/:_authToken=${npmToken}\n`, 'utf8')
+    createdNpmrc = true
+    console.log('✓ Configured registry token in temporary .npmrc')
+  }
+
+  try {
+    console.log('--- Inspecting workspace packages vs npm registry ---')
+    const packages = getLocalPackages()
+    const stranded = []
+
+    for (const pkg of packages) {
+      if (pkg.private) continue
+      const npmVer = getNpmVersion(pkg.name)
+      console.log(`- ${pkg.name}: local=${pkg.version} | npm=${npmVer || '(none)'}`)
+      if (npmVer !== pkg.version) {
+        stranded.push({ name: pkg.name, local: pkg.version, npm: npmVer })
+      }
+    }
+
+    let otp = process.env.NPM_OTP
+    const otpArg = process.argv.find(arg => arg.startsWith('--otp='))
+    if (otpArg) {
+      otp = otpArg.split('=')[1]
+    }
+
+    if (!otp) {
+      otp = await promptOtp()
+    }
+
+    if (!otp) {
+      console.error('OTP code is required to publish.')
+      process.exit(1)
+    }
+
+    const baseArgs = [
+      'publish',
+      '--no-verify-access',
+      '--yes',
+      `--otp=${otp}`
+    ]
+
+    if (stranded.length > 0) {
+      console.log(`\nFound ${stranded.length} package(s) with local version ahead of npm:`)
+      stranded.forEach(p => console.log(`  * ${p.name}@${p.local}`))
+      console.log('\nRunning: lerna publish from-package ...\n')
+
+      run('npx', ['lerna', ...baseArgs, 'from-package'], { env })
+    } else {
+      console.log('\nAll local packages match npm. Running regular release...\n')
+
+      run('npx', ['lerna', ...baseArgs], { env })
+    }
+
+    console.log('\nPublish completed successfully.')
+  } finally {
+    if (createdNpmrc && fs.existsSync(localNpmrc)) {
+      fs.unlinkSync(localNpmrc)
     }
   }
-
-  const otp = await promptOtp()
-  if (!otp) {
-    console.error('OTP code is required to publish.')
-    process.exit(1)
-  }
-
-  if (stranded.length > 0) {
-    console.log(`\nFound ${stranded.length} package(s) with local version ahead of npm (unreleased/stranded tags):`)
-    stranded.forEach(p => console.log(`  * ${p.name}@${p.local}`))
-    console.log('\nRunning: lerna publish from-package --no-verify-access ...\n')
-
-    run('npx', [
-      'lerna',
-      'publish',
-      'from-package',
-      '--no-verify-access',
-      '--yes',
-      `--otp=${otp}`
-    ])
-  } else {
-    console.log('\nAll local packages match npm. Running regular independent release bump...\n')
-
-    run('npx', [
-      'lerna',
-      'publish',
-      '--no-verify-access',
-      '--yes',
-      `--otp=${otp}`
-    ])
-  }
-
-  console.log('\nPublish completed successfully.')
 }
 
 main().catch((err) => {
