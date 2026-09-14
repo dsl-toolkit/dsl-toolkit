@@ -11,3 +11,4 @@ tmp
 *.tgz
 npm-minor-hash
 .vscode/
+.npmrc
