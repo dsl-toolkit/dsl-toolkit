@@ -50,7 +50,6 @@ async function main() {
   const npmToken = process.env.NPM_TOKEN || process.env.NODE_AUTH_TOKEN
   const env = { ...process.env }
 
-  // If NPM_TOKEN is passed, create a project-level .npmrc for npm/lerna sub-processes
   const localNpmrc = path.join(projectRoot, '.npmrc')
   let createdNpmrc = false
 
@@ -89,23 +88,31 @@ async function main() {
       process.exit(1)
     }
 
-    const baseArgs = [
-      'publish',
-      '--no-verify-access',
-      '--yes',
-      `--otp=${otp}`
-    ]
-
     if (stranded.length > 0) {
       console.log(`\nFound ${stranded.length} package(s) with local version ahead of npm:`)
       stranded.forEach(p => console.log(`  * ${p.name}@${p.local}`))
       console.log('\nRunning: lerna publish from-package ...\n')
 
-      run('npx', ['lerna', ...baseArgs, 'from-package'], { env })
+      // from-package only publishes what exists on disk without bumping git tags
+      run('npx', [
+        'lerna',
+        'publish',
+        'from-package',
+        '--no-verify-access',
+        '--no-git-reset',
+        '--yes',
+        `--otp=${otp}`
+      ], { env })
     } else {
       console.log('\nAll local packages match npm. Running regular release...\n')
 
-      run('npx', ['lerna', ...baseArgs], { env })
+      run('npx', [
+        'lerna',
+        'publish',
+        '--no-verify-access',
+        '--yes',
+        `--otp=${otp}`
+      ], { env })
     }
 
     console.log('\nPublish completed successfully.')
