@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "monorepo for dsl-toolkit",
   "scripts": {
-    "test": "PROD=true npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npx lerna run test-common"
+    "test": "PROD=true npx nyc --reporter=lcov --reporter=clover --reporter=text --reporter=json-summary --cache npx lerna run test-common",
+    "coverage:update": "node bin/update-coverage.js",
+    "coverage": "npm test && npm run coverage:update"
   },
   "author": "Imre Toth",
   "license": "MIT",
@@ -11,6 +13,10 @@
     "url": "https://github.com/dsl-toolkit/"
   },
   "nyc": {
+    "all": true,
+    "include": [
+      "packages/*/src/**/*.js"
+    ],
     "exclude": [
       "**/tests/**"
     ]
