@@ -1,5 +1,5 @@
 {
-  "name": "dsl-toolkkit",
+  "name": "dsl-toolkit",
   "version": "0.0.0",
   "description": "monorepo for dsl-toolkit",
   "scripts": {
@@ -7,7 +7,8 @@
     "coverage:update": "node bin/update-coverage.js",
     "coverage": "npm test && npm run coverage:update",
     "coverage:publish": "node bin/publish-badge.js",
-    "coverage:release": "npm run coverage && npm run coverage:publish"
+    "coverage:release": "npm run coverage && npm run coverage:publish",
+    "release": "node bin/smart-publish.js"
   },
   "author": "Imre Toth",
   "license": "MIT",
@@ -24,7 +25,7 @@
     ]
   },
   "dependencies": {
-    "lerna": "^8.1.5"
+    "lerna": "^9.0.7"
   },
   "workspaces": [
     "packages/*"
