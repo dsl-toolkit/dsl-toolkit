@@ -1,5 +1,6 @@
 {
   "name": "directory-fixture-provider",
+  "private": true,
   "version": "1.7.30",
   "description": "Provides directories for testing.",
   "main": "src/index.js",
