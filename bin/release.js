@@ -5,6 +5,9 @@
  * Smart release for the dsl-toolkit monorepo.
  *
  * Pipeline (tests first, so a failure changes nothing):
+ *   0. preflight + sync      clean tree, then fetch/ff origin BEFORE publishing,
+ *                            because `git push` is the last step: releasing while
+ *                            behind origin would publish to npm and then fail the push
  *   1. tests + coverage      -- `npm test` is the coverage run: one nyc pass
  *                               produces both the result and coverage-summary.json
  *   2. refresh badges        -- bin/update-coverage.js writes coverage/*.svg and
@@ -42,6 +45,7 @@
  *   npm run release:check           read-only report, runs nothing
  *   node bin/release.js --skip-tests        packages only (no tests/badges)
  *   node bin/release.js --skip-badge        tests + badges, no gh-pages push
+ *   node bin/release.js --no-sync           do not fetch/reconcile with origin
  *   node bin/release.js --otp=123456
  *   node bin/release.js --bump=minor
  */
@@ -55,6 +59,7 @@ const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const CHECK_ONLY = process.argv.includes('--check')
 const SKIP_TESTS = process.argv.includes('--skip-tests')
 const SKIP_BADGE = process.argv.includes('--skip-badge')
+const SKIP_SYNC = process.argv.includes('--no-sync')
 const OTP_ARG = process.argv.find((a) => a.startsWith('--otp='))
 const BUMP = (process.argv.find((a) => a.startsWith('--bump=')) || '--bump=patch').split('=')[1]
 const NO_PUSH = process.argv.includes('--no-push')
@@ -262,8 +267,73 @@ function assertCleanTree () {
   process.exit(2)
 }
 
+/**
+ * Fetch and reconcile with the upstream branch before anything is published.
+ *
+ * This has to happen BEFORE the npm publish: `git push` is the very last step,
+ * so releasing while behind origin would publish packages to npm and then fail
+ * the push, leaving the registry and the repository disagreeing.
+ *
+ *   behind only  -> fast-forward (safe, no local commits to lose)
+ *   ahead only   -> fine, these are the commits being released
+ *   diverged     -> stop and let a human merge
+ */
+function syncWithRemote ({ dryRun = false } = {}) {
+  const branch = (sh('git', ['rev-parse', '--abbrev-ref', 'HEAD']).stdout || '').trim()
+  if (!branch || branch === 'HEAD') {
+    throw new Error('detached HEAD -- check out a branch before releasing')
+  }
+
+  console.log(`\n===== sync with origin (${branch}) =====`)
+  const fetch = sh('git', ['fetch', '--prune', 'origin'], { stdio: 'inherit' })
+  if (fetch.status !== 0) throw new Error('git fetch failed')
+
+  const upstreamRes = sh('git', ['rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}'])
+  const upstream = upstreamRes.status === 0 && upstreamRes.stdout.trim()
+    ? upstreamRes.stdout.trim()
+    : `origin/${branch}`
+
+  const counts = sh('git', ['rev-list', '--left-right', '--count', `${upstream}...HEAD`])
+  if (counts.status !== 0) throw new Error(`cannot compare with ${upstream}`)
+  const [behind, ahead] = counts.stdout.trim().split(/\s+/).map(Number)
+
+  if (behind === 0) {
+    console.log(`up to date with ${upstream} (${ahead} local commit(s) ahead, to be released)`)
+    return
+  }
+
+  if (ahead > 0) {
+    console.error(
+      `\nERROR: ${upstream} has ${behind} commit(s) you do not have, and you have ` +
+      `${ahead} local commit(s).`
+    )
+    console.error('The branch has diverged. Merge or rebase it yourself, then re-run:')
+    console.error(`  git merge ${upstream}`)
+    process.exit(2)
+  }
+
+  if (dryRun) {
+    console.log(`[check only] ${behind} commit(s) behind ${upstream}; would fast-forward`)
+    return
+  }
+
+  console.log(`${upstream} is ${behind} commit(s) ahead; fast-forwarding`)
+  const merge = sh('git', ['merge', '--ff-only', upstream], { stdio: 'inherit' })
+  if (merge.status !== 0) throw new Error('fast-forward merge failed')
+}
+
 async function main () {
-  if (!CHECK_ONLY) assertCleanTree()
+  if (CHECK_ONLY) {
+    // still worth knowing whether origin has moved, but never merge while checking
+    if (!SKIP_SYNC) syncWithRemote({ dryRun: true })
+  } else {
+    assertCleanTree()
+    if (SKIP_SYNC) {
+      console.log('\n===== sync with origin ===== skipped (--no-sync)')
+    } else {
+      syncWithRemote()
+    }
+  }
 
   // ---- gating stages: tests -> coverage -> badges -> commit -----------------
   if (!CHECK_ONLY && !SKIP_TESTS) {
