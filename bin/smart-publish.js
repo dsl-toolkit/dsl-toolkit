@@ -2,7 +2,6 @@
 'use strict'
 
 const cp = require('child_process')
-const readline = require('readline')
 const fs = require('fs')
 const path = require('path')
 
@@ -17,19 +16,6 @@ function run(cmd, args, options = {}) {
     process.exit(res.status || 1)
   }
   return res
-}
-
-function promptOtp() {
-  return new Promise((resolve) => {
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
-    })
-    rl.question('Enter npm 2FA OTP code: ', (ans) => {
-      rl.close()
-      resolve(ans.trim())
-    })
-  })
 }
 
 function getLocalPackages() {
@@ -73,46 +59,31 @@ async function main() {
       }
     }
 
-    let otp = process.env.NPM_OTP
+    // Single concurrency prevents burning the OTP across multiple parallel requests
+    const baseArgs = [
+      'publish',
+      '--concurrency=1',
+      '--no-git-reset',
+      '--yes'
+    ]
+
+    // If an OTP is passed in CLI or env, pass it along
     const otpArg = process.argv.find(arg => arg.startsWith('--otp='))
-    if (otpArg) {
-      otp = otpArg.split('=')[1]
-    }
-
-    if (!otp) {
-      otp = await promptOtp()
-    }
-
-    if (!otp) {
-      console.error('OTP code is required to publish.')
-      process.exit(1)
+    const otp = process.env.NPM_OTP || (otpArg ? otpArg.split('=')[1] : null)
+    if (otp) {
+      baseArgs.push(`--otp=${otp}`)
     }
 
     if (stranded.length > 0) {
       console.log(`\nFound ${stranded.length} package(s) with local version ahead of npm:`)
       stranded.forEach(p => console.log(`  * ${p.name}@${p.local}`))
-      console.log('\nRunning: lerna publish from-package ...\n')
+      console.log('\nRunning: lerna publish from-package --concurrency=1 ...\n')
 
-      // from-package only publishes what exists on disk without bumping git tags
-      run('npx', [
-        'lerna',
-        'publish',
-        'from-package',
-        '--no-verify-access',
-        '--no-git-reset',
-        '--yes',
-        `--otp=${otp}`
-      ], { env })
+      run('npx', ['lerna', ...baseArgs, 'from-package'], { env })
     } else {
       console.log('\nAll local packages match npm. Running regular release...\n')
 
-      run('npx', [
-        'lerna',
-        'publish',
-        '--no-verify-access',
-        '--yes',
-        `--otp=${otp}`
-      ], { env })
+      run('npx', ['lerna', ...baseArgs], { env })
     }
 
     console.log('\nPublish completed successfully.')
