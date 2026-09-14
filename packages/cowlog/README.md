@@ -2,6 +2,9 @@
 ### QA dsl-toolkit
 [![CI](https://github.com/dsl-toolkit/dsl-toolkit/actions/workflows/test.yml/badge.svg)](https://github.com/dsl-toolkit/dsl-toolkit/actions/workflows/test.yml)
 <!--- destination qa rewrite end -->
+<!--- coverage begin -->
+![coverage: 63.2% lines](https://dsl-toolkit.github.io/dsl-toolkit/cowlog.svg)
+<!--- coverage end -->
 
 # Cowlog
 

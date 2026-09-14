@@ -8,6 +8,7 @@
     "coverage": "npm test && npm run coverage:update",
     "coverage:publish": "node bin/publish-badge.js",
     "coverage:release": "npm run coverage && npm run coverage:publish",
+    "docs:update": "node bin/update-docs-static-parts.js",
     "release": "node bin/release.js",
     "release:check": "node bin/release.js --check"
   },

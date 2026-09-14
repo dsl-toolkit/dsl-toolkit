@@ -4,19 +4,31 @@
 /*
  * Smart release for the dsl-toolkit monorepo.
  *
- * WHY THIS EXISTS (and why it does not just call `lerna publish`):
+ * Pipeline (tests first, so a failure changes nothing):
+ *   1. tests + coverage      -- `npm test` is the coverage run: one nyc pass
+ *                               produces both the result and coverage-summary.json
+ *   2. refresh badges        -- bin/update-coverage.js writes coverage/*.svg and
+ *                               the per-package badge into each README
+ *   3. publish badges        -- bin/publish-badge.js force-pushes gh-pages, so the
+ *                               READMEs that npm is about to pack have live images
+ *   4. commit badge refresh  -- leaves a clean tree for lerna version
+ *   5. reconcile + publish   -- see below
+ *   6. push commits + tags
+ *   7. verify on the registry
+ *
+ * Steps 1-3 GATE the release: if any fails, nothing is published.
+ *
+ * WHY npm PUBLISHES AND LERNA DOES NOT:
  * Lerna ships its own bundled registry client (libnpmpublish 11.1.2 /
  * npm-registry-fetch 19.1.0 in BOTH lerna 9 and lerna 10). That client cannot
  * perform npm's current 2FA handshake; the registry answers it with
  *   "EOTP You must provide a one-time pass. Upgrade your client to npm@latest
  *    in order to use 2FA."
- * and the publish dies. Upgrading Lerna does not change those pins.
+ * and the publish dies. Upgrading Lerna does not change those pins. So Lerna is
+ * used for discovery + versioning + tagging, and the registry write is delegated
+ * to the npm CLI on PATH, which supports the WebAuthn browser flow.
  *
- * So: Lerna does what it is good at (package discovery + version bumping and
- * tagging), and the actual registry write is delegated to the npm CLI on PATH,
- * which does support the current 2FA flow (WebAuthn browser flow or classic OTP).
- *
- * Modes, chosen automatically:
+ * Reconcile modes, chosen automatically:
  *   1. STRANDED     local version is not on npm yet   -> publish as-is, NO bump
  *   2. IN SYNC      every package matches npm         -> lerna version, then publish
  *   3. REGISTRY AHEAD  npm has a version we lack      -> hard error, stops
@@ -24,11 +36,12 @@
  * Idempotent: npm reports success before the version is readable from the
  * registry, so every lookup retries, and "cannot publish over the previously
  * published versions" is treated as "already published", not as a failure.
- * Re-running is safe.
  *
  * Usage:
- *   npm run release              reconcile, then publish (or bump + publish)
- *   npm run release:check        dry report only, publishes nothing
+ *   npm run release                 full pipeline
+ *   npm run release:check           read-only report, runs nothing
+ *   node bin/release.js --skip-tests        packages only (no tests/badges)
+ *   node bin/release.js --skip-badge        tests + badges, no gh-pages push
  *   node bin/release.js --otp=123456
  *   node bin/release.js --bump=minor
  */
@@ -40,6 +53,8 @@ const fs = require('fs')
 const ROOT = path.join(__dirname, '..')
 const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const CHECK_ONLY = process.argv.includes('--check')
+const SKIP_TESTS = process.argv.includes('--skip-tests')
+const SKIP_BADGE = process.argv.includes('--skip-badge')
 const OTP_ARG = process.argv.find((a) => a.startsWith('--otp='))
 const BUMP = (process.argv.find((a) => a.startsWith('--bump=')) || '--bump=patch').split('=')[1]
 const NO_PUSH = process.argv.includes('--no-push')
@@ -52,6 +67,20 @@ const sleep = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 
 
 function sh (cmd, args, opts = {}) {
   return cp.spawnSync(cmd, args, { encoding: 'utf8', cwd: ROOT, ...opts })
+}
+
+/** Run a gating pipeline step, streaming its output. Throws on failure. */
+function runStep (label, cmd, args) {
+  console.log(`\n===== ${label} =====`)
+  const res = cp.spawnSync(cmd, args, { cwd: ROOT, stdio: 'inherit' })
+  if (res.error) throw res.error
+  if (res.status !== 0) {
+    throw new Error(`${label} failed (exit ${res.status}) -- nothing was published`)
+  }
+}
+
+function nodeScript (name) {
+  return [process.execPath, [path.join(ROOT, 'bin', name)]]
 }
 
 /** Lerna's own resolver, preferring the locally installed copy. */
@@ -194,8 +223,65 @@ function verifyAll (pkgs) {
   return missing
 }
 
+/** Stage + commit just the badge-bearing READMEs, so lerna version sees a clean tree. */
+function commitBadgeRefresh () {
+  const readmes = [
+    'README.md',
+    ...fs.readdirSync(path.join(ROOT, 'packages'))
+      .map((pkg) => path.join('packages', pkg, 'README.md'))
+      .filter((rel) => fs.existsSync(path.join(ROOT, rel)))
+  ]
+  const add = sh('git', ['add', '--', ...readmes])
+  if (add.status !== 0) throw new Error('git add of READMEs failed')
+  const staged = sh('git', ['diff', '--cached', '--quiet'])
+  if (staged.status === 0) {
+    console.log('badges unchanged, nothing to commit')
+    return
+  }
+  console.log('\n===== commit badge refresh =====')
+  const commit = sh('git', ['commit', '--quiet', '-m', 'chore(coverage): refresh badges'], { stdio: 'inherit' })
+  if (commit.status !== 0) throw new Error('git commit of badge refresh failed')
+  console.log('committed badge refresh')
+}
+
+/**
+ * Lerna refuses to version a dirty tree (EUNCOMMIT) and its change detection
+ * cannot see uncommitted work, so a release has to start from a clean tree.
+ */
+function assertCleanTree () {
+  const res = sh('git', ['status', '--porcelain'])
+  if (res.status !== 0) throw new Error('git status failed')
+  const dirty = (res.stdout || '').trim()
+  if (!dirty) return
+  console.error('\nERROR: the working tree has uncommitted changes:\n')
+  dirty.split('\n').forEach((line) => console.error(`  ${line}`))
+  console.error(
+    '\nCommit or stash them first. Lerna will not version a dirty tree, and its\n' +
+    'change detection cannot see uncommitted work, so nothing would be released.'
+  )
+  process.exit(2)
+}
+
 async function main () {
-  console.log('--- Reconciling workspace packages against npm ---')
+  if (!CHECK_ONLY) assertCleanTree()
+
+  // ---- gating stages: tests -> coverage -> badges -> commit -----------------
+  if (!CHECK_ONLY && !SKIP_TESTS) {
+    runStep('tests + coverage', NPM, ['test'])
+
+    runStep('refresh coverage badges', ...nodeScript('update-coverage.js'))
+
+    if (SKIP_BADGE) {
+      console.log('\n===== publish badges ===== skipped (--skip-badge)')
+    } else {
+      runStep('publish badges to gh-pages', ...nodeScript('publish-badge.js'))
+    }
+
+    commitBadgeRefresh()
+  }
+
+  // ---- reconcile ------------------------------------------------------------
+  console.log('\n--- Reconciling workspace packages against npm ---')
   const all = listPackages()
   const publishable = all.filter((p) => !p.private)
   const skipped = all.filter((p) => p.private)
@@ -251,6 +337,7 @@ async function main () {
     return
   }
 
+  // ---- publish --------------------------------------------------------------
   const otp = OTP_ARG ? [OTP_ARG] : []
   const ordered = topological(publishable)
   const failures = []
@@ -261,8 +348,21 @@ async function main () {
     attempted = ordered.filter((p) => stranded.some((s) => s.name === p.name))
   } else {
     console.log(`\nAll local packages match npm. Bumping (${BUMP}) and publishing.`)
-    const res = sh(lernaBin(), lernaArgs(['version', BUMP, '--yes', '--no-push']), { stdio: 'inherit' })
-    if (res.status !== 0) throw new Error('lerna version failed')
+    // Markdown is excluded from change detection: the badge refresh that just
+    // ran touches every package README, and that must not version every package.
+    const res = sh(lernaBin(), lernaArgs([
+      'version', BUMP, '--yes', '--no-push', '--ignore-changes', '**/*.md'
+    ]), { stdio: ['inherit', 'pipe', 'pipe'] })
+    const versionOutput = `${res.stdout || ''}${res.stderr || ''}`
+    process.stdout.write(res.stdout || '')
+    process.stderr.write(res.stderr || '')
+    if (res.status !== 0) {
+      if (/no changed packages/i.test(versionOutput)) {
+        console.log('\nNo changed packages to version -- nothing to release.')
+        return
+      }
+      throw new Error('lerna version failed')
+    }
 
     const bumped = listPackages().filter((p) => !p.private)
     const changed = bumped.filter((p) => npmVersion(`${p.name}@${p.version}`) !== p.version)
@@ -300,7 +400,7 @@ async function main () {
     return
   }
 
-  if (!stranded.length && !NO_PUSH) {
+  if (!NO_PUSH) {
     console.log('\n>>> pushing commits and tags')
     const push = sh('git', ['push', '--follow-tags'], { stdio: 'inherit' })
     if (push.status !== 0) {
