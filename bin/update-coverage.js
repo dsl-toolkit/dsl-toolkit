@@ -5,7 +5,7 @@ const { linkerFile } = require('generic-text-linker')
 
 const projectRoot = path.join(__dirname, '../')
 const summaryPath = path.join(projectRoot, 'coverage/coverage-summary.json')
-const badgePath = path.join(projectRoot, 'coverage.svg')
+const badgePath = path.join(projectRoot, 'coverage', 'coverage.svg')
 
 const beginning = '<!--- coverage begin -->'
 const closing = '<!--- coverage end -->'
@@ -65,9 +65,11 @@ function badge (label, val, fill) {
 
 fs.writeFileSync(badgePath, badge('coverage', value, color(total.lines.pct)), { encoding: 'utf8' })
 
-// The README shows the badge (relative path: served from the repo, never
-// cached or proxied, so it can't lag behind what was just committed).
-const readmeValue = `![coverage: ${pct}% lines](./coverage.svg)`
+// The badge is published to the gh-pages branch and hotlinked from the Pages
+// URL, so one asset serves the repo README, npm and any other site.
+// `npm run coverage:publish` pushes it.
+const pagesBadgeUrl = 'https://dsl-toolkit.github.io/dsl-toolkit/coverage.svg'
+const readmeValue = `![coverage: ${pct}% lines](${pagesBadgeUrl})`
 
 const readmes = [
   path.join(projectRoot, 'README.md'),

@@ -5,7 +5,9 @@
   "scripts": {
     "test": "PROD=true npx nyc --reporter=lcov --reporter=clover --reporter=text --reporter=json-summary --cache npx lerna run test-common",
     "coverage:update": "node bin/update-coverage.js",
-    "coverage": "npm test && npm run coverage:update"
+    "coverage": "npm test && npm run coverage:update",
+    "coverage:publish": "node bin/publish-badge.js",
+    "coverage:release": "npm run coverage && npm run coverage:publish"
   },
   "author": "Imre Toth",
   "license": "MIT",
