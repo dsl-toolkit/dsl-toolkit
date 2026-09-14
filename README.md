@@ -2,7 +2,7 @@
 ### QA dsl-toolkit
 [![CI](https://github.com/dsl-toolkit/dsl-toolkit/actions/workflows/test.yml/badge.svg)](https://github.com/dsl-toolkit/dsl-toolkit/actions/workflows/test.yml)
 <!--- coverage begin -->
-Whole-project coverage: 81.21% stmts · 75.16% branch · 79.07% funcs · 80.62% lines
+![coverage: 80.6% lines](./coverage.svg)
 <!--- coverage end -->
 <!--- source qa rewrite end -->
 #Where are you?
