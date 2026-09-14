@@ -35,6 +35,9 @@
   ],
   "author": "Imre Toth",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit/issues"
+  },
   "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/demeter-di",
   "devDependencies": {
     "@babel/cli": "^7.19.3",

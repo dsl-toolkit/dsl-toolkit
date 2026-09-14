@@ -33,7 +33,7 @@
   "author": "Imre Toth",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dsl-toolkit/refresh-me/issues"
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit/issues"
   },
   "dependencies": {
     "bottlejs": "^2.0.0",

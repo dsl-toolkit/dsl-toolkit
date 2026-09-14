@@ -38,9 +38,9 @@
   "author": "Imre Toth",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dsl-toolkit/array-dsl/issues"
+    "url": "https://github.com/dsl-toolkit/dsl-toolkit/issues"
   },
-  "homepage": "https://github.com/dsl-toolkit/directory-fixture-provider",
+  "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/directory-fixture-provider",
   "dependencies": {
     "directory-exists": "^2.0.1",
     "dsl-framework": "^1.8.37",
