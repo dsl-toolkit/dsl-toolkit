@@ -1,8 +1,6 @@
 <!--- source qa rewrite begin -->
 ### QA dsl-toolkit
 [![CI](https://github.com/dsl-toolkit/dsl-toolkit/actions/workflows/test.yml/badge.svg)](https://github.com/dsl-toolkit/dsl-toolkit/actions/workflows/test.yml)
-[![Maintainability](https://api.codeclimate.com/v1/badges/a0e903d579b8ebebaf18/maintainability)](https://codeclimate.com/github/dsl-toolkit/dsl-toolkit/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/a0e903d579b8ebebaf18/test_coverage)](https://codeclimate.com/github/dsl-toolkit/dsl-toolkit/test_coverage)
 <!--- coverage begin -->
 Whole-project coverage: 81.21% stmts · 75.16% branch · 79.07% funcs · 80.62% lines
 <!--- coverage end -->
