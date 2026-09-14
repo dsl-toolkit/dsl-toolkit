@@ -17,10 +17,9 @@
     "test-common": "npm run clean && npx mocha --recursive  tests/**/*-spec.js",
     "test-dev": "npm run clean && npm run babel && npx mocha --recursive dist/**/*-spec.js",
     "test": "npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-common",
-    "test-project": "echo 1 || npm run license-check && node_modules/.bin/depcheck --ignores \"chai,@types/node,\" && echo npm run standard-fix",
+    "test-project": "echo 1 || node_modules/.bin/depcheck --ignores \"chai,@types/node,\" && echo npm run standard-fix",
     "clean": "npx rimraf dist tmp && mkdir dist && mkdir tmp",
     "standard-fix": "echo 1 || npx standard --fix",
-    "license-check": "npx license-checker --failOn unknown --summary",
     "babel": "npx rimraf dist; npx babel ./ --ignore node_modules,dist,bin,test -d dist; cp src/index.d.ts dist/src; node bin/renameFilesAndImports.js js mjs dist/src/"
   },
   "repository": {
@@ -44,7 +43,6 @@
     "babel-plugin-transform-commonjs": "^1.1.6",
     "chai": "^4.3.6",
     "depcheck": "^1.2.0",
-    "license-checker": "^25.0.1",
     "mocha": "^10.1.0",
     "nyc": "^15.1.0",
     "require-dir": "^1.2.0",

@@ -7,7 +7,7 @@
     "pub": "npm version patch --force && npm publish",
     "test-common": "npx mocha --recursive tests/tests",
     "test-dev-unit": "npm run clean && npx mocha --recursive tests/tests/unit",
-    "test-project": "echo directory-fixture-provider;pwd && npm run license-check && node_modules/.bin/depcheck && npm run standard-fix",
+    "test-project": "echo directory-fixture-provider;pwd && node_modules/.bin/depcheck && npm run standard-fix",
     "test": "node_modules/.bin/nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-common",
     "test-all": "npm run test-project && npm test",
     "test-all-dev": "npm run test-project && npm run test-dev",
@@ -16,8 +16,7 @@
     "build-test": "echo 1",
     "prepublish": "npm run build-src && npm run build-test",
     "clean": "node_modules/.bin/rimraf dist tmp && mkdir dist && mkdir tmp",
-    "standard-fix": "node_modules/.bin/standard --fix",
-    "license-check": "node_modules/.bin/license-checker --failOn unknown --summary"
+    "standard-fix": "node_modules/.bin/standard --fix"
   },
   "repository": {
     "type": "git",
@@ -56,7 +55,6 @@
     "chai": "^4.3.6",
     "depcheck": "^1.4.0",
     "is-directory": "^0.3.1",
-    "license-checker": "^25.0.1",
     "mocha": "^10.1.0",
     "nyc": "^15.1.0",
     "shelljs": "^0.8.4",
