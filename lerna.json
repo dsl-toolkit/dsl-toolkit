@@ -7,5 +7,10 @@
       "array-dsl"
     ]
   },
-  "version": "independent"
+  "version": "independent",
+  "command": {
+    "version": {
+      "excludeDependents": true
+    }
+  }
 }

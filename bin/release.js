@@ -420,9 +420,19 @@ async function main () {
     console.log(`\nAll local packages match npm. Bumping (${BUMP}) and publishing.`)
     // Markdown is excluded from change detection: the badge refresh that just
     // ran touches every package README, and that must not version every package.
-    const res = sh(lernaBin(), lernaArgs([
+    //
+    // Dependent propagation is disabled in lerna.json
+    // (command.version.excludeDependents). Lerna's project graph includes
+    // *devDependency* edges, so a real change in generic-text-linker would
+    // otherwise drag in cowlog, whose only link to it is a devDependency --
+    // publishing a release whose shipped code is identical. Note this is a
+    // lerna.json key, NOT a CLI flag: `lerna version --exclude-dependents` is
+    // rejected as an unknown argument (only exec/list/run/clean register it).
+    const versionArgs = [
       'version', BUMP, '--yes', '--no-push', '--ignore-changes', '**/*.md'
-    ]), { stdio: ['inherit', 'pipe', 'pipe'] })
+    ]
+
+    const res = sh(lernaBin(), lernaArgs(versionArgs), { stdio: ['inherit', 'pipe', 'pipe'] })
     const versionOutput = `${res.stdout || ''}${res.stderr || ''}`
     process.stdout.write(res.stdout || '')
     process.stderr.write(res.stderr || '')
