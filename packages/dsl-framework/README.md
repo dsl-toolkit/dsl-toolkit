@@ -6,450 +6,387 @@
 ![coverage: 95.0% lines](https://dsl-toolkit.github.io/dsl-toolkit/dsl-framework.svg)
 <!--- coverage end -->
 
-# Installation
+# dsl-framework
+
+**Labeled, order-free arguments and inspectable command sequences for JavaScript.**
+
+Describe a program by chaining commands, then interpret it once by calling the chain. Each command's name and arguments are recorded as data, so validation and extraction happen in one place instead of being spread across a ten-parameter function signature.
+
+Zero dependencies. Runs in Node and the browser. Commands are created dynamically — there is no schema, grammar file, or code generation step.
+
+## Why
+
+A function with ten parameters is hard to call correctly and hard to change:
+
+```js
+function createUser(firstName, lastName, email, age, address, city, country, role, permissions, preferences) {
+  // ...
+}
+
+createUser(
+  'John', 'Doe', 'john@example.com', 30,
+  undefined, undefined, 'USA', 'admin',
+  ['read', 'write'], { theme: 'dark' }
+)
+```
+
+Everything is positional. Optional arguments force `undefined` holes. The call site never says what any value is. Adding or reordering a parameter is a breaking change, and validation lives somewhere else entirely.
+
+dsl-framework replaces that with a chain where every value is labeled by the command that carries it, and hands you the finished call as plain data you can validate and read by name:
+
+```js
+createUser
+  .firstName('John')
+  .lastName('Doe')
+  .email('john@example.com')
+  .age(30)
+  .permissions('read', 'write')
+  ()
+```
+
+Order does not matter, optional arguments are simply omitted, and the callback that receives the program can validate the whole sequence before doing anything.
+
+## Install
+
 ```bash
 npm install dsl-framework --save
 ```
 
-# Module Support
-The dsl-framework supports both ESM (ECMAScript Modules) and CommonJS module systems, working seamlessly across client-side and server-side JavaScript environments. You can import the library using either syntax:
+Works with both module systems:
 
-```javascript
-// ESM 
-import dslFramework from "dsl-framework";
-
-// CommonJS
-const dslFramework = require("dsl-framework");
-```
-
-# dsl-framework: Evolve Your Code, Not Your Plans
-
-Ever felt bogged down by endless planning before writing a single line of code?  What if you could start simple and evolve your software naturally, adapting to new requirements without massive refactorings?
-
-**That's the power of dsl-framework.** It's a new way to build software that embraces change and lets you focus on what matters: **solving problems.** Forget rigid structures and complex dependency injection. With dsl-framework, you can code less, explore more, and build powerful applications with elegant, readable code.
-
-# Introduction to dsl-framework
-## Hello world
-
-Imagine you're constructing a sentence, word by word, or drawing a picture, stroke by stroke. That's similar to how dsl-framework works. Each command you chain adds to or modifies a piece of structured data, which we call returnArrayChunks. It's like a command tree where each node represents a command or its argument.
-
-```javascript
-// ESM 
-import dslFramework from "dsl-framework";
+```js
+// ESM
+import dslFramework from 'dsl-framework'
 
 // CommonJS
-const dslFramework = require("dsl-framework");
-
-const defaultFactory = dslFramework();
-
-const result = defaultFactory().Hello.world();
-console.log(result.data.returnArrayChunks); // [['Hello'], ['world']]
+const dslFramework = require('dsl-framework')
 ```
 
-Adding Parameters to DSL Chain Functions and Dynamic Command Creation
-A key feature of dsl-framework is its ability to accept parameters directly within the chain of commands. This flexibility allows you to customize commands or add additional data points as needed, enhancing the expressiveness of your DSL. Moreover, you can also introduce new commands dynamically, without needing to predefine them in your code. Here's an example where we both add parameters to functions in the chain and create a new command on-the-fly:
+## Quick start
 
+```js
+const dslFramework = require('dsl-framework')
 
-```javascript
+// 1. Create a factory.
+const dsl = dslFramework()
 
-// ESM 
-import dslFramework from "dsl-framework";
+// 2. Define a language. The callback receives (error, program) and runs last.
+const createUser = dsl((error, program) => {
+  const { command, arguments: args } = program
 
-// CommonJS
-const dslFramework = require("dsl-framework");
+  // Validate the sequence rather than a list of positional parameters.
+  if (!command.hasAnd('firstName', 'lastName', 'email')) {
+    throw new Error('firstName, lastName and email are required')
+  }
 
-const defaultFactory = dslFramework();
+  // Read the arguments back by command name, in any order.
+  const user = args.object(
+    ['firstName', 'lastName', 'email', 'age', 'role', 'permissions'],
+    ['firstArgument', 'firstArgument', 'firstArgument', 'firstArgument', 'firstArgument', 'allEntries']
+  )
 
-// Adding a new command 'greet' dynamically
-defaultFactory().greet('world', '!').with('enthusiasm');
+  return {
+    ...user,
+    role: user.role || 'user',
+    permissions: user.permissions.flat()
+  }
+})
 
-console.log(defaultFactory().greet('world', '!').with('enthusiasm').data.returnArrayChunks);
-// [['greet', 'world', '!'], ['with', 'enthusiasm']]
+// 3. Describe a user, then run the callback by calling the chain with no arguments.
+const user = createUser
+  .firstName('John')
+  .lastName('Doe')
+  .email('john@example.com')
+  .age(30)
+  .permissions('read', 'write')
+  ()
+
+console.log(user)
 ```
 
-### Managing Complexity: The Problem with Long Parameter Lists
-
-Imagine a function with a growing number of parameters:
-```JavaScript
-
-function createUser(firstName, lastName, email, age, address, city, country, role, permissions, ...) {
-  // ... complex logic ...
+```
+{
+  firstName: 'John',
+  lastName: 'Doe',
+  email: 'john@example.com',
+  age: 30,
+  role: 'user',
+  permissions: [ 'read', 'write' ]
 }
 ```
 
-It quickly becomes difficult to remember the order of parameters and what each one represents. Refactoring is a nightmare!
+Two details worth noticing: `permissions` uses `allEntries`, so `('read', 'write')` comes back as an array; `role` was never given, so it falls back to `false` and `||` turns that into `'user'`.
 
-dsl-framework offers a better way:
-```JavaScript
-// ESM 
-import dslFramework from "dsl-framework";
+## Mental model
 
-// CommonJS
-const dslFramework = require("dsl-framework");
+There are only three moving parts.
 
-const defaultFactory = dslFramework();
+```
+  dslFramework()          dsl(callback)              chain.a.b('c')()
+  ───────────────         ──────────────             ─────────────────
+  a factory               a language instance        describe, then run
+                          (grammar + callback)       |
+                                                     |
+  every chained command appends one chunk:  [ 'b', 'c' ]
+                                                     |
+  the terminal () hands the whole program to the callback
+```
 
-const userCreator = defaultFactory((err, data) => {
-  if (err) {
-    console.error('Error creating user:', err);
-  } else {
-    // Extract all user data into a single object.
-    // The keys in 'user' will be the same as the command names.
-    // We can add custom logic later to validate or transform the data
-    // as needed (see examples in later sections).
-    const user = data.arguments.object(
-      ['firstName', 'lastName', 'email', 'age', 'address', 'city', 'country', 'role', 'permissions', 'preferences']
-    );
+A chain builds an ordered list of chunks. Each chunk is `[commandName, ...arguments]`. Property access names a command; calling it supplies that command's arguments.
 
-    user.permissions = user.permissions.flat(); // Flatten permissions to get a simple array
+```js
+const dsl = dslFramework()
 
-    // Handle optional fields and defaults directly in the object creation
-    if (!user.address) {
-      user.address = undefined; 
-    }
-    if (!user.city) {
-      user.city = undefined;
-    }
-    if (!user.role) {
-      user.role = 'user';
-    }
-    if (!user.preferences) {
-      user.preferences = {};
-    }
-
-    console.log('Created user:', user);
-    // ... further processing, e.g., save to database ...
-  }
-});
-
-userCreator
-  .createUser
+const program = dsl()
   .firstName('John')
   .lastName('Doe')
-  .email('[email address removed]')
-  .age(30)
-  .address('123 Main St') // Optional
-  .city('Anytown') // Optional
-  .country('USA')
-  .role('admin') // Optional
-  .permissions('read', 'write') // Multiple permissions
-  .preferences({ theme: 'dark', notifications: { email: true, sms: false } }) // Complex object
-  ();
-  
+  .email('john@example.com')
+  ()
+
+console.log(program.data.returnArrayChunks)
+// [ [ 'firstName', 'John' ], [ 'lastName', 'Doe' ], [ 'email', 'john@example.com' ] ]
+
+console.log(program.data.returnArray())
+// [ 'firstName', 'John', 'lastName', 'Doe', 'email', 'john@example.com' ]
 ```
 
-Now, each piece of data is clearly labeled, making the code much easier to read and understand. Adding or removing fields is trivial. The order doesn't matter, and you can clearly see the relationships between data elements. This approach also allows you to set default parameters or perform conditional logic within the chain itself.
+Calling the chain with **no arguments** is the terminal step. What it returns depends on whether the language instance was given a callback:
 
-# Working with Data
-While you can directly interact with returnArrayChunks for simple tasks, 
-dsl-framework provides utilities to help you process, filter, and analyze the data 
-without having to manually sift through raw arrays. Here’s why:
+| Instance | Terminal `()` returns |
+| --- | --- |
+| `dsl(callback)` | whatever `callback` returns (or a `Promise` if the callback is `async`) |
+| `dsl()` (no callback) | the program object itself |
 
-* Abstraction: Direct manipulation of the raw array can be error-prone and less intuitive, particularly for complex data structures. The framework offers methods that abstract away these complexities.
-* Ease of Use: These utility functions make it easier to perform common operations like filtering, querying, or extracting data based on certain conditions.
-* Consistency: Using these methods ensures consistency in how data is handled across your application, making your code more maintainable.
+Nothing in the chain executes your domain logic; commands only accumulate. All behavior lives in the callback.
 
-## Examples of Data Processing:
-### Accessing and Flattening Data:
+## API reference
 
-```javascript
-const result = defaultFactory().Hello.world().data;
-console.log(result.returnArray()); // ['Hello', 'world']
+### Creating a language
+
+```js
+const dsl = dslFramework()      // factory
+const users = dsl(callback)     // independent language instance
+const orders = dsl(callback)    // a separate, independent instance
 ```
 
-Filtering Commands:
+Every call to the factory creates an isolated instance with its own accumulated state. Instances do not share data.
 
-```javascript
-const commandData = defaultFactory().Hello.world().add('more')().data;
-const hasHello = commandData.command.has('Hello'); // true
-const onlyHelloCommands = commandData.command.get('Hello'); // [['Hello']]
+The callback has the signature `(error, program)`. The `error` argument is always `0` — see [Limitations](#limitations-and-non-goals).
+
+### Chaining commands
+
+```js
+users.firstName('John')             // command with one argument
+users.permissions('read', 'write')  // command with several arguments
+users.expired                       // command with no arguments
+users.a.b.c()                       // several no-argument commands
+users('admin')                      // a bare, unnamed chunk
 ```
 
-Querying Complex Structures:
+Any property name is a valid command. There is no predefined command list, so commands can be introduced on the fly and names are matched as plain strings.
 
-```javascript
-const complexData = defaultFactory()
-  .Task.create('Code review', { due: '2023-10-05' })
-  .Task.create('Deploy', { due: '2023-10-07' })()
-  .data;
+### The program object
 
-// Function to check if 'Task' followed by whatever command exists in the command sequence
-const processTaskCreation = (data) => {
-  let tasks = [];
+The callback receives, and a callback-less terminal returns, a program object with these members:
 
-  for (let i = 0; i < data.returnArrayChunks.length - 1; i++) {
-    if (data.returnArrayChunks[i][0].toLowerCase() === 'task') {
-      tasks.push(data.returnArrayChunks[i + 1]);
-    }
+| Member | Description |
+| --- | --- |
+| `program.data.returnArrayChunks` | The chunks: `[['a'], ['b', 'c']]` |
+| `program.data.returnArray()` | All chunks flattened into one array |
+| `program.data.repeate.me(instance)` | Replays this program into another instance |
+| `program.command` | Query API over the chunks (below) |
+| `program.arguments(name, mode, default)` | Reads one command's arguments |
+| `program.arguments.object(names, modes?, defaults?)` | Reads several commands into an object |
+| `program.commandSequence()` | Generator of `{ command, arguments }`, in order |
+| `program.getFrom` | Low-level container access |
+
+### Querying commands
+
+Given:
+
+```js
+const program = dsl().a.b('c').d('e', 'f').g('h', 'i').g('j', 'k')()
+```
+
+| Call | Result |
+| --- | --- |
+| `program.command.has('g')` | `true` |
+| `program.command.has('nope')` | `false` |
+| `program.command.get('g')` | `[['g', 'h', 'i'], ['g', 'j', 'k']]` |
+| `program.command.getArguments('b')` | `[['c']]` — arguments only |
+| `program.command.has.more('a', 'nope')` | `[true, false]` |
+| `program.command.has.and('a', 'g')` | `true` — all present |
+| `program.command.has.or('nope', 'g')` | `true` — at least one present |
+| `program.command.has.xor('a', 'nope')` | `1` — truthy when some are present and some are not |
+| `program.command.has.object('a', 'nope')` | `{ a: true, nope: false }` |
+| `program.command.get.more('g')` | `[[['g', 'h', 'i'], ['g', 'j', 'k']]]` — one `get` per requested name |
+| `program.command.get.object('g')` | `{ g: [['g', 'h', 'i'], ['g', 'j', 'k']] }` |
+
+Aliases exist without the dots: `hasMore`, `hasAnd`, `hasOr`, `hasXor`, `hasObject`, `getMore`, `getObject`.
+
+`has.and` and `has.or` return booleans. `has.xor` returns a number (the count of absent commands), which is truthy only when the commands are mixed — treat it as truthy/falsy rather than a strict boolean.
+
+### Reading arguments
+
+`arguments(name, mode, defaultValue)`. The mode decides what is extracted when a command appears more than once.
+
+```js
+const program = dsl().g('h', 'i').g('j', 'k')()
+```
+
+| Mode | Result |
+| --- | --- |
+| `'allEntries'` (default) | `[['h', 'i'], ['j', 'k']]` |
+| `'firstEntry'` | `['h', 'i']` |
+| `'lastEntry'` | `['j', 'k']` |
+| `'firstArgument'` | `'h'` |
+| `'lastArgument'` | `'j'` |
+| `'boolean'` | `true` — presence only, the value is ignored |
+
+If the command is absent, `defaultValue` is returned (default `false`).
+
+`arguments` also accepts an array of names and returns an array of results, and `.object()` reads several commands into an object:
+
+```js
+program.arguments.object(
+  ['g', 'missing'],
+  ['lastEntry', 'firstArgument'],
+  [false, 'fallback']
+)
+// { g: [ 'j', 'k' ], missing: 'fallback' }
+```
+
+### commandSequence
+
+`commandSequence()` is a generator that yields every chunk in order, as `{ command, arguments }`. Use it for rules that depend on ordering or on how many times a command appears.
+
+```js
+;[...program.commandSequence()]
+// [
+//   { command: 'a', arguments: [] },
+//   { command: 'b', arguments: [ 'c' ] },
+//   { command: 'd', arguments: [ 'e', 'f' ] },
+//   { command: 'g', arguments: [ 'h', 'i' ] },
+//   { command: 'g', arguments: [ 'j', 'k' ] }
+// ]
+```
+
+## Recipes
+
+### Enforcing an order
+
+```js
+const migrate = dsl((error, program) => {
+  const steps = [...program.commandSequence()]
+  const created = steps.findIndex(step => step.command === 'createTable')
+  const inserted = steps.findIndex(step => step.command === 'insert')
+
+  if (created === -1 || inserted === -1 || created > inserted) {
+    throw new Error('createTable must come before insert')
   }
 
-  return tasks;
-};
-
-const createdTasks = processTaskCreation(complexData);
-console.log('Created Tasks:', createdTasks); 
-const complexData = defaultFactory()
-  .Task.create('Code review', { due: '2023-10-05' })
-  .Task.create('Deploy', { due: '2023-10-07' })()
-  .data;
-
-
-const createdTasks = processTaskCreation(complexData);
-console.log('Created Tasks:', createdTasks); 
-// The data now looks like: 
-//   [
-//     ['create', 'Code review', { due: '2023-10-05' }], 
-//     ['create', 'Deploy', { due: '2023-10-07' }]
-//   ]
-```
-
-### Embedding Processing in Callbacks
-
-Using callbacks for data processing:
-
-Allows for immediate execution post-DSL chain.
-Keeps DSL chain clean, processing logic encapsulated.
-Can handle errors inline with data generation.
-
-Here's how to use callbacks:
-
-
-```javascript
-const { dslFramework } = require('dsl-framework');
-const defaultFactory = dslFramework();
-
-// Function to check if 'Task' followed by whatever command exists in the command sequence
-const processTaskCreation = (data) => {
-  let tasks = [];
-
-  for (let i = 0; i < data.returnArrayChunks.length - 1; i++) {
-    if (data.returnArrayChunks[i][0].toLowerCase() === 'task') {
-      tasks.push(data.returnArrayChunks[i + 1]);
-    }
-  }
-
-  return tasks;
-};
-
-// Using callbacks to process data directly within the DSL chain
-defaultFactory((e, data) => {
-  const createdTasks = processTaskCreation(data);
-  console.log('Created Tasks:', createdTasks); 
-  // The data now looks like: 
-  //   [
-  //     ['create', 'Code review', { due: '2023-10-05' }], 
-  //     ['create', 'Deploy', { due: '2023-10-07' }]
-  //   ]
+  return steps.map(step => ({ step: step.command, args: step.arguments }))
 })
-.Task.create('Code review', { due: '2023-10-05' })
-.Task.create('Deploy', { due: '2023-10-07' })();
 
+migrate.createTable('users').insert('users', { id: 1 })()
+// [
+//   { step: 'createTable', args: [ 'users' ] },
+//   { step: 'insert', args: [ 'users', { id: 1 } ] }
+// ]
 ```
 
-These examples showcase how you can work with the data provided by the DSL without directly manipulating the returnArrayChunks. This approach leverages the power of the framework to make data processing more intuitive and aligned with your domain logic.
+### Asynchronous work
 
-# Asynchronous Operations in DSL Chains and returning values from callbacks
+An `async` callback makes the terminal call return a promise, so the chain can be awaited directly. Because the callback is the only place work happens, the chain itself stays cheap to build.
 
-One of the key features of dsl-framework is the ability to handle asynchronous operations within the DSL chain. Below is an example demonstrating how you can integrate asynchronous callbacks into your DSL workflow. This method is particularly useful when your DSL commands need to wait for external resources or perform time-consuming operations. Importantly, this approach also allows for returning values from callback functions, providing a way to pass processed data back to the caller. Whether the callback is asynchronous or not, you can return any value, but in an async context, this is particularly useful for chaining further operations or making decisions based on the returned data.
+```js
+const fetchUser = dsl(async (error, program) => {
+  const id = program.arguments('id', 'firstArgument')
+  const response = await fetch(`https://example.com/users/${id}`)
+  return response.json()
+})
 
-
-```javascript
-// ESM 
-import dslFramework from "dsl-framework";
-
-// CommonJS
-const dslFramework = require("dsl-framework");
-
-const defaultFactory = dslFramework();
-
-const myAsyncDsl = defaultFactory(async (error, data) => {
-  if (error) {
-    console.error('Error in DSL processing:', error);
-    return; // Since we're not in a Promise context, we can't use resolve directly
-  } else {
-    // Simulate some async operation with data
-    await new Promise(r => setTimeout(r, 1000)); // Wait for 1 second
-    console.log('Data processed asynchronously');
-    
-    // Join the returnArray to get "Hello world" string
-    const result = data.returnArray().join(' ');
-    console.log('Returning:', result);
-    return result; // Return the joined string
-  }
-});
-
-// Await the DSL chain execution and log the returned string
-const result = await myAsyncDsl.Hello.world();
-console.log('Processed result:', result); // This will log "Hello world"
+const profile = await fetchUser.id(42)()
 ```
 
-# Using Conditional Commands in DSL Chains
-Building on the asynchronous operations, dsl-framework also allows for conditional command execution within the DSL chain. This example introduces the use of a hypothetical capital command to demonstrate how you can dynamically alter the output based on the presence of specific commands in the chain. Here, we'll check if the capital command exists to decide whether to return the result in all capital letters or not. This approach showcases the flexibility of DSLs in processing commands conditionally, based on the structure of the command sequence.
+### Reusing a program as a template
 
+`repeate.me` replays a finished program into a fresh instance, which you can then extend. This is how you build a base configuration and specialize it.
 
-```javascript
-// ESM 
-import dslFramework from "dsl-framework";
+```js
+const template = dsl((e, program) => program).from('users').where('active', true)()
 
-// CommonJS
-const dslFramework = require("dsl-framework");
+const extended = template.data.repeate.me(dsl((e, program) => program))
+  .orderBy('name')
+  ()
 
-const defaultFactory = dslFramework();
-
-const myAsyncDsl = defaultFactory(async (error, data) => {
-  if (error) {
-    console.error('Error in DSL processing:', error);
-    return; // Since we're not in a Promise context, we can't use resolve directly
-  } else {
-    // Check if 'capital' command is in the chain
-    if (data.command.has('capital')) {
-      const result = data.returnArray().join(' ').toUpperCase();
-      console.log('Returning in CAPITALS:', result);
-      return result; // Return the capitalized string
-    } else {
-      console.log('No capital command found, returning nothing.');
-      return ''; // Return an empty string or null if you prefer
-    }
-  }
-});
-
-// First scenario without 'capital'
-const result1 = await myAsyncDsl.Hello.world();
-console.log('Result without capital:', result1); // This will log an empty string or nothing
-
-// Second scenario with 'capital'
-const result2 = await myAsyncDsl.Hello.world.capital();
-console.log('Result with capital:', result2); // This will log "HELLO WORLD"
+extended.data.returnArrayChunks
+// [ [ 'from', 'users' ], [ 'where', 'active', true ], [ 'orderBy', 'name' ] ]
 ```
 
-## Different Kinds of Conditionals in DSL
-The dsl-framework provides several methods for conditional checks within the DSL chain:
+The target instance may be reused to produce independent copies, and replays can themselves be replayed.
 
-has: Checks if a specific command or property exists in the chain. 
-hasMore: Similar to has, but can check for multiple commands at once, returning an array of booleans indicating the presence of each command.
-hasAnd: Checks if all specified commands or properties are present in the chain. Useful for ensuring multiple conditions are met.
-hasOr: Checks if at least one of the specified commands or properties is present in the chain. Helpful for scenarios where any one condition can trigger an action.
-hasXor: Checks for the exclusive presence of one command or property from a list, ensuring only one exists, not multiple.
+## Limitations and non-goals
 
-Example: Using hasAnd for Complex Conditions
-Imagine you are creating a DSL for managing tasks in a project management tool. You might want to check if both a Task and a Deadline command have been used in sequence to confirm that a task has been properly scheduled:
+These are deliberate or known properties. Knowing them will save you time.
 
-```javascript
-// ESM 
-import dslFramework from "dsl-framework";
+**Chains are mutable cursors, not values.** Property access appends a command immediately, so a "prefix" cannot be branched:
 
-// CommonJS
-const dslFramework = require("dsl-framework");
+```js
+const chain = dsl((e, program) => program).Alpha
+const left = chain.Beta
+const right = chain.Gamma
 
-const defaultFactory = dslFramework();
-
-const taskManagerDsl = defaultFactory(async (error, data) => {
-  if (error) {
-    console.error('Error in task management DSL:', error);
-    return;
-  } else {
-    if (data.command.hasAnd('Task', 'Deadline')) {
-      const taskDetails = data.returnArray().join(' - ');
-      console.log('Task scheduled with deadline:', taskDetails);
-      return taskDetails; // Return details of the scheduled task
-    } else {
-      console.log('Task not fully scheduled, missing either Task or Deadline command.');
-      return ''; // Indicate that the task wasn't fully scheduled
-    }
-  }
-});
-
-// Example usage
-const result = await taskManagerDsl.Task('Write Report').Deadline('2023-12-31')();
-console.log('Task management result:', result); // Logs the task details if both commands are present
+left === right            // true — same object
+left().data.returnArrayChunks
+// [ [ 'Alpha' ], [ 'Beta' ], [ 'Gamma' ] ] — all three landed in one chain
 ```
 
-In this use case, hasAnd ensures that both "Task" and "Deadline" commands are in the sequence before proceeding with task scheduling. This demonstrates how conditional logic can be used to validate complex command sequences or ensure that all necessary components for an operation are present.
+Even inspecting a property counts as using a command. Build a fresh chain from the factory for each program instead.
 
-# Command Sequences
-In this example, we'll create different DSL chains to demonstrate how commands can be validated based on their presence, order, and parameters. We'll define four checks:
+**A chain is single-use once it has a callback.** Terminating an instance that was created with a callback resets its accumulator, so a half-built chain cannot be resumed:
 
- - Check for 'hello' and 'world' presence
- - Check if there are only 'hello' and 'world'
- - Check if any command has more than one argument
- - Check if 'hello' comes before 'world'
+```js
+const chain = dsl((e, program) => program).Step1('a')
 
-```javascript
-// ESM 
-import dslFramework from "dsl-framework";
+chain.Step2('b')().data.returnArrayChunks
+// [ [ 'Step1', 'a' ], [ 'Step2', 'b' ] ]
 
-// CommonJS
-const dslFramework = require("dsl-framework");
-
-const defaultFactory = dslFramework();
-
-// Check if 'hello' and 'world' are present
-const hasHelloAndWorld = (data) => data.command.hasAnd('hello', 'world');
-
-// Check if only 'hello' and 'world' are used
-const onlyHelloAndWorld = (data) => {
-  const commands = data.commandSequence();
-  return Array.from(commands).every(cmd => ['hello', 'world'].includes(cmd.command)) && 
-         Array.from(commands).length === 2;
-};
-
-// Check if any command has more than one argument
-const noCommandWithMultipleArgs = (data) => {
-  for (const cmd of data.commandSequence()) {
-    if (cmd.arguments.length > 1) return false;
-  }
-  return true;
-};
-
-// Check if 'hello' is before 'world'
-const helloBeforeWorld = (data) => {
-  const commands = Array.from(data.commandSequence());
-  const helloIndex = commands.findIndex(cmd => cmd.command === 'hello');
-  const worldIndex = commands.findIndex(cmd => cmd.command === 'world');
-  return helloIndex !== -1 && worldIndex !== -1 && helloIndex < worldIndex;
-};
-
-const validateDSL = defaultFactory((error, data) => {
-  if (error) {
-    console.error('Error in DSL validation:', error);
-    return;
-  }
-
-  if (!hasHelloAndWorld(data)) {
-    console.log('Validation failed: Missing hello or world');
-    return false;
-  }
-  if (!onlyHelloAndWorld(data)) {
-    console.log('Validation failed: More than hello and world used');
-    return false;
-  }
-  if (!noCommandWithMultipleArgs(data)) {
-    console.log('Validation failed: Command with multiple arguments found');
-    return false;
-  }
-  if (!helloBeforeWorld(data)) {
-    console.log('Validation failed: World before Hello');
-    return false;
-  }
-
-  console.log('Validation passed:', data.returnArray().join(' '));
-  return true;
-});
-
-// Testing different scenarios
-console.log('Scenario 1:');
-await validateDSL.hello.world(); // Should pass
-
-console.log('\nScenario 2:');
-await validateDSL.hello.extra.world(); // Should fail due to extra command
-
-console.log('\nScenario 3:');
-await validateDSL.hello('arg1', 'arg2').world(); // Should fail due to multiple arguments
-
-console.log('\nScenario 4:');
-await validateDSL.world.hello(); // Should fail due to order
+chain.Step3('c')().data.returnArrayChunks
+// [ [ 'Step3', 'c' ] ] — the earlier chunks are gone
 ```
 
-In this example, we've created a DSL chain where we validate various aspects of the command sequence in the callback function. Each validation function checks for different criteria, demonstrating how you can chain commands and validate their sequence, presence, and parameters in a way that mirrors monadic behavior by maintaining state and context across transformations.
+Create a new instance per program, or use `repeate.me` to start from a template.
 
+**Any property is a command.** There is no way to tell a real command from a typo, and no autocomplete or static checking: `chain.usrName('x')` is a valid command named `usrName`. This also means protocol-style members cannot be detected on a chain.
 
+**The error argument is always `0`.** The callback signature is `(error, program)` for familiarity, but no failure is ever reported through it, and there is no short-circuit. Throw from the callback to signal failure.
+
+**The `has(name, onTrue, onFalse)` callback form returns `undefined`.** The callbacks are invoked, but the boolean result is not returned. Prefer the plain `has(name)` form.
+
+**`noPromises()` and `noTriggerEndOfExecution()` are not implemented.** They are left-over names from earlier designs. Because every property looks callable, they appear to work but do nothing useful.
+
+**It is not a parser or a grammar.** There is no text syntax and no automatic validation. The framework builds and inspects command sequences; enforcing structure is your callback's job.
+
+**It is not a lawful monad.** It is Writer-shaped and free-monad-adjacent: chaining accumulates a description and the terminal call interprets it. But there is no `of`/`pure`, no `chain`/`flatMap` that takes a function of the accumulated value, no immutability, and no error channel — so the monad laws do not apply. If you need lawful `Option`/`Either`/`Task` or typed effects, use [Effect](https://github.com/Effect-TS/effect), [fp-ts](https://github.com/gcanti/fp-ts), or [neverthrow](https://github.com/supermacro/neverthrow) instead.
+
+### When this is a good fit
+
+- You have functions or builders with many optional, order-insensitive arguments.
+- You want one place to validate a call before it executes.
+- You want the call itself to be inspectable data (logging, replay, templating).
+- You want negligible setup and no schema.
+
+### When it is not
+
+- You need compile-time guarantees about which commands exist.
+- You need typed errors, cancellation, concurrency, or retries.
+- You need to parse a textual DSL.
+
+## TypeScript
+
+Types ship with the package. The chain is typed as an indexable callable (`Core`), so dynamic commands type-check but are not statically verified, and there is no autocomplete for command names. `DslState`, `ast`, and `ReturnCallback` describe the program object and the callback.
+
+## License
+
+MIT © Imre Toth
