@@ -9,18 +9,25 @@
 
 This project is a monorepo, giving home for multiple projects depending on each
 other. We use [lerna](https://github.com/lerna/lerna) to manage the releases
-and the packages efficiently. Each of the project it hosts usable meant ot be
-**useful** in their area, are listed below.
+and the packages efficiently. Each of the projects it hosts is meant to be
+**useful** in its area, and they are listed below.
 
 # What projects belong to here?
 
- - **[dsl-toolkit](https://github.com/311ecode/dsl-toolkit/tree/master/packages/dsl-toolkit)** Development time logging for NodeJs developers
- - [directory-fixture-provider](https://github.com/311ecode/dsl-toolkit/tree/master/packages/directory-fixture-provider) 
-Provides directories for testing. 
- - [generic-text-linker](https://github.com/311ecode/dsl-toolkit/tree/master/packages/generic-text-linker) 
-Generic text linker for NodeJs. 
- - **[dsl-framework](https://github.com/311ecode/dsl-toolkit/tree/master/packages/dsl-framework)**
-Currying to create DSLs 
+ - **[dsl-framework](https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/dsl-framework)**
+The chaining engine. Describe a program as a labeled command sequence, then
+interpret it once with a callback.
+ - **[demeter-di](https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/demeter-di)**
+A dependency-injection container **built on dsl-framework**. Its `define`,
+`compose` and `create` chains are folded into a container, making it the worked
+example of a second interpreter over the engine.
+ - **[cowlog](https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/cowlog)**
+Development time logging for NodeJs developers. Its logging command DSL is
+built on dsl-framework.
+ - **[generic-text-linker](https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/generic-text-linker)**
+Generic text linker for NodeJs.
+ - **[directory-fixture-provider](https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/directory-fixture-provider)**
+Provides directories for testing. Built on dsl-framework.
 
 # Motivation
 Our aim is to provide tools that has not been released for developers, 

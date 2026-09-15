@@ -326,6 +326,39 @@ extended.data.returnArrayChunks
 
 The target instance may be reused to produce independent copies, and replays can themselves be replayed.
 
+## Built on this engine
+
+Three packages in this repo build their own languages on dsl-framework, in three different domains, with no engine changes:
+
+| Package | Its command vocabulary | Reads the program back with |
+| --- | --- | --- |
+| [cowlog](https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/cowlog) | Logging: `lol`, `mute`, `forget`, `die`, `keys`, `return`, … | `command.has`, `command.getArguments` |
+| [demeter-di](https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/demeter-di) | Dependency injection: `define`, `compose`, `create` | `arguments('compose', 'allEntries', [])` |
+| [directory-fixture-provider](https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/directory-fixture-provider) | Fixture builds: `permanent`, `noFileReads` | `command.has`, `command.getArguments`, `data.returnArray()` |
+
+None of those command names exist in this package. That is the point: the vocabulary belongs to the consumer, and dsl-framework only carries the sequence until an interpreter folds it. demeter-di's bootstrap is one line:
+
+```js
+module.exports.containerFactoryFactory = () =>
+  require('dsl-framework')()((e, program) => buildContainer(program))
+```
+
+### What the consumers reveal
+
+Across all three, the API in real use is `command.has`, `command.getArguments`, `arguments(name, mode, default)`, `data.returnArray()` and `data.returnArrayChunks`. None of them uses `command.get`, `commandSequence()`, `get.more`, `arguments.object` or `repeate.me`, so the presence/argument queries are the load-bearing surface, while the ordered-validation and template-replay recipes elsewhere in this document are not yet proven by adoption.
+
+Only cowlog uses the engine safely: it holds the factory and creates a fresh instance per program.
+
+```js
+const factory = require('dsl-framework').noPromoises()
+// ...
+const run = factory((e, program) => { /* ... */ })   // a fresh chain, every call
+```
+
+demeter-di exposes `containerFactory` (one shared chain) alongside `containerFactoryFactory()` (a fresh chain per build), and directory-fixture-provider exports one shared chain directly — so there an abandoned build leaks into the next one. Both are the single-use and mutable-cursor trade-off from [Limitations](#limitations-and-non-goals) turned into public API shape. The rule that avoids all of it: **hold the factory, not the chain.**
+
+One note if you change the engine: cowlog and demeter-di call `noPromoises()`, which this package does not implement. (This package's own test spells it `noPromises`.) The catch-all Proxy returns a chain for any name, so both calls appear to work. Two published packages therefore rely on accidental Proxy behaviour, and tightening the Proxy — for example to reserve `Symbol` keys for a protocol — is a breaking change, not an internal cleanup.
+
 ## Limitations and non-goals
 
 These are deliberate or known properties. Knowing them will save you time.
