@@ -40,6 +40,18 @@
  * registry, so every lookup retries, and "cannot publish over the previously
  * published versions" is treated as "already published", not as a failure.
  *
+ * DOCS-ONLY RELEASES:
+ * Markdown is excluded from lerna's change detection because step 2 rewrites the
+ * coverage badge inside every package README, and one badge digit changing must
+ * not version every package. Excluding *all* markdown, though, would make
+ * authored documentation invisible to the release forever. So a package whose
+ * markdown changed outside the generated coverage block is added back with
+ * `lerna version --force-publish`. Badge-only changes are still ignored.
+ *
+ * The exclusion has to stay path-based (not "did badges change this run"):
+ * a badge commit from an earlier release is still inside the tag..HEAD range,
+ * so it would resurface as a change on every later run.
+ *
  * Usage:
  *   npm run release                 full pipeline
  *   npm run release:check           read-only report, runs nothing
@@ -228,7 +240,10 @@ function verifyAll (pkgs) {
   return missing
 }
 
-/** Stage + commit just the badge-bearing READMEs, so lerna version sees a clean tree. */
+/**
+ * Stage + commit just the badge-bearing READMEs, so lerna version sees a clean
+ * tree. Returns true when a commit was actually made.
+ */
 function commitBadgeRefresh () {
   const readmes = [
     'README.md',
@@ -241,12 +256,122 @@ function commitBadgeRefresh () {
   const staged = sh('git', ['diff', '--cached', '--quiet'])
   if (staged.status === 0) {
     console.log('badges unchanged, nothing to commit')
-    return
+    return false
   }
   console.log('\n===== commit badge refresh =====')
   const commit = sh('git', ['commit', '--quiet', '-m', 'chore(coverage): refresh badges'], { stdio: 'inherit' })
   if (commit.status !== 0) throw new Error('git commit of badge refresh failed')
   console.log('committed badge refresh')
+  return true
+}
+
+/**
+ * Remove a marker-delimited generated block (markers included). Content before
+ * and after is kept; an unterminated block is left alone.
+ */
+function stripBlock (text, begin, end) {
+  let out = ''
+  let rest = text
+  while (rest.length) {
+    const i = rest.indexOf(begin)
+    if (i < 0) break
+    out += rest.slice(0, i)
+    const j = rest.indexOf(end, i + begin.length)
+    if (j < 0) {
+      rest = rest.slice(i)
+      break
+    }
+    rest = rest.slice(j + end.length)
+  }
+  return out + rest
+}
+
+/**
+ * Blank out the blocks the release pipeline generates, so a badge refresh is
+ * not mistaken for an authored documentation change. The coverage badge is the
+ * only generated markdown; update-coverage.js rewrites exactly this block.
+ */
+function stripGeneratedBlocks (text) {
+  return stripBlock(text, '<!--- coverage begin -->', '<!--- coverage end -->')
+}
+
+/** Markdown files tracked under a package directory at a given ref. */
+function markdownFilesAt (ref, pkgRel) {
+  const res = sh('git', ['ls-tree', '-r', '--name-only', ref, '--', pkgRel])
+  if (res.status !== 0) return []
+  return (res.stdout || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((file) => /\.md$/i.test(file))
+}
+
+/** File content at a ref, or '' when the path does not exist there. */
+function fileAt (ref, file) {
+  const res = sh('git', ['show', `${ref}:${file}`])
+  return res.status === 0 ? (res.stdout || '') : ''
+}
+
+/**
+ * The package's last release tag. Versioning is independent, so tags are
+ * named `<package>@<version>`.
+ */
+function lastTagFor (name) {
+  const res = sh('git', ['describe', '--tags', '--abbrev=0', '--match', `${name}@*`, 'HEAD'])
+  return res.status === 0 ? (res.stdout || '').trim() : null
+}
+
+/**
+ * True when a package's markdown changed since its last release tag outside the
+ * generated coverage block -- i.e. somebody edited the docs. Badge refreshes are
+ * stripped, so they never count. Packages without a release tag are left to
+ * lerna's normal new-package handling.
+ */
+function hasAuthoredDocsChange (pkg) {
+  const tag = lastTagFor(pkg.name)
+  if (!tag) return false
+  const pkgRel = path.relative(ROOT, pkg.location).split(path.sep).join('/')
+  const files = new Set([
+    ...markdownFilesAt(tag, pkgRel),
+    ...markdownFilesAt('HEAD', pkgRel)
+  ])
+  for (const file of files) {
+    if (stripGeneratedBlocks(fileAt(tag, file)) !== stripGeneratedBlocks(fileAt('HEAD', file))) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * Packages lerna considers changed once generated markdown is excluded. This is
+ * the same predicate `lerna version` uses below, so the read-only report and a
+ * real release agree. `lerna changed` exits 1 with empty stdout when there is
+ * nothing to report, which is not an error here.
+ */
+function codeChangedPackages () {
+  const res = sh(lernaBin(), lernaArgs(['changed', '--json', '--ignore-changes', '**/*.md']))
+  const out = res.stdout || ''
+  const start = out.indexOf('[')
+  if (start < 0) return []
+  try {
+    return JSON.parse(out.slice(start))
+  } catch (e) {
+    return []
+  }
+}
+
+/** Push commits + tags unless --no-push was given. */
+function pushCommitsAndTags () {
+  if (NO_PUSH) {
+    console.log('\n>>> push skipped (--no-push)')
+    return
+  }
+  console.log('\n>>> pushing commits and tags')
+  const push = sh('git', ['push', '--follow-tags'], { stdio: 'inherit' })
+  if (push.status !== 0) {
+    console.error('git push failed')
+    process.exit(1)
+  }
 }
 
 /**
@@ -336,6 +461,7 @@ async function main () {
   }
 
   // ---- gating stages: tests -> coverage -> badges -> commit -----------------
+  let badgesRefreshed = false
   if (!CHECK_ONLY && !SKIP_TESTS) {
     runStep('tests + coverage', NPM, ['test'])
 
@@ -347,7 +473,7 @@ async function main () {
       runStep('publish badges to gh-pages', ...nodeScript('publish-badge.js'))
     }
 
-    commitBadgeRefresh()
+    badgesRefreshed = commitBadgeRefresh()
   }
 
   // ---- reconcile ------------------------------------------------------------
@@ -398,12 +524,25 @@ async function main () {
   }
 
   if (CHECK_ONLY) {
-    console.log(
-      '\n[check only] ' +
-      (stranded.length
-        ? `would PUBLISH AS-IS (no bump): ${stranded.map((r) => `${r.name}@${r.version}`).join(', ')}`
-        : 'everything in sync -> would BUMP and publish')
-    )
+    // Mirror what a real release would detect, so "would BUMP and publish" is
+    // never printed when lerna would actually find no changed packages.
+    const codeChanged = codeChangedPackages().map((p) => p.name)
+    const docsChanged = publishable.filter((p) => hasAuthoredDocsChange(p)).map((p) => p.name)
+    const wouldBump = [...new Set([...codeChanged, ...docsChanged])]
+
+    console.log('\n--- Changed since the last release ---')
+    console.log(`  code: ${codeChanged.length ? codeChanged.join(', ') : '(none)'}`)
+    console.log(`  docs: ${docsChanged.length ? docsChanged.join(', ') : '(none)'} (markdown outside the coverage badge)`)
+
+    if (stranded.length) {
+      console.log(
+        `\n[check only] would PUBLISH AS-IS (no bump): ${stranded.map((r) => `${r.name}@${r.version}`).join(', ')}`
+      )
+    } else if (wouldBump.length) {
+      console.log(`\n[check only] everything in sync -> would BUMP and publish: ${wouldBump.join(', ')}`)
+    } else {
+      console.log('\n[check only] no changed packages -> a real release would publish nothing.')
+    }
     return
   }
 
@@ -432,6 +571,15 @@ async function main () {
       'version', BUMP, '--yes', '--no-push', '--ignore-changes', '**/*.md'
     ]
 
+    // Authored markdown was ignored above along with the badges, so put those
+    // packages back explicitly. Only markdown outside the generated coverage
+    // block counts, so a badge refresh can never land here.
+    const docsChanged = publishable.filter((p) => hasAuthoredDocsChange(p)).map((p) => p.name)
+    if (docsChanged.length) {
+      versionArgs.push('--force-publish', docsChanged.join(','))
+      console.log(`  docs changed -> force-publishing: ${docsChanged.join(', ')}`)
+    }
+
     const res = sh(lernaBin(), lernaArgs(versionArgs), { stdio: ['inherit', 'pipe', 'pipe'] })
     const versionOutput = `${res.stdout || ''}${res.stderr || ''}`
     process.stdout.write(res.stdout || '')
@@ -439,6 +587,9 @@ async function main () {
     if (res.status !== 0) {
       if (/no changed packages/i.test(versionOutput)) {
         console.log('\nNo changed packages to version -- nothing to release.')
+        // The badge refresh commit exists but has no release to ride along with;
+        // gh-pages was already updated, so push it to keep the READMEs in step.
+        if (badgesRefreshed) pushCommitsAndTags()
         return
       }
       throw new Error('lerna version failed')
@@ -449,6 +600,9 @@ async function main () {
     attempted = topological(changed)
     if (!attempted.length) {
       console.log('Nothing to publish after the bump.')
+      // lerna version already committed and tagged locally; push so the repo
+      // does not silently drift from the version numbers it just wrote.
+      pushCommitsAndTags()
       return
     }
   }
@@ -477,17 +631,13 @@ async function main () {
       `(${missing.map((p) => `${p.name}@${p.version}`).join(', ')}).`
     )
     console.log('This is normal registry lag. Re-run `npm run release:check` in a minute to confirm.')
+    // The registry write already happened, so the version commits and tags must
+    // go out now; leaving them local is how the repo drifts behind npm.
+    pushCommitsAndTags()
     return
   }
 
-  if (!NO_PUSH) {
-    console.log('\n>>> pushing commits and tags')
-    const push = sh('git', ['push', '--follow-tags'], { stdio: 'inherit' })
-    if (push.status !== 0) {
-      console.error('git push failed')
-      process.exit(1)
-    }
-  }
+  pushCommitsAndTags()
 
   console.log('\nRelease complete.')
 }
