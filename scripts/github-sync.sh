@@ -84,6 +84,54 @@ if ((${#missing[@]})); then
   exit 1
 fi
 
+# --- credentials --------------------------------------------------------
+# bash.sh resolves the token as ${GITHUB_TEST_TOKEN:-${GITHUB_TOKEN}}, i.e. a
+# test token, if present, WINS over the real one. On this machine
+# GITHUB_TEST_TOKEN holds a stale/revoked token while GITHUB_TOKEN is valid,
+# so every API call 401s and each project only fails after a full extraction.
+# This wrapper exists to sync real repos, so drop the test override and use
+# the real token. (For the test-token behavior, call github_sync_workflow
+# directly from an interactive shell instead.)
+if [[ -n "${GITHUB_TEST_TOKEN:-}" ]]; then
+  echo "github-sync: ignoring GITHUB_TEST_TOKEN override (using GITHUB_TOKEN)" >&2
+  unset GITHUB_TEST_TOKEN
+fi
+
+if [[ -z "${GITHUB_TOKEN:-}" ]]; then
+  die "GITHUB_TOKEN is not set after loading $RC_FILE.
+       A real sync needs it; use 'npm run github:sync:dry' to exercise the
+       pipeline without credentials."
+fi
+
+if [[ -z "${GITHUB_USER:-}" ]]; then
+  die "GITHUB_USER is not set after loading $RC_FILE."
+fi
+
+command -v curl >/dev/null 2>&1 ||
+  die "curl is required for the credential check but was not found."
+
+# Fail before doing any work if the token is not valid. Read-only request.
+echo "github-sync: verifying GitHub credentials..." >&2
+AUTH_LOGIN="$(
+  curl -sS --max-time 20 \
+    -H "Authorization: token $GITHUB_TOKEN" \
+    -H "Accept: application/vnd.github.v3+json" \
+    "https://api.github.com/user" 2>/dev/null |
+    jq -r '.login // empty' 2>/dev/null
+)" || AUTH_LOGIN=""
+
+if [[ -z "$AUTH_LOGIN" ]]; then
+  die "GitHub rejected GITHUB_TOKEN (defined in $RC_FILE / bash.sh.private).
+       Fix or rotate the token, then retry. Nothing was pushed."
+fi
+
+if [[ "$AUTH_LOGIN" != "$GITHUB_USER" ]]; then
+  die "GITHUB_TOKEN authenticates as '$AUTH_LOGIN' but GITHUB_USER is '$GITHUB_USER'.
+       Repositories would be created under the wrong account. Nothing was pushed."
+fi
+
+echo "github-sync: authenticated as $AUTH_LOGIN" >&2
+
 # --- run ----------------------------------------------------------------
 # The scanner resolves project paths relative to the YAML file, but the
 # workflow defaults to a relative './.github-sync.yaml', so cwd matters.
