@@ -2,10 +2,16 @@ github_user: 311ecode
 json_output: /tmp/.github-sync-output.json
 
 projects:
+  - path: packages/cowlog
+    private: false
   - path: packages/demeter-di
     private: false
   - path: packages/dsl-framework
     private: false
+  - path: packages/generic-text-linker
+    private: false
+  # packages/directory-fixture-provider is intentionally omitted:
+  # its package.json declares "private": true (never published to npm).
 
   # - path: development/fun
   #   private: false

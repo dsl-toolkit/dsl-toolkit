@@ -12,7 +12,9 @@
     "update:packages": "node bin/update-packages.js",
     "update:check": "node bin/update-packages.js --dry-run",
     "release": "node bin/release.js",
-    "release:check": "node bin/release.js --check"
+    "release:check": "node bin/release.js --check",
+    "github:sync": "bash scripts/github-sync.sh",
+    "github:sync:dry": "bash scripts/github-sync.sh true"
   },
   "author": "Imre Toth",
   "license": "MIT",
