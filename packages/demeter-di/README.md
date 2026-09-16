@@ -3,7 +3,7 @@
 [![CI](https://github.com/dsl-toolkit/dsl-toolkit/actions/workflows/test.yml/badge.svg)](https://github.com/dsl-toolkit/dsl-toolkit/actions/workflows/test.yml)
 <!--- destination qa rewrite end -->
 <!--- coverage begin -->
-![coverage: 95.0% lines](https://dsl-toolkit.github.io/dsl-toolkit/demeter-di.svg)
+![coverage: 100.0% lines](https://dsl-toolkit.github.io/dsl-toolkit/demeter-di.svg)
 <!--- coverage end -->
 
 # What does it help you with?
