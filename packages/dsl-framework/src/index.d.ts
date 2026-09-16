@@ -1,89 +1,114 @@
 // dsl-framework.d.ts
 
-// The abstract syntax tree type
-export type ast = any[][]; // Array<Array<any>>
+/** One chunk of a program: `[commandName, ...arguments]`. */
+export type ast = any[][]
 
-// Default export is a function that returns an instance of the framework.
-declare function dslFramework(): DslFrameworkInstance;
+/**
+ * The program object a callback receives, and what a callback-less terminal
+ * call returns.
+ */
+export interface DslState {
+  commandSequence: () => IterableIterator<{ command: string, arguments: any[] }>
+  arguments: ArgumentsReader
+  command: Command
+  data: ProgramData
+  /** Low-level container access. */
+  getFrom: (...args: any[]) => any
+}
+
+export interface ProgramData {
+  returnArrayChunks: ast
+  returnArray: () => any[]
+  repeate: {
+    me: (instance: Core) => Core
+    parent: ProgramData
+  }
+}
+
+/** Modes accepted by `arguments(name, mode, defaultValue)`. */
+export type ArgumentMode =
+  | 'allEntries'
+  | 'firstEntry'
+  | 'lastEntry'
+  | 'firstArgument'
+  | 'lastArgument'
+  | 'boolean'
+
+export interface ArgumentsReader {
+  (command: string, mode?: ArgumentMode, defaultValue?: any): any
+  (commands: string[], mode?: ArgumentMode, defaultValue?: any): any[]
+  object (
+    commands: string | string[],
+    modes?: ArgumentMode | ArgumentMode[],
+    defaults?: any | any[]
+  ): { [command: string]: any }
+}
+
+export type HasMoreFunction = (...names: string[]) => boolean[]
+export type HasLogicalFunction = (...names: string[]) => boolean
+export type GetMoreFunction = (...names: string[]) => ast[][]
+
+export interface HasFunction {
+  (name: string): boolean
+  (name: string, onTrue: () => void, onFalse?: () => void): void
+  more: HasMoreFunction
+  and: HasLogicalFunction
+  or: HasLogicalFunction
+  xor: (...names: string[]) => number
+  object: (...names: string[]) => { [command: string]: boolean }
+}
+
+export interface GetFunction {
+  (name: string): ast[]
+  more: GetMoreFunction
+  object: (...names: string[]) => { [command: string]: ast[] }
+}
+
+export interface Command {
+  has: HasFunction
+  get: GetFunction
+  hasMore: HasMoreFunction
+  getMore: GetMoreFunction
+  hasAnd: HasLogicalFunction
+  hasOr: HasLogicalFunction
+  hasXor: (...names: string[]) => number
+  hasObject: (...names: string[]) => { [command: string]: boolean }
+  getObject: (...names: string[]) => { [command: string]: ast[] }
+  getArguments: (command: string) => any[][]
+}
+
+/**
+ * The chain. It is an indexable, callable object: property access names a
+ * command, calling it supplies that command's arguments, and calling the chain
+ * with no arguments terminates it. Because the index signature is all the
+ * engine can know about your vocabulary, commands type-check without being
+ * verified — see the README's TypeScript section.
+ */
+export interface Core {
+  (): DslState
+  (returnCallback: ReturnCallback): Core
+  (...args: any[]): Core
+  [command: string]: Core
+}
+
+/** Result of calling the factory: hold it, then call it with a callback. */
+export interface DslFrameworkInstance {
+  (): Core
+  (callback: Callback): Core
+}
+
+export type Callback = (error: any, program: DslState) => any
+
+export type ReturnCallback = (error: number, program: DslState) => any
+
+export type CoreFactory = () => Core
+
+export const anyType: any
+
+declare function dslFramework (): DslFrameworkInstance
 
 declare namespace dslFramework {
-  export const anyType: any;
-  export default dslFramework;
+  export const anyType: any
 }
 
-// The 'DslFrameworkInstance' type represents the main interface of the DSL framework.
-interface DslFrameworkInstance {
-  (): Core;
-  (callback: Callback): DslState;
-}
-
-// The 'Callback' type represents the callback function used in the DSL framework.
-type Callback = (error: any, data: DslState) => void;
-
-// The 'Core' type represents the core function.
-interface Core {
-  (returnCallback: ReturnCallback): Core;
-  (): DslState;
-  (...args: any[]): Core;
-  [index: string]: Core;
-}
-
-type HasFunction = (name: string) => boolean;
-type GetFunction = (name: string) => ast[]|[]
-type HasMoreFunction = (...args: string[]) => boolean[];
-type getMoreFunction = (...args: string[]) => []|[]&ast[];
-
-type GetObjectFunction = (...args: string[]) => {
-  [key: string]: ast;
-};
-
-interface Command {
-  getObject: GetObjectFunction;
-  hasObject: (...args: string[]) => { [key: string]: boolean };
-  hasXor: (...args: string[]) => boolean;
-  hasOr: (...args: string[]) => boolean;
-  hasAnd: (...args: string[]) => boolean;
-  getMore:getMoreFunction;
-  hasMore: HasMoreFunction;
-  get: GetFunction & {
-    more: getMoreFunction;
-    object: GetObjectFunction;
-  };
-  has: HasFunction & {
-    more: HasMoreFunction;
-    and: (...args: string[]) => boolean[];
-    or: (...args: string[]) => boolean;
-    xor: (...args: string[]) => boolean;
-    object: (...args: string[]) => { [key: string]: boolean };
-  };
-  getArguments: (...argument: string[]) => [...any[]];
-}
-
-// The 'DslState' type represents the state of the DSL.
-export interface DslState {
-  commandSequence: () => any;
-  arguments: (
-    command: string,
-    getProcess: "allEntries" | "firstArgument" | "firstEntry" | "lastArgument" | "lastEntry",
-    defaultValue?: any
-  ) => ast;
-  command: Command;
-  data: {
-    returnArrayChunks: ast;
-    returnArray: () => any[]; // Flattened array
-    getSubcommand: (keyword: string) => ast;
-    repeate: {
-      me: (mecore: Core) => Core;
-    };
-  };
-}
-
-// The 'ReturnCallback' type represents the return callback function.
-export type ReturnCallback = (callback: number, state: DslState) => void | any;
-
-// The 'CoreFactory' type represents the factory for creating core instances.
-export type CoreFactory = () => Core;
-
-// Exporting 'anyType' as any
-export const anyType: any;
-export default dslFramework;
+export default dslFramework
