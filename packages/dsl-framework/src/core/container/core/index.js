@@ -79,7 +79,6 @@ module.exports = exports = () => ({
   commandName: false,
   resetMe: false,
   reset: require('./reset.js'),
-  clone: require('./clone.js'),
   start () {
     this.reset()
     this.level++},

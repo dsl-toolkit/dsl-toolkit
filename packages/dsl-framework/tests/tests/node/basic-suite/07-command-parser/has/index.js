@@ -70,5 +70,21 @@ module.exports = (
       assert(beenThere)
       assert(neverWasThere)
     })
+
+    it('two-argument false case leaves the callback uncalled', () => {
+      let called = false
+      data.command.has('HEY', () => {
+        called = true
+      })
+      assert.strictEqual(called, false)
+    })
+
+    it('three-argument call with a non-function true slot', () => {
+      let called = false
+      data.command.has('g', 'not-a-function', () => {
+        called = true
+      })
+      assert.strictEqual(called, false)
+    })
   })
 }

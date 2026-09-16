@@ -30,7 +30,7 @@ describe('Basic Test Suite', function () {
     require('./basic-suite/04-DSL-chaining.js')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance)
     require('./basic-suite/05-.js')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance)
     require('./basic-suite/06-command-sequence.js')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance)
-    // require('./basic-suite/07-command-parser.js')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance)
+    require('./basic-suite/07-command-parser/index.js')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance)
     require('./basic-suite/08-arguments-parser.js')(curryCallbackObject, expect, enviromentSupportsPromises, dslFrameworkDefaultInstance)
   })
 

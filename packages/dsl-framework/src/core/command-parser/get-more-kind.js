@@ -7,15 +7,6 @@ const { extractCallbackData } = require('./extractCallbackData.js')
 module.exports = (baseObject) => {
   return (kind) => function (...args) {
     const commands = getArrayData(args)
+    const { baseKindArguments } = extractCallbackData(...commands)
 
-    const {
-      baseKindArguments,
-      trueCaseFunction,
-      falseCaseFunction
-    } = extractCallbackData(...commands)
-
-    return baseKindArguments.map(command => {
-      const actualCommand = [...command]
-      trueCaseFunction && actualCommand.push(trueCaseFunction)
-      falseCaseFunction && actualCommand.push(falseCaseFunction)
-      return baseObject[kind](command)})}}
+    return baseKindArguments.map(command => baseObject[kind](command))}}

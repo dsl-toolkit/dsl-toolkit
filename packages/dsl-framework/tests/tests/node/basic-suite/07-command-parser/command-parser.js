@@ -154,6 +154,27 @@ module.exports = (
       ])
     })
 
+    it('.has and .get with an array or with several names', function () {
+      assert.deepEqual(data.command.has(['g', 'dd']), [true, false])
+      assert.deepEqual(data.command.has('g', 'dd'), [true, false])
+      assert.deepEqual(data.command.get(['b', 'dd']), [[['b', 'c']], []])
+    })
+
+    it('.has.and, .has.or and .has.xor without commands', function () {
+      assert.strictEqual(data.command.has.and(), false)
+      assert.strictEqual(data.command.has.or(), false)
+      assert.strictEqual(data.command.has.xor(), 0)
+    })
+
+    it('.arguments.object with a scalar mode and default', function () {
+      assert.deepEqual(data.arguments.object('g', 'lastEntry', 'fallback'), { g: ['j', 'k'] })
+      assert.deepEqual(data.arguments.object('missing', 'firstArgument', 'fallback'), { missing: 'fallback' })
+    })
+
+    it('exposes the low level getFrom', function () {
+      assert.strictEqual(typeof data.getFrom(0).command.has, 'function')
+    })
+
     // it('.', function () {
 
     // })

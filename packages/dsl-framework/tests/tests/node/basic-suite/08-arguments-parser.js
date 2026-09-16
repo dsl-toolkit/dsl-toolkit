@@ -38,5 +38,11 @@ module.exports = (curryCallbackObject, expect, enviromentSupportsPromises, dslFr
       expect(commandParser(baseArray, 'lastEntry')).to.include('b').and.to.include('c')
       expect(commandParser([baseArray], 'lastEntry')).to.include('b').and.to.include('c')
     })
+
+    it('falls back to an empty result for unmatched input or unknown mode', function () {
+      const commandParser = require('../../../../src/core/arguments/parser.js')
+      expect(commandParser('abc', 'firstEntry')).to.deep.equal([[]])
+      expect(commandParser(['a', 'b'], 'unknown')).to.deep.equal([[]])
+    })
   })
 }

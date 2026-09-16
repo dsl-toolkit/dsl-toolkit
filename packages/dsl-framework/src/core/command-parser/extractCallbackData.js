@@ -4,37 +4,23 @@
 
 function extractCallbackData (...args) {
   let baseKindArguments = Array.from(args)
-  const argumentsLastIndex = baseKindArguments.length >= 2 ? baseKindArguments.length - 1 : false
-  const argumentsOneBeforeLastIndex = baseKindArguments.length >= 3 ? argumentsLastIndex - 1 : false
+  const lastIndex = args.length >= 2 ? args.length - 1 : -1
+  const oneBeforeLastIndex = args.length >= 3 ? lastIndex - 1 : -1
   let trueCaseFunction = false
   let falseCaseFunction = false
 
-  if (argumentsLastIndex) {
-    if (argumentsOneBeforeLastIndex) {
-      falseCaseFunction = argumentsLastIndex
-        ? typeof args[argumentsLastIndex] === 'function'
-            ? args[argumentsLastIndex]
-            : false
-        : false
-      trueCaseFunction = argumentsOneBeforeLastIndex
-        ? typeof args[argumentsOneBeforeLastIndex] === 'function'
-            ? args[argumentsOneBeforeLastIndex]
-            : false
-        : false
+  if (lastIndex > -1) {
+    if (oneBeforeLastIndex > -1) {
+      falseCaseFunction = typeof args[lastIndex] === 'function' ? args[lastIndex] : false
+      trueCaseFunction = typeof args[oneBeforeLastIndex] === 'function' ? args[oneBeforeLastIndex] : false
     } else {
-      trueCaseFunction = argumentsLastIndex
-        ? typeof args[argumentsLastIndex] === 'function'
-            ? args[argumentsLastIndex]
-            : false
-        : false
-      falseCaseFunction = false
+      trueCaseFunction = typeof args[lastIndex] === 'function' ? args[lastIndex] : false
     }
   }
   trueCaseFunction &&
     (() => (baseKindArguments = baseKindArguments.slice(0, -1)))()
   falseCaseFunction &&
     (() => (baseKindArguments = baseKindArguments.slice(0, -1)))()
-
   const havingCaseFunction = !!trueCaseFunction || !!falseCaseFunction
   return {
     baseKindArguments,

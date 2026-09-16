@@ -2,6 +2,7 @@
 /* eslint-disable brace-style */
 /* eslint-disable indent */
 
+const getArrayData = require('../lib/get-array-data.js')
 const { extractCallbackData } = require('./extractCallbackData.js')
 
 module.exports = (baseObject, returnObject) => {
@@ -18,12 +19,11 @@ module.exports = (baseObject, returnObject) => {
 
       const returnValue =
         Array.isArray(command) || baseKindArguments.length > 1
-          ? baseObject[`${kind === 'some' ? 'has' : 'get'}`].more(command)
+          ? baseObject[`${kind === 'some' ? 'has' : 'get'}`].more(getArrayData(baseKindArguments))
           : returnObject.data.returnArrayChunks[kind](
             argumentArray => argumentArray[0] === command)
 
       if (!havingCaseFunction) {
         return returnValue}
-      if (havingCaseFunction) {
-        returnValue && trueCaseFunction && trueCaseFunction()
-        returnValue || (falseCaseFunction && falseCaseFunction())}}}
+      returnValue && trueCaseFunction && trueCaseFunction()
+      returnValue || (falseCaseFunction && falseCaseFunction())}}
