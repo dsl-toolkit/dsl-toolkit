@@ -418,7 +418,57 @@ Create a new instance per program, or use `repeate.me` to start from a template.
 
 ## TypeScript
 
-Types ship with the package. The chain is typed as an indexable callable (`Core`), so dynamic commands type-check but are not statically verified, and there is no autocomplete for command names. `DslState`, `ast`, and `ReturnCallback` describe the program object and the callback.
+The engine stays JavaScript. Command names are property accesses invented at the call site, so a compiler cannot know them — that is the design, not a gap to close. A declaration file ships with the package, and it describes the inspection types:
+
+| Type | Describes |
+| --- | --- |
+| `Core` | the chain — an indexable, callable object |
+| `DslState` | the program object the callback receives, and what a callback-less terminal returns |
+| `ast` | the raw chunks, `any[][]` |
+| `ReturnCallback` | the `(error, program)` callback signature |
+
+One limit is worth stating plainly: the chain is an index signature, so `chain.usrName('x')` compiles and nothing is verified — no autocomplete, no typo detection, no argument checking. That is the ceiling for an engine that cannot know your vocabulary, and it is the reason to make *your* language the typed surface.
+
+### Typing a language built on this engine
+
+If you publish your own language over dsl-framework, do not try to make the engine's types enumerate your commands. Write a small facade `.d.ts` that names your vocabulary once, by hand, beside your source. `demeter-di` is the worked example — its public API is declared independently of the engine:
+
+```ts
+// demeter-di/src/index.d.ts
+export interface ContainerFactory {
+  define<T>(name: string, value: T): ContainerFactory
+  compose<T>(name: string, service: (...args: any[]) => T, dependencies?: string[]): ContainerFactory
+  create<T>(name: string, service: (...args: any[]) => T, dependencies?: string[]): ContainerFactory
+  (): Container
+}
+
+export interface Container { [key: string]: any }
+
+export interface ContainerFactoryFactory {
+  (): ContainerFactory
+}
+```
+
+With that, the chain this page describes and the typed API are the same shape:
+
+```ts
+containerFactoryFactory()
+  .define('a', 1)
+  .compose('b', (a: number) => a + 1, ['a'])
+  .create('c', (b: number) => b * 2, ['b'])
+  () // Container
+```
+
+Hints that fall out of that example:
+
+- **One interface per chain, one method per command.** The facade *is* your command reference, and the only place the vocabulary exists in typed form.
+- **Give the terminal its own signature.** The same interface carries `(): Container`, so `()` returns the folded result instead of another chain.
+- **Type the factory as well as the chain.** `(): ContainerFactory` lets callers hold the factory — the safe pattern from [What the consumers reveal](#what-the-consumers-reveal) — and still get a typed chain.
+- **Mark the safe entry point.** `containerFactoryFactory()` mints a fresh chain per call, while `containerFactory` is one shared, single-use chain — worth a comment in the facade so callers pick deliberately.
+- **Ship it where resolvers look.** Keep `index.d.ts` beside `src/`, copy it into `dist/` in your build, and point `exports.types` — plus a top-level `types` for older resolvers — at the copy.
+- **Compile your README's examples.** A hand-written facade drifts from the runtime, so keep the two in step with a `tsc --noEmit` over your examples — the same test that proves the facade is worth having.
+
+The trade-off is the whole story: the engine stays schema-less JavaScript, you get real checking on your own vocabulary, and keeping the facade honest is one type test away.
 
 ## License
 

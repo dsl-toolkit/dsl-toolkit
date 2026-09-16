@@ -39,7 +39,7 @@ This method returns the container object, which can be used to access the compos
 
 Example:
 ```js
-const container = containerFactoryFactory.compose('myService', (dependency1, dependency2) => dependency1 + dependency2, ['dependency1', 'dependency2'])();
+const container = containerFactoryFactory().compose('myService', (dependency1, dependency2) => dependency1 + dependency2, ['dependency1', 'dependency2'])();
 console.log(container.myService); // adition of depencency1 and dependecy2
 // if dependency1 evaluates to 1 and depencency2 evaluates to two this will print 3
 // most likey you will define dependency1 and 2 with the define method of this factory,
@@ -59,7 +59,7 @@ const {containerFactoryFactory} = demeterDi;
 const demeterDi = require('demeter-di');
 const {containerFactoryFactory} = demeterDi;
 
-const container = containerFactoryFactory
+const container = containerFactoryFactory()
   .define('one', 1)
   .compose('showOne', (one) => console.log(one))()
 
@@ -77,20 +77,22 @@ This difference in initialization can be useful in different situations. For exa
 Here is an example of the difference between the "create" and "compose" methods:
 
 ```js
+import demeterDi from 'demeter-di';
+const {containerFactoryFactory} = demeterDi;
 
-containerFactory.compose('singleton', () => {
-  console.log('Creating singleton');
-  return {};
-})();
-
-containerFactory.create('factory', () => {
-  console.log('Creating factory');
-  return {};
-});
-```
+const container = containerFactoryFactory()
+  .compose('singleton', () => {
+    console.log('Creating singleton');
+    return {};
+  })
+  .create('factory', () => {
+    console.log('Creating factory');
+    return {};
+  })();
 
 console.log(container.singleton === container.singleton); // Output: true
 console.log(container.factory === container.factory); // Output: false
+```
 
 In this example, the "compose" method is used to create a service called "singleton", which logs a message when it's created. The "create" method is then used to create a service called "factory", which also logs a message when it's created.
 
@@ -123,7 +125,7 @@ You can also use the define method to define multiple constants at once by chain
 import demeterDi from 'demeter-di';
 const {containerFactoryFactory} = demeterDi;
 
-const container = containerFactory
+const container = containerFactoryFactory()
     .define('PI', 3.14)
     .define('E', 2.72)
     .define('GOLDEN_RATIO', 1.618)();
@@ -134,9 +136,11 @@ In this example, the define method is used to define the constants PI, E, and GO
 Once the container is created, you can access the defined constants like so:
 
 
+```js
 console.log(container.PI); // Output: 3.14
 console.log(container.E); // Output: 2.72
 console.log(container.GOLDEN_RATIO); // Output: 1.618
+```
 
 In this way, you can separate your constants from the services and manage them easily, making your code more readable and maintainable.
 
@@ -148,13 +152,13 @@ You can override the functionality of this service for testing purposes by simpl
 
 
 ```js
-containerFactoryFactory.create('complexService', (A, lot, of, dependencies) => ... ... [] /* returns an output of an array */)
+containerFactoryFactory().create('complexService', (A, lot, of, dependencies) => ... ... [] /* returns an output of an array */)()
 ```
 
 You can override the functionality of this service for testing purposes by simply redefining the service with the create method, like this:
 
 ```js
-containerFactoryFactory.create('complexService', () => ['fixture','data'])
+containerFactoryFactory().create('complexService', () => ['fixture','data'])()
 ```
 again: It's important to note that the create method will create a new instance of the service each time it's accessed, this means that the service will be evaluated again and the new value returned.
 
@@ -167,14 +171,16 @@ This will override the existing 'complexService' with a new service that returns
 You access a service or constant through the container, it returns a proxy object that automatically resolves the service or constant when it's invoked. In this case, you don't need to invoke the service with parenthesis, just by accessing it through the container will execute the service.
 Example:
 
-const container = containerFactoryFactory
-.define('one', 1)
-.compose('showOne', (one) => console.log(one))();
+```js
+const container = containerFactoryFactory()
+  .define('one', 1)
+  .compose('showOne', (one) => console.log(one))();
 console.log(container.one) // Output: 1
 container.showOne // Output: 1
 
 const showOne1 = container.showOne;
 console.log(showOne1) // Output: [Function: showOne]
+```
 
 The 'showOne1' variable is a reference to the function that is returned by 'container.showOne', but it does not execute the function automatically. If you want to execute the function, you need to invoke it with parenthesis like 'showOne1()'.
 
@@ -189,7 +195,7 @@ import React from 'react';
 import demeterDi from 'demeter-di';
 const {containerFactoryFactory} = demeterDi;
 
-const container = containerFactoryFactory
+const container = containerFactoryFactory()
   .define('API_URL', 'https://api.example.com')
   .define('API_KEY', 'secret_key')
   .compose('MyButton', (handleClick) => <button onClick={handleClick}>Fetch Users</button>)
@@ -224,7 +230,7 @@ import Hapi from 'hapi';
 import demeterDi from 'demeter-di';
 const {containerFactoryFactory} = demeterDi;
 
-const container = (server = false) => containerFactory
+const container = (server = false) => containerFactoryFactory()
   .define('host', process.env.API_HOST || 'localhost')
   .define('port', process.env.API_PORT || 3000)
   .define('secret', process.env.API_SECRET || 'mysecret')
@@ -232,7 +238,7 @@ const container = (server = false) => containerFactory
     // JWT validation logic
   })
   .compose('server', (host, port) => server || new Hapi.Server({ host, port }))
-  .compose('init', (validateJWT, server) => {
+  .compose('init', async (validateJWT, server, secret) => {
     server.route({
       method: 'GET',
       path: '/',
@@ -242,21 +248,25 @@ const container = (server = false) => containerFactory
     });
 
     server.auth.strategy('jwt', 'jwt', {
-      key: container.secret,
-      validate: container.validateJWT,
+      key: secret,
+      validate: validateJWT,
       verifyOptions: { algorithms: ['HS256'] },
     });
 
     server.auth.default('jwt');
 
     await server.start();
-    console.log('Server running on %s', container.server.info.uri);
-  });
+    console.log('Server running on %s', server.info.uri);
+  })();
 
-container.init;
+container().init;
 ```
 
-This way, if a server is passed as an argument to the container function, it will be used instead of creating a new Hapi server. Also, the container.init is called at the end, to start the server and handle the routes.
+This way, if a server is passed as an argument to the container function, it will be used instead of creating a new Hapi server. Also, `container().init` is called at the end, to start the server and handle the routes.
+
+# TypeScript
+
+Types ship with the package: `ContainerFactory` names the `define` / `compose` / `create` commands, and calling the chain returns a `Container`. The declarations are hand-written rather than derived from dsl-framework — for the reasoning and for hints on typing your own language built on the engine, see [dsl-framework's TypeScript section](https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/dsl-framework#typescript).
 
 # More intellectual munition for you
 TLDR begin;
