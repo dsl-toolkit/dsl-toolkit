@@ -38,7 +38,7 @@ function* matchNexter(string) {
             debug(ret)
             yield ret
         }
-        else if (string.length) {
+        else {
             const subString = string.slice(index)
             const ret = {
                 subString,
@@ -117,7 +117,7 @@ function parse(input) {
             debug('Found ) and we are done')
             argsEnded = true
         }
-        else if (firstChar === ',' || (firstChar === '(' && vars.length === 0)) {
+        else {
             const newVar = value.subString.slice(1)
             debug(`Found '${newVar}'`)
             if (depth.parenthesis === 0) {

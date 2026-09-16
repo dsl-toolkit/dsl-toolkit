@@ -243,6 +243,16 @@ describe('checking constants', ()=>{
         assert(ff.notDefined === undefined)
         assert.deepEqual(ff._undefined, ['notDefined'])
       })
+      it('case2 filters out keys that are registered', () => {
+        const ff = basicInstanceMaker()
+        ff.notDefined
+        ff.a
+        assert.deepEqual(ff._undefined, ['notDefined'])
+      })
+      it('unknown hidden tags fall through as undefined', () => {
+        const ff = basicInstanceMaker()
+        assert.strictEqual(ff._nope, undefined)
+      })
     })
   // })
 

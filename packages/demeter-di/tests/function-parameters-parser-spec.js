@@ -135,4 +135,24 @@ describe('function-parameters-parser', function () {
       assert.deepEqual(parse(function (user_id, item_count) {}), ['user_id', 'item_count'])
     })
   })
+
+  describe('default values and nested parentheses', function () {
+    it('parses parameters with default values', function () {
+      assert.deepEqual(parse(function (a = 1, b = 2) {}), ['a', 'b'])
+    })
+
+    it('parses defaults containing calls and parentheses', function () {
+      assert.deepEqual(parse(function (a = foo(1), b = (2), c) {}), ['a', '2'])
+    })
+
+    it('parses default values in arrow functions', function () {
+      var fn = (a = 1, b = (2)) => a
+      assert.deepEqual(parse(fn), ['a', 'b'])
+    })
+
+    it('ignores commas inside a default value call', function () {
+      var fn = function (a = foo(1, 2)) { return a }
+      assert.deepEqual(parse(fn), ['a'])
+    })
+  })
 })
