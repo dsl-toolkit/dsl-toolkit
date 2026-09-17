@@ -49,5 +49,5 @@ jobs:
         npm i && npm link
         npm test
 
-    - name: Coverage gate (dsl-framework, demeter-di)
+    - name: Coverage gate (dsl-framework, demeter-di, cowlog)
       run: npm run test:coverage-gate
