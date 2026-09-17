@@ -1,7 +1,7 @@
 {
   "name": "cowlog",
   "private": false,
-  "version": "1.7.34",
+  "version": "1.7.35",
   "description": "Development time logging for NodeJs",
   "homepage": "https://github.com/dsl-toolkit/dsl-toolkit/tree/master/packages/cowlog",
   "keywords": [
@@ -45,7 +45,7 @@
     "colors": "^1.4.0",
     "cowsay": "^1.2.0",
     "detect-node": "^2.1.0",
-    "dsl-framework": "^1.8.39",
+    "dsl-framework": "^1.8.41",
     "fclone": "^1.0.11",
     "flat": "^5.0.2",
     "is-function": "^1.0.2",

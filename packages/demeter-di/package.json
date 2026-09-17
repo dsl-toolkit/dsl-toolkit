@@ -1,6 +1,6 @@
 {
   "name": "demeter-di",
-  "version": "1.8.62",
+  "version": "1.8.63",
   "description": "A most flexible container solution",
   "main": "./src/index.js",
   "module": "./dist/src/index.mjs",
@@ -90,7 +90,7 @@
   ],
   "gitHead": "5bbd860ddd05e0824172efd2a8d75124ecd0e790",
   "dependencies": {
-    "dsl-framework": "^1.8.39",
+    "dsl-framework": "^1.8.41",
     "underscore": "^1.13.6"
   }
 }
