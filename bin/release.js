@@ -38,7 +38,8 @@
  *
  * Idempotent: npm reports success before the version is readable from the
  * registry, so every lookup retries, and "cannot publish over the previously
- * published versions" is treated as "already published", not as a failure.
+ * published versions" (or "... over a previously staged version") is treated as
+ * "already published", not as a failure.
  *
  * DOCS-ONLY RELEASES:
  * Markdown is excluded from lerna's change detection because step 2 rewrites the
@@ -207,6 +208,7 @@ function publishOne (pkg, otp) {
     child.on('close', (code) => {
       if (code === 0) return resolve({ ok: true })
       if (/cannot publish over the previously published versions/i.test(stderr) ||
+          /cannot publish over previously staged version/i.test(stderr) ||
           /EPUBLISHCONFLICT/.test(stderr)) {
         return resolve({ ok: true, already: true })
       }
