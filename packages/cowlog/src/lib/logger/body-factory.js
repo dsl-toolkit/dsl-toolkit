@@ -58,5 +58,4 @@ module.createBody = function extracted (
     const tooLongLine = line.length >= limit
     if (tooLongLine) {
       return (line.match(RegExp(`.{1,${limit}}`, 'gm')).join('\n'))}
-    if (!tooLongLine || !line.length) {
-      return line}}).join('\n')}
+    return line}).join('\n')}

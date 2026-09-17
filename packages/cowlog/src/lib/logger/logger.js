@@ -120,3 +120,5 @@ module.exports = exports = function (container) {
   }
   return callback
 }
+
+module.exports.cancelUnderscore = module.cancelUnderscore

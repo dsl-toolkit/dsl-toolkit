@@ -21,16 +21,6 @@ module.exports = function (calculatedParameters) {
   container.set('logger-body-factory', (c) => require('../lib/logger/body-factory')(c))
   container.set('log-file-creator', () => require('../lib/logfile-creator')(cowlogHashDir))
   container.set('cowlog', (c) => {
-    const logger = c.logger
-    const messageCreator = c.get('message-creator')
-    const runtimeVariables = c.get('runtime-variables')
-    const dictionary = c.get('dictionary')
-    const environmentDependent = c.get('environment-dependent')
-
-    return require('../lib/cowlog')(logger, messageCreator, runtimeVariables, dictionary, environmentDependent)
-  })
-
-  container.set('cowlog', (c) => {
     const logger = c.get('logger')
     const messageCreator = c.get('message-creator')
     const runtimeVariables = c.get('runtime-variables')

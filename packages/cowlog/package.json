@@ -21,7 +21,7 @@
     "test-common": "npx mocha --recursive tests/tests ",
     "test-dev-unit": "npm run clean && node_modules/.bin/mocha --recursive tests/tests/unit",
     "test-old": "npm run build && npm run test-compiled && npm run clean",
-    "test": "PROD=true npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-dev",
+    "test": "PROD=true npx nyc --reporter=lcov --reporter=clover --reporter=text --cache npm run test-common",
     "test-project": "pwd && node_modules/.bin/depcheck   --ignores \"@types/node, eslint-plugin-standard\" && npm run standard-fix",
     "build-src": "echo 1",
     "build-test": "echo 1",
@@ -87,9 +87,19 @@
     "node": ">=11"
   },
   "nyc": {
+    "all": true,
+    "include": [
+      "src/**/*.js"
+    ],
     "exclude": [
       "**/tests/**"
-    ]
+    ],
+    "check-coverage": true,
+    "per-file": true,
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
   },
   "standard": {
     "ignore": [

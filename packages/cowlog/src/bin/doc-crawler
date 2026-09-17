@@ -1,6 +1,0 @@
-#!/usr/bin/env node
-const pkgDir = require('pkg-dir')
-const cwd = pkgDir.sync(__dirname)
-const path = require('path')
-let projectRoot = path.join(cwd,"../../")
-require('../lib/juggler/doc-crawler/doc-crawler')(projectRoot)
