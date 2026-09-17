@@ -48,3 +48,6 @@ jobs:
         # chown -R 1000:1000 /github/home/.standard-v14-cache
         npm i && npm link
         npm test
+
+    - name: Coverage gate (dsl-framework, demeter-di)
+      run: npm run test:coverage-gate
