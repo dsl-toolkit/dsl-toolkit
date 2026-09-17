@@ -15,7 +15,7 @@
  *   3. publish badges        -- bin/publish-badge.js force-pushes gh-pages, so the
  *                               READMEs that npm is about to pack have live images
  *   4. commit badge refresh  -- leaves a clean tree for lerna version
- *   5. reconcile + publish   -- see below
+ *   5. reconcile + publish   -- verify npm auth BEFORE versioning, then publish
  *   6. push commits + tags
  *   7. verify on the registry
  *
@@ -447,6 +447,24 @@ function syncWithRemote ({ dryRun = false } = {}) {
   if (merge.status !== 0) throw new Error('fast-forward merge failed')
 }
 
+/**
+ * `lerna version` commits before the first `npm publish` runs, so an
+ * unauthenticated release used to leave a bumped-but-unpublished commit and tag
+ * behind and only then fail. Checking credentials first keeps that from
+ * happening: it is the one gate that has to run before anything is written.
+ */
+function assertNpmAuth () {
+  const res = sh(NPM, ['whoami'], { stdio: ['ignore', 'pipe', 'pipe'] })
+  const who = (res.stdout || '').trim()
+  if (res.status !== 0 || !who) {
+    console.error('\nERROR: npm is not authenticated, so nothing can be published.')
+    console.error('Run `npm login` (or set NPM_TOKEN), then re-run.')
+    console.error('Nothing was versioned or published.')
+    process.exit(2)
+  }
+  console.log(`\nnpm authenticated as ${who}`)
+}
+
 async function main () {
   if (CHECK_ONLY) {
     // still worth knowing whether origin has moved, but never merge while checking
@@ -545,6 +563,8 @@ async function main () {
     }
     return
   }
+
+  assertNpmAuth()
 
   // ---- publish --------------------------------------------------------------
   const otp = OTP_ARG ? [OTP_ARG] : []
