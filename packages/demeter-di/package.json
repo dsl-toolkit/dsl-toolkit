@@ -89,6 +89,14 @@
     "src/**"
   ],
   "gitHead": "5bbd860ddd05e0824172efd2a8d75124ecd0e790",
+  "overrides": {
+    "flat-cache": {
+      "flatted": "3.4.4"
+    },
+    "external-editor": {
+      "tmp": "0.2.7"
+    }
+  },
   "dependencies": {
     "dsl-framework": "^1.8.41",
     "underscore": "^1.13.6"

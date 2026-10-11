@@ -34,6 +34,24 @@
   "dependencies": {
     "lerna": "^9.0.7"
   },
+  "overrides": {
+    "nx": {
+      "axios": "1.20.0",
+      "brace-expansion": "5.0.12",
+      "smol-toml": "1.9.1"
+    },
+    "lerna": {
+      "js-yaml": "4.3.2",
+      "pacote": "21.5.1",
+      "tar": "7.5.22"
+    },
+    "external-editor": {
+      "tmp": "0.2.7"
+    },
+    "flat-cache": {
+      "flatted": "3.4.4"
+    }
+  },
   "workspaces": [
     "packages/*"
   ]
