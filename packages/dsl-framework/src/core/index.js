@@ -9,6 +9,8 @@ const container = require('./container/core/index.js')
 // const f = function
 const coreFactory = () => {
   const core = function me (callback, state = false) {
+    if (core.realTimePlugin && typeof callback === 'function') {
+      callback = core.realTimePlugin(callback)}
     let { coreData } = core
     state = state || (function () {
       // if(coreData.command.has('factory')){
@@ -68,6 +70,7 @@ const coreFactory = () => {
 
   core.setCoreData = function (data) {
     this.coreData = data}
+  core.createFactory = coreFactory
   return core}
 
 module.exports = coreFactory()
