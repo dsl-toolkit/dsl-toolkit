@@ -198,7 +198,11 @@ The callback receives, and a callback-less terminal returns, a program object wi
 | `program.arguments(name, mode, default)` | Reads one command's arguments |
 | `program.arguments.object(names, modes?, defaults?)` | Reads several commands into an object |
 | `program.commandSequence()` | Generator of `{ command, arguments }`, in order |
+| `program.steps` | The normalized sequence, after real-time `resolve` — see [Real-time calls](#real-time-calls) |
+| `program.effects` | Results of the real-time `run` handlers, in written order |
 | `program.getFrom` | Low-level container access |
+
+`steps` and `effects` are attached when a callback runs through a factory that carries real-time registrations. A callback-less terminal returns the plain program object without them.
 
 ### Querying commands
 
@@ -326,6 +330,91 @@ extended.data.returnArrayChunks
 
 The target instance may be reused to produce independent copies, and replays can themselves be replayed.
 
+## Real-time calls
+
+A chain is inert by default: commands pile up and nothing happens until the callback runs. A **real-time call** registers behaviour for a command name, so that command does work when the program is interpreted.
+
+Registration happens on the default export, and the first `()` mints the factory that carries it:
+
+```js
+const dslFramework = require('dsl-framework')
+const path = require('path')
+const fs = require('fs')
+
+const factory = dslFramework
+  .registerRealTimeCall('image', {
+    parameters: ['source'],
+    resolve: ({ arguments: [source] }) => [path.resolve(source)],
+    run: ({ arguments: [source], program }) => {
+      const to = program.arguments('destination', 'firstArgument') || 'out'
+      fs.copyFileSync(source, path.join(to, path.basename(source)))
+    }
+  })
+  ()
+
+const app = factory((error, program) => ({
+  copied: program.effects,
+  steps: program.steps
+}))
+
+app.destination('out').image('./logo.png')()
+```
+
+`factory.realTime` is the folded registry, and it belongs to that factory alone: a second `dslFramework.registerRealTimeCall(...)()` is an independent factory, so two languages in one process never share behaviour.
+
+### The two halves
+
+| | `resolve` | `run` |
+| --- | --- | --- |
+| gets | `{ name, arguments, program }` | `{ name, arguments, program }` |
+| returns | the argument array | anything, collected into `program.effects` |
+| may do I/O | no | yes |
+
+`resolve` canonicalises: `'./logo.png'` becomes an absolute path, defaults are filled in, a bad argument throws. `run` receives those canonical values and does the thing. Either half may be omitted, and an omitted `resolve` passes the written arguments straight through.
+
+`program` is the same object the callback receives, so a real-time call can read the rest of the program — `program.command.has('destination')`, `program.arguments(...)`, `commandSequence()`. It is the raw sequence: values canonicalised by `resolve` appear in `program.steps`, not in the chunks.
+
+### When they run
+
+Both halves run at the terminal `()`, in the order the commands were written. Real-time here means *the command has behaviour*, not *the behaviour fires while you type* — building the chain still touches nothing.
+
+### Adding and replacing
+
+`registerRealTimeCall` adds. Registering the same name twice stacks the handlers, and they run as whole units in registration order — each one's `resolve`, then its `run`:
+
+```js
+dslFramework
+  .registerRealTimeCall('image', baseHandler)
+  .registerRealTimeCallAdd('image', extraHandler)     // alias of the line above
+  ()
+```
+
+`registerRealTimeCallReplace` clears the whole stack for that name and installs one handler in its place.
+
+### For-all aspects
+
+`registerRealTimeCallForAll` registers an aspect that wraps **every** command, registered or not — logging, timing, tracing. It receives `{ name, arguments, program }` and a `next` that runs whatever specific handlers exist for that command:
+
+```js
+dslFramework.registerRealTimeCallForAll({
+  name: 'timer',
+  wrap: ({ name }, next) => {
+    const started = Date.now()
+    const result = next()
+    timings.push([name, Date.now() - started])
+    return result
+  }
+})
+```
+
+Aspects always run, even for a command that has its own registration, and they nest: the first registered is outermost. An aspect that returns without calling `next` suppresses the specific handlers for that command. Aspects deliberately have no `resolve` — a cross-cutting normaliser would rewrite arguments it does not own. `registerRealTimeCallForAllReplace` replaces the whole aspect list, and `registerRealTimeCallForAllAdd` is an alias of the add form.
+
+### Registration errors
+
+A malformed registration throws at the first `()` rather than misbehaving later: a missing name, a spec that is not an object, an unknown key, `parameters` that is not an array of non-empty strings, a non-function `resolve` or `run`, or an aspect without `wrap`.
+
+None of the in-repo consumers use real-time calls yet; the contract above is carried by this package's own tests.
+
 ## Built on this engine
 
 Three packages in this repo build their own languages on dsl-framework, in three different domains, with no engine changes:
@@ -403,6 +492,14 @@ Create a new instance per program, or use `repeate.me` to start from a template.
 
 **It is not a lawful monad.** It is Writer-shaped and free-monad-adjacent: chaining accumulates a description and the terminal call interprets it. But there is no `of`/`pure`, no `chain`/`flatMap` that takes a function of the accumulated value, no immutability, and no error channel — so the monad laws do not apply. If you need lawful `Option`/`Either`/`Task` or typed effects, use [Effect](https://github.com/Effect-TS/effect), [fp-ts](https://github.com/gcanti/fp-ts), or [neverthrow](https://github.com/supermacro/neverthrow) instead.
 
+**Real-time calls are not record-time.** `resolve` and `run` both fire at the terminal `()`. Normalising an argument the moment you write it would need a change in the engine, not a registration.
+
+**Real-time registration belongs to a factory, not the module.** `dslFramework()` mints a fresh factory every time, so registrations are never shared between languages. Build a factory through the registration chain, hold it, and mint instances from it.
+
+**Replay re-runs real-time calls.** `repeate.me` copies the command chunks, not the registry, so a replayed program runs its real-time calls again on the target — and the target uses its own registry, which may differ.
+
+**A stacked handler runs once per registration.** Because `registerRealTimeCall` adds, registering the same effect twice runs it twice; `registerRealTimeCallReplace` is how you mean one.
+
 ### When this is a good fit
 
 - You have functions or builders with many optional, order-insensitive arguments.
@@ -426,6 +523,11 @@ The engine stays JavaScript. Command names are property accesses invented at the
 | `DslState` | the program object the callback receives, and what a callback-less terminal returns |
 | `ast` | the raw chunks, `any[][]` |
 | `ReturnCallback` | the `(error, program)` callback signature |
+| `RealTimeFactory` | a factory minted by the default export; carries its own `realTime` registry |
+| `RealTimeCallSpec` | one per-command registration: `{ parameters, resolve, run }` |
+| `RealTimeAspectSpec` | one for-all aspect: `{ name, wrap }` |
+| `RealTimePayload` | what a handler receives: `{ name, arguments, program }` |
+| `RealTimeRegistry` | the folded registry: command name to its stacked handlers |
 
 One limit is worth stating plainly: the chain is an index signature, so `chain.usrName('x')` compiles and nothing is verified — no autocomplete, no typo detection, no argument checking. That is the ceiling for an engine that cannot know your vocabulary, and it is the reason to make *your* language the typed surface.
 

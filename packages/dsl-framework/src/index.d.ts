@@ -12,6 +12,10 @@ export interface DslState {
   arguments: ArgumentsReader
   command: Command
   data: ProgramData
+  /** The normalized sequence. Present when a callback runs through a real-time factory. */
+  steps?: { command: string, arguments: any[] }[]
+  /** Results of the real-time `run` handlers, in written order. */
+  effects?: any[]
   /** Low-level container access. */
   getFrom: (...args: any[]) => any
 }
@@ -103,12 +107,68 @@ export type ReturnCallback = (error: number, program: DslState) => any
 
 export type CoreFactory = () => Core
 
+/** What a real-time handler receives. */
+export interface RealTimePayload {
+  name: string
+  arguments: any[]
+  program: DslState
+}
+
+/** What `next()` hands back to a for-all aspect. */
+export interface RealTimeOutcome {
+  arguments: any[]
+  effects: any[]
+}
+
+/** One per-command real-time registration. */
+export interface RealTimeCallSpec {
+  parameters?: string[]
+  resolve?: (payload: RealTimePayload) => any[]
+  run?: (payload: RealTimePayload) => any
+}
+
+/** One for-all real-time aspect. */
+export interface RealTimeAspectSpec {
+  name?: string
+  wrap: (payload: RealTimePayload, next: () => RealTimeOutcome) => any
+}
+
+/** The folded registry a factory carries: command name to its stacked handlers. */
+export interface RealTimeRegistry {
+  [command: string]: RealTimeCallSpec[]
+}
+
+/** A factory minted by the default export. It carries its own real-time registry. */
+export interface RealTimeFactory extends DslFrameworkInstance {
+  realTime: RealTimeRegistry
+  realTimePlugin: (callback: Callback) => Callback
+  createFactory: () => DslFrameworkInstance
+  setCoreData: (data: any) => void
+}
+
+/** The default export's registration chain: register, then terminate to mint. */
+export interface RealTimeRegistration {
+  (): RealTimeFactory
+  registerRealTimeCall (name: string, spec: RealTimeCallSpec): RealTimeRegistration
+  registerRealTimeCallAdd (name: string, spec: RealTimeCallSpec): RealTimeRegistration
+  registerRealTimeCallReplace (name: string, spec: RealTimeCallSpec): RealTimeRegistration
+  registerRealTimeCallForAll (spec: RealTimeAspectSpec): RealTimeRegistration
+  registerRealTimeCallForAllAdd (spec: RealTimeAspectSpec): RealTimeRegistration
+  registerRealTimeCallForAllReplace (spec: RealTimeAspectSpec): RealTimeRegistration
+}
+
 export const anyType: any
 
-declare function dslFramework (): DslFrameworkInstance
+declare function dslFramework (): RealTimeFactory
 
 declare namespace dslFramework {
   export const anyType: any
+  export function registerRealTimeCall (name: string, spec: RealTimeCallSpec): RealTimeRegistration
+  export function registerRealTimeCallAdd (name: string, spec: RealTimeCallSpec): RealTimeRegistration
+  export function registerRealTimeCallReplace (name: string, spec: RealTimeCallSpec): RealTimeRegistration
+  export function registerRealTimeCallForAll (spec: RealTimeAspectSpec): RealTimeRegistration
+  export function registerRealTimeCallForAllAdd (spec: RealTimeAspectSpec): RealTimeRegistration
+  export function registerRealTimeCallForAllReplace (spec: RealTimeAspectSpec): RealTimeRegistration
 }
 
 export default dslFramework
