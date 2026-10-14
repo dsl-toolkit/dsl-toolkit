@@ -147,9 +147,13 @@ const makePlugin = (registry, aspects) => callback => (error, program) => {
   return callback(error, program)
 }
 
-module.exports = exports = {
-  toRegistry,
-  resolveArguments,
-  fold,
-  makePlugin
-}
+// Assign onto `exports` instead of replacing it. The ESM build is produced by
+// babel-plugin-transform-commonjs, which can only emit named exports for
+// property assignments; `module.exports = { ... }` becomes a default-only
+// module, and `const { toRegistry, makePlugin } = require(...)` in src/index.js
+// is compiled into a NAMED import, which then dies at load time with
+// "does not provide an export named 'makePlugin'".
+exports.toRegistry = toRegistry
+exports.resolveArguments = resolveArguments
+exports.fold = fold
+exports.makePlugin = makePlugin
