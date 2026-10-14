@@ -198,16 +198,25 @@ function entryPointPaths (json) {
   return [...out]
 }
 
-/** Paths npm would actually put in the tarball for a package. */
+/**
+ * Paths npm would actually put in the tarball for a package.
+ *
+ * Package lifecycle scripts (their `prepare`, now that it builds dist) print to
+ * stdout ahead of npm's JSON payload, so the payload is located by its own line
+ * rather than by the first "[" -- a script's log line may well contain one.
+ */
 function packedPaths (pkg) {
   const res = sh(NPM, ['pack', '--dry-run', '--json'], { cwd: pkg.location })
   if (res.status !== 0) {
     console.error(res.stderr || res.stdout)
     throw new Error(`npm pack --dry-run failed for ${pkg.name}`)
   }
-  const start = (res.stdout || '').indexOf('[')
-  if (start < 0) throw new Error(`could not parse npm pack output for ${pkg.name}`)
-  const parsed = JSON.parse(res.stdout.slice(start))
+  const out = res.stdout || ''
+  const lines = out.split('\n')
+  const start = lines.findIndex((line) => line.trim() === '[')
+  const payload = start >= 0 ? lines.slice(start).join('\n') : out.slice(out.indexOf('['))
+  if (!payload.startsWith('[')) throw new Error(`could not parse npm pack output for ${pkg.name}`)
+  const parsed = JSON.parse(payload)
   return new Set((parsed[0].files || []).map((f) => f.path))
 }
 
@@ -501,6 +510,14 @@ function assertCleanTree () {
  *   behind only  -> fast-forward (safe, no local commits to lose)
  *   ahead only   -> fine, these are the commits being released
  *   diverged     -> stop and let a human merge
+ *
+ * A fast-forward is reported to the caller (returns true) because it rewrites
+ * the files this very script is running from. Node loaded bin/release.js at
+ * startup, so the process would keep executing the OLD pipeline even though the
+ * working tree now holds the new one -- which is exactly how 1.8.44/1.8.65 got
+ * published by a script that had no build step: it was started behind origin,
+ * fast-forwarded mid-run, and packed the new package.json with no dist. The
+ * caller must therefore refuse to continue and ask for a re-run.
  */
 function syncWithRemote ({ dryRun = false } = {}) {
   const branch = (sh('git', ['rev-parse', '--abbrev-ref', 'HEAD']).stdout || '').trim()
@@ -523,7 +540,7 @@ function syncWithRemote ({ dryRun = false } = {}) {
 
   if (behind === 0) {
     console.log(`up to date with ${upstream} (${ahead} local commit(s) ahead, to be released)`)
-    return
+    return false
   }
 
   if (ahead > 0) {
@@ -538,12 +555,13 @@ function syncWithRemote ({ dryRun = false } = {}) {
 
   if (dryRun) {
     console.log(`[check only] ${behind} commit(s) behind ${upstream}; would fast-forward`)
-    return
+    return false
   }
 
   console.log(`${upstream} is ${behind} commit(s) ahead; fast-forwarding`)
   const merge = sh('git', ['merge', '--ff-only', upstream], { stdio: 'inherit' })
   if (merge.status !== 0) throw new Error('fast-forward merge failed')
+  return true
 }
 
 /**
@@ -572,8 +590,12 @@ async function main () {
     assertCleanTree()
     if (SKIP_SYNC) {
       console.log('\n===== sync with origin ===== skipped (--no-sync)')
-    } else {
-      syncWithRemote()
+    } else if (syncWithRemote()) {
+      console.error('\nERROR: origin was ahead, so the checkout was fast-forwarded to new commits.')
+      console.error('This process is still running the bin/release.js it loaded at startup, which')
+      console.error('predates those commits, so it may not be the pipeline you think it is.')
+      console.error('Nothing was published. Re-run `npm run release` to run the new code.')
+      process.exit(2)
     }
   }
 

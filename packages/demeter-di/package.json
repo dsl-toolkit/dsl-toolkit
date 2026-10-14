@@ -14,6 +14,7 @@
   "types": "./dist/src/index.d.ts",
   "scripts": {
     "build": "npm run babel",
+    "prepare": "npm run build",
     "pub": "npm run clean; npm version patch --force && npm run babel && npm publish",
     "test-common": "npm run clean && npx mocha --recursive  tests/**/*-spec.js",
     "test-dev": "npm run clean && npm run babel && npx mocha --recursive dist/**/*-spec.js",
