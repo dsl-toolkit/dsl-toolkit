@@ -15,11 +15,26 @@
  *   3. publish badges        -- bin/publish-badge.js force-pushes gh-pages, so the
  *                               READMEs that npm is about to pack have live images
  *   4. commit badge refresh  -- leaves a clean tree for lerna version
- *   5. reconcile + publish   -- verify npm auth BEFORE versioning, then publish
- *   6. push commits + tags
- *   7. verify on the registry
+ *   5. build + pack check    -- dist/ is gitignored AND `npm test` wipes it (every
+ *                               package's test-common starts with `clean`, which
+ *                               rimrafs dist), so the compiled files that main,
+ *                               module, types and exports point at have to be
+ *                               rebuilt here -- after the tests, before packing.
+ *                               Then the tarball npm would upload is verified to
+ *                               actually contain every advertised entry point.
+ *   6. reconcile + publish   -- verify npm auth BEFORE versioning, then publish
+ *   7. push commits + tags
+ *   8. verify on the registry
  *
- * Steps 1-3 GATE the release: if any fails, nothing is published.
+ * Steps 1-5 GATE the release: if any fails, nothing is published.
+ *
+ * WHY THE PACK CHECK EXISTS:
+ * dsl-framework and demeter-di ship dual entries -- `require` -> src/index.js,
+ * `import`/`types` -> dist/. When the build was skipped, npm published a tarball
+ * with no dist/ at all: `require()` still worked, but every ESM `import` died on
+ * ERR_MODULE_NOT_FOUND (and demeter-di's top-level `types` was a dead path). The
+ * build stage restores dist; the pack check keeps a future regression from
+ * reaching the registry, whatever its cause.
  *
  * WHY npm PUBLISHES AND LERNA DOES NOT:
  * Lerna ships its own bundled registry client (libnpmpublish 11.1.2 /
@@ -88,9 +103,9 @@ function sh (cmd, args, opts = {}) {
 }
 
 /** Run a gating pipeline step, streaming its output. Throws on failure. */
-function runStep (label, cmd, args) {
+function runStep (label, cmd, args, cwd = ROOT) {
   console.log(`\n===== ${label} =====`)
-  const res = cp.spawnSync(cmd, args, { cwd: ROOT, stdio: 'inherit' })
+  const res = cp.spawnSync(cmd, args, { cwd, stdio: 'inherit' })
   if (res.error) throw res.error
   if (res.status !== 0) {
     throw new Error(`${label} failed (exit ${res.status}) -- nothing was published`)
@@ -151,6 +166,88 @@ function topological (pkgs) {
   }
   for (const pkg of pkgs) visit(pkg, new Set())
   return out
+}
+
+/**
+ * Rebuild every package's compiled output. `npm test` runs each package's
+ * `clean`, which deletes dist, so this has to run after the tests and before
+ * anything is versioned or packed. Packages without a build script are skipped.
+ */
+function buildPackages (pkgs) {
+  for (const pkg of topological(pkgs)) {
+    runStep(`build ${pkg.name}`, NPM, ['run', 'build', '--if-present'], pkg.location)
+  }
+}
+
+/** Relative paths package.json advertises as published entry points. */
+function entryPointPaths (json) {
+  const out = new Set()
+  const add = (value) => {
+    if (typeof value === 'string' && value.startsWith('./')) out.add(value.slice(2))
+  }
+  add(json.main)
+  add(json.module)
+  add(json.types)
+  add(json.typings)
+  add(json.browser)
+  const walk = (node) => {
+    if (typeof node === 'string') add(node)
+    else if (node && typeof node === 'object') Object.values(node).forEach(walk)
+  }
+  walk(json.exports)
+  return [...out]
+}
+
+/** Paths npm would actually put in the tarball for a package. */
+function packedPaths (pkg) {
+  const res = sh(NPM, ['pack', '--dry-run', '--json'], { cwd: pkg.location })
+  if (res.status !== 0) {
+    console.error(res.stderr || res.stdout)
+    throw new Error(`npm pack --dry-run failed for ${pkg.name}`)
+  }
+  const start = (res.stdout || '').indexOf('[')
+  if (start < 0) throw new Error(`could not parse npm pack output for ${pkg.name}`)
+  const parsed = JSON.parse(res.stdout.slice(start))
+  return new Set((parsed[0].files || []).map((f) => f.path))
+}
+
+/**
+ * Entry points package.json promises but the tarball would not contain. A
+ * missing dist/src/index.mjs makes every ESM import of the published package
+ * fail with ERR_MODULE_NOT_FOUND; a missing .d.ts silently drops the types.
+ */
+function missingFromPack (pkg) {
+  const json = readPkgJson(pkg.location)
+  const packed = packedPaths(pkg)
+  const missing = []
+  for (const rel of entryPointPaths(json)) {
+    const clean = rel.replace(/\/+$/, '')
+    const present = packed.has(rel) ||
+      [...packed].some((file) => file === clean || file.startsWith(`${clean}/`))
+    if (!present) missing.push(rel)
+  }
+  return missing
+}
+
+/** Fail the release unless every advertised entry point is in the tarball. */
+function assertPackContents (pkgs) {
+  console.log('\n===== verify packed entry points =====')
+  const broken = []
+  for (const pkg of pkgs) {
+    const missing = missingFromPack(pkg)
+    if (missing.length) {
+      console.error(`  MISSING ${pkg.name}: ${missing.join(', ')}`)
+      broken.push(`${pkg.name} (${missing.join(', ')})`)
+    } else {
+      console.log(`  OK   ${pkg.name}`)
+    }
+  }
+  if (broken.length) {
+    throw new Error(
+      `package(s) would publish without their advertised entry points: ${broken.join('; ')}. ` +
+      'Run their build, then re-run the release.'
+    )
+  }
 }
 
 /**
@@ -565,6 +662,12 @@ async function main () {
     }
     return
   }
+
+  // Tests wiped every dist/, and dist/ is gitignored, so the compiled entries
+  // main/module/types/exports point at must be regenerated -- and verified
+  // against the actual tarball -- before anything is versioned or published.
+  buildPackages(publishable)
+  assertPackContents(publishable)
 
   assertNpmAuth()
 

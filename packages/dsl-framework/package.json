@@ -12,6 +12,7 @@
     }
   },
   "scripts": {
+    "build": "npm run babel",
     "pub": "npm run clean; npm run babel; npm version patch --force && npm publish",
     "test-common": "npm run clean && npx mocha --recursive tests/tests/**/*-spec.js",
     "test-dev": "npm run clean && npm run babel-test && npx mocha --recursive dist/tests/tests/**/*-spec.js",
